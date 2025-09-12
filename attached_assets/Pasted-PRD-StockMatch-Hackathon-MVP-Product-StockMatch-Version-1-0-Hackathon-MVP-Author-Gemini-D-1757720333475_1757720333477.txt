@@ -1,0 +1,181 @@
+PRD: StockMatch (Hackathon MVP)
+Product: StockMatch
+
+Version: 1.0 (Hackathon MVP)
+
+Author: Gemini
+
+Date: 2025-09-12
+
+Goal: To create a functional prototype of a gamified stock discovery and portfolio creation tool within a hackathon timeframe.
+
+1. Vision & Overview
+Vision: To make stock investing accessible and engaging for a new generation of investors by transforming complex stock screening into a simple, personalized, and fun experience.
+
+Product Summary: StockMatch is a mobile-first web app that allows users to build a personalized stock portfolio in under 30 seconds. Users complete a quick profile quiz, swipe right or left on a curated stack of stock cards, and are immediately presented with an equally-weighted portfolio of the stocks they liked.
+
+2. The Problem
+Analysis Paralysis: Traditional stock screeners are intimidating, filled with financial jargon and endless filters, causing potential new investors to give up.
+
+Lack of Personal Connection: Investing in broad market ETFs is a sound strategy but feels impersonal. Many people want to invest in companies they know and believe in but lack a tool for discovery.
+
+Time Consuming: Researching individual stocks is a slow and tedious process.
+
+3. Target User Persona: "The Curious Beginner"
+Demographics: 18-30 years old, digitally native, familiar with apps like Tinder and TikTok.
+
+Goals: Wants to start investing but doesn't know where to begin. Wants to invest in familiar brands and companies that align with their values.
+
+Frustrations: Finds traditional finance tools boring and overly complex. Is afraid of making the "wrong" choice due to a lack of knowledge.
+
+4. Hackathon MVP Scope: Core Features (The "30-Second Portfolio" Flow)
+Feature ID	User Story	Acceptance Criteria (What makes it "done"?)
+F-01	Personalization Quiz	As a new user, I want to answer a few simple questions about my preferences so the app can suggest relevant stocks.
+F-02	Swipeable Stock Deck	As a user, I want to swipe through a stack of stock cards, swiping right on companies I like and left on those I don't.
+F-03	Dynamic Stock Cards	As a user, I want to see simple, key information on each card so I can make a quick decision.
+F-04	Automatic Portfolio Generation	As a user, after I've swiped through the deck, I want to see my generated portfolio so I know what to do next.
+
+Export to Sheets
+5. Detailed Functional Breakdown (for Replit Agent)
+Screen 1: The Personalization Quiz (Modal Overlay)
+UI: A three-step, full-screen modal. Clean, large fonts, and icon-based choices.
+
+Step 1: Investment Style (Risk)
+
+Question: "What's your investment style?"
+
+Components: Three large, clickable buttons: "Slow & Steady", "Balanced Growth", "High Flyer".
+
+Step 2: Industries of Interest
+
+Question: "What industries excite you?"
+
+Components: A grid of 6-8 clickable cards, each with an icon and a label (e.g., 🎮 Gaming, 🌿 Green Energy, 🛒 Consumer, 💻 Tech, 💊 Healthcare, 🏦 Finance). Allows multiple selections.
+
+Step 3: Social Impact (ESG)
+
+Question: "Do you value social impact?"
+
+Components: A large toggle switch or "Yes" / "No" buttons.
+
+Final Component: A "Find My Matches" button to close the modal and trigger the backend data fetch.
+
+State Management: Store the user's choices in a single state object, e.g., const [profile, setProfile] = useState({ risk: '', industries: [], esg: false });
+
+Screen 2: The Swipe Deck (Main View)
+UI: Minimalist, centered card stack. No other UI elements should be distracting.
+
+Components:
+
+Card Stack: Use the react-tinder-card library.
+
+Stock Card: A div styled with a border-radius and shadow. It should contain:
+
+<img> for the company logo.
+
+<h3> for the Company Name.
+
+<span> for the Ticker.
+
+<p> for the one-sentence hook.
+
+<p> for the key metric.
+
+Logic:
+
+The likedStocks array is initially empty.
+
+The onCardLeftScreen event from the swipe library is used.
+
+If direction === 'right', add the stock's ticker to the likedStocks array.
+
+Keep a counter for total swipes. When swipeCount === 15, programmatically navigate to the /portfolio route.
+
+Screen 3: The Portfolio Reveal
+UI: A clean dashboard view.
+
+Components:
+
+Header: "Your StockMatch Portfolio".
+
+Pie Chart: Use a library like Recharts or Chart.js to render the portfolio. The data should be an array of objects like [{ name: 'AAPL', value: 20 }, { name: 'TSLA', value: 20 }].
+
+Stock List: A list of the liked stocks with their logos and names.
+
+Call to Action: A prominent, non-functional button: "Connect Brokerage to Invest".
+
+Logic:
+
+This component receives the likedStocks array as a prop or from a global state.
+
+It calculates the percentage for each stock: percentage = 100 / likedStocks.length.
+
+It formats the data for the pie chart library and renders the chart and the list.
+
+6. Backend & API Logic
+Endpoint: Create a single API endpoint: POST /api/get-stock-deck
+
+Request Body: The endpoint should expect a JSON object with the user's profile:
+
+JSON
+
+{
+  "risk": "Balanced Growth",
+  "industries": ["Tech", "Consumer"],
+  "esg": true
+}
+Backend Logic:
+
+Receive the user profile.
+
+Translate the profile into API query parameters. (e.g., risk maps to beta, industries map to sector).
+
+Call the external stock data API (Finnhub.io is recommended).
+
+Use the /stock/profile2 endpoint to get company info (logo, name, industry).
+
+Use the /stock/metric endpoint to get financial metrics (market cap, beta).
+
+Fetch a broad list of ~200 stocks from a relevant index (e.g., S&P 500).
+
+Filter this list on your backend based on the user's profile criteria.
+
+Select 15 random stocks from the filtered list.
+
+Format the data for each of the 15 stocks into the required StockCard format (see below) and return it as a JSON array.
+
+7. Data Models
+StockCard (Object returned from your backend to the frontend):
+
+JSON
+
+{
+  "ticker": "AAPL",
+  "name": "Apple Inc.",
+  "logoUrl": "https://static.finnhub.io/logo/aapl.png",
+  "hook": "Designs and sells iconic consumer electronics and software.",
+  "metric": "Market Cap: $3.0T"
+}
+8. Out of Scope for Hackathon
+User accounts, login, or persistent data. State can be managed client-side.
+
+Real brokerage integration.
+
+Advanced portfolio analysis (e.g., risk calculation, backtesting).
+
+In-depth stock detail pages.
+
+More than 15 swipes in the main flow.
+
+9. Tech Stack Recommendations (Replit-Friendly)
+Frontend: React (Vite) with TypeScript.
+
+Styling: Tailwind CSS.
+
+Backend: Node.js with Express.
+
+Animations/Gestures: react-tinder-card for the core swipe mechanic.
+
+Charts: Recharts for the portfolio pie chart.
+
+Stock Data API: Finnhub.io (API key required).
