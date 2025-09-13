@@ -165,18 +165,23 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     handleEnd();
   };
 
-  // Touch events
+  // Touch events - Enhanced for better mobile support
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent scrolling
     const touch = e.touches[0];
     handleStart(touch.clientX, touch.clientY);
   };
 
   const handleTouchMove = (e: TouchEvent) => {
-    const touch = e.touches[0];
-    handleMove(touch.clientX, touch.clientY);
+    e.preventDefault(); // Prevent scrolling
+    if (e.touches.length > 0) {
+      const touch = e.touches[0];
+      handleMove(touch.clientX, touch.clientY);
+    }
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e: TouchEvent) => {
+    e.preventDefault();
     handleEnd();
   };
 
@@ -184,8 +189,8 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false });
       
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
@@ -328,10 +333,10 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
   return (
     <div
       ref={cardRef}
-      className="w-full h-[600px] bg-white rounded-2xl cursor-grab select-none transition-all duration-200 overflow-hidden"
+      className="w-full h-[600px] bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 rounded-2xl cursor-grab select-none transition-all duration-200 overflow-hidden border border-gray-200 dark:border-gray-700"
       style={{
         ...style,
-        boxShadow: '0px 8px 24px 0px rgba(0, 0, 0, 0.08)',
+        boxShadow: '0px 12px 32px 0px rgba(0, 0, 0, 0.12), 0px 2px 8px 0px rgba(0, 0, 0, 0.04)',
         transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out'
       }}
       onMouseDown={handleMouseDown}
@@ -342,10 +347,10 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         {/* Header: Ticker and Risk Indicator */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0">
-            <h2 className="font-din-ticker text-black mb-1 truncate" data-testid={`stock-ticker-${stock.ticker}`}>
+            <h2 className="font-din-ticker text-gray-900 dark:text-white mb-1 truncate drop-shadow-sm" data-testid={`stock-ticker-${stock.ticker}`}>
               {stock.ticker}
             </h2>
-            <p className="text-company-name text-gray-600 truncate" data-testid={`stock-name-${stock.ticker}`}>
+            <p className="text-company-name text-gray-700 dark:text-gray-300 truncate" data-testid={`stock-name-${stock.ticker}`}>
               {stock.name}
             </p>
           </div>
@@ -363,12 +368,12 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         {/* Price, Change and Sentiment Index */}
         <div className="mb-4">
           <div className="flex items-end justify-between mb-1">
-            <div className="text-price text-black" data-testid={`stock-price-${stock.ticker}`}>
+            <div className="text-price text-gray-900 dark:text-white drop-shadow-sm" data-testid={`stock-price-${stock.ticker}`}>
               {stock.price || '$150.25'}
             </div>
             <div className="text-right">
-              <div className="text-xs text-gray-500 mb-1">Sentiment</div>
-              <div className="text-sm font-semibold text-black" data-testid={`sentiment-index-${stock.ticker}`}>
+              <div className="text-xs text-gray-600 dark:text-gray-400 mb-1 font-medium">Sentiment</div>
+              <div className="text-sm font-semibold text-gray-900 dark:text-white drop-shadow-sm" data-testid={`sentiment-index-${stock.ticker}`}>
                 {sentimentIndex}/100
               </div>
             </div>
@@ -388,17 +393,17 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
               ticker={stock.ticker}
             />
           ) : (
-            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200 h-20 flex items-center justify-center">
-              <span className="text-xs text-gray-500">Chart data loading...</span>
+            <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-200 dark:border-gray-600 h-20 flex items-center justify-center">
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Chart data loading...</span>
             </div>
           )}
         </div>
 
         {/* AI Sentiment Summary */}
         <div className="flex-1 flex flex-col justify-center min-h-0">
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 h-full flex flex-col pt-[24px] pb-[24px] pl-[18px] pr-[18px]">
-            <h4 className="text-xs font-medium text-gray-600 mb-2">Why this might interest you:</h4>
-            <div className="text-sm text-gray-900 leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
+          <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-4 border border-gray-200 dark:border-gray-600 h-full flex flex-col pt-[24px] pb-[24px] pl-[18px] pr-[18px] shadow-sm">
+            <h4 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Why this might interest you:</h4>
+            <div className="text-sm text-gray-900 dark:text-gray-100 leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
               {enhanceSentimentText(stock.sentimentSummary || stock.hook || getDefaultSentiment(stock))}
             </div>
           </div>
@@ -406,7 +411,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
 
         {/* Company Logo at Bottom */}
         <div className="mt-4 flex justify-center flex-shrink-0">
-          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-white/70 dark:bg-gray-700/70 backdrop-blur-sm rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 shadow-sm">
             {stock.logoUrl && !logoError ? (
               <img 
                 src={stock.logoUrl} 
@@ -415,7 +420,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <span className="text-sm font-bold text-gray-600">{stock.ticker.charAt(0)}</span>
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{stock.ticker.charAt(0)}</span>
             )}
           </div>
         </div>
