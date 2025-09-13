@@ -115,7 +115,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
               <img 
                 src={bearIcon} 
                 alt="Bear Icon" 
-                className="w-12 h-12"
+                className="w-32 h-32"
                 data-testid="bear-icon-personality"
               />
             </div>
