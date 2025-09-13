@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { StockCard as StockCardType } from "@shared/schema";
 import StockChart from "./stock-chart";
-import { Shield, AlertTriangle, Flame } from "lucide-react";
+import { Shield, AlertTriangle, Flame, Heart, Sparkles } from "lucide-react";
 
 interface StockCardProps {
   stock: StockCardType;
@@ -58,6 +58,8 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
   const [isDragging, setIsDragging] = useState(false);
   const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
   const [dragDistance, setDragDistance] = useState(0);
+  const [isAnimatingLike, setIsAnimatingLike] = useState(false);
+  const [isAnimatingPass, setIsAnimatingPass] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const startPosRef = useRef({ x: 0, y: 0 });
 
@@ -80,8 +82,11 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       setDragDirection(null);
     }
 
-    const rotation = (deltaX / 10) * 5; // Subtle rotation effect
-    cardRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg)`;
+    // Enhanced physics with more natural movement
+    const rotation = (deltaX / 8) * 3; // More subtle rotation
+    const scale = 1 - Math.abs(deltaX) / 2000; // Slight scale effect
+    const verticalOffset = Math.abs(deltaX) > 50 ? -Math.abs(deltaX) / 8 : 0; // Lift effect when swiping
+    cardRef.current.style.transform = `translate(${deltaX}px, ${deltaY + verticalOffset}px) rotate(${rotation}deg) scale(${Math.max(scale, 0.95)})`;
   };
 
   const handleEnd = () => {
@@ -93,22 +98,28 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     
     if (dragDistance > threshold) {
       if (dragDirection === 'right') {
-        // Animate card off screen to the right
-        cardRef.current.style.transform = 'translateX(100vw) rotate(15deg)';
+        // Enhanced celebratory "Like" animation - fly upward with celebration
+        setIsAnimatingLike(true);
+        cardRef.current.style.transform = 'translateX(50vw) translateY(-150vh) rotate(25deg) scale(0.8)';
         cardRef.current.style.opacity = '0';
-        setTimeout(onSwipeRight, 200);
+        cardRef.current.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease-out';
+        setTimeout(onSwipeRight, 400);
       } else if (dragDirection === 'left') {
-        // Animate card off screen to the left
-        cardRef.current.style.transform = 'translateX(-100vw) rotate(-15deg)';
+        // Enhanced swift "Pass" animation - clean dismissal
+        setIsAnimatingPass(true);
+        cardRef.current.style.transform = 'translateX(-120vw) rotate(-25deg) scale(0.9)';
         cardRef.current.style.opacity = '0';
-        setTimeout(onSwipeLeft, 200);
+        cardRef.current.style.transition = 'transform 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 0.3s ease-out';
+        setTimeout(onSwipeLeft, 300);
       } else {
-        // Snap back to center
+        // Snap back to center with elastic feel
         cardRef.current.style.transform = 'translate(0, 0) rotate(0deg)';
+        cardRef.current.style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
       }
     } else {
-      // Snap back to center
+      // Snap back to center with elastic feel
       cardRef.current.style.transform = 'translate(0, 0) rotate(0deg)';
+      cardRef.current.style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
     }
     
     setDragDirection(null);
@@ -348,25 +359,62 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         </div>
       </div>
       
-      {/* Swipe Action Hints */}
+      {/* Enhanced Swipe Action Hints with Animations */}
       <div 
-        className={`absolute top-4 right-4 transition-opacity duration-200 ${
-          dragDirection === 'right' && dragDistance > 50 ? 'opacity-100' : 'opacity-0'
+        className={`absolute top-4 right-4 transition-all duration-200 ${
+          dragDirection === 'right' && dragDistance > 50 ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
         }`}
       >
-        <div className="bg-secondary/20 border-2 border-secondary text-secondary px-2 py-1 rounded-full text-xs font-medium">
+        <div className="bg-secondary/20 border-2 border-secondary text-secondary px-3 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 animate-pulse">
+          <Heart className="w-3 h-3 fill-current" />
           LIKE
         </div>
       </div>
       <div 
-        className={`absolute top-4 left-4 transition-opacity duration-200 ${
-          dragDirection === 'left' && dragDistance > 50 ? 'opacity-100' : 'opacity-0'
+        className={`absolute top-4 left-4 transition-all duration-200 ${
+          dragDirection === 'left' && dragDistance > 50 ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
         }`}
       >
-        <div className="bg-destructive/20 border-2 border-destructive text-destructive px-2 py-1 rounded-full text-xs font-medium">
+        <div className="bg-destructive/20 border-2 border-destructive text-destructive px-3 py-2 rounded-full text-xs font-bold animate-pulse">
           PASS
         </div>
       </div>
+      
+      {/* Celebratory Heart Burst Effect */}
+      {isAnimatingLike && (
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          {/* Main Heart */}
+          <div className="relative animate-ping">
+            <Heart className="w-20 h-20 text-secondary fill-current animate-bounce" />
+          </div>
+          {/* Burst Hearts */}
+          <div className="absolute animate-pulse">
+            <Heart className="w-8 h-8 text-secondary fill-current absolute -top-8 -left-8 animate-bounce" style={{ animationDelay: '0.1s' }} />
+            <Heart className="w-6 h-6 text-secondary fill-current absolute -top-12 left-8 animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <Heart className="w-10 h-10 text-secondary fill-current absolute top-8 -right-8 animate-bounce" style={{ animationDelay: '0.15s' }} />
+            <Heart className="w-4 h-4 text-secondary fill-current absolute -bottom-6 -left-6 animate-bounce" style={{ animationDelay: '0.25s' }} />
+            <Heart className="w-7 h-7 text-secondary fill-current absolute bottom-6 right-6 animate-bounce" style={{ animationDelay: '0.05s' }} />
+          </div>
+          {/* Sparkles */}
+          <div className="absolute animate-spin">
+            <Sparkles className="w-12 h-12 text-yellow-400 absolute -top-16 left-0 animate-pulse" style={{ animationDelay: '0.3s' }} />
+            <Sparkles className="w-8 h-8 text-yellow-300 absolute top-16 -right-12 animate-pulse" style={{ animationDelay: '0.1s' }} />
+            <Sparkles className="w-10 h-10 text-yellow-500 absolute -bottom-12 -left-12 animate-pulse" style={{ animationDelay: '0.2s' }} />
+          </div>
+        </div>
+      )}
+      
+      {/* Pass Animation Effect */}
+      {isAnimatingPass && (
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-destructive rounded-full animate-ping" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-destructive font-bold text-lg">✕</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
