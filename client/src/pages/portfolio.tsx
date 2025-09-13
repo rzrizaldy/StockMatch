@@ -258,7 +258,7 @@ export default function Portfolio() {
           {/* Header Text */}
           <div className="flex flex-col gap-2 text-center">
             <h1 
-              className="font-din text-white font-bold leading-8 tracking-wide" 
+              className="font-din text-white font-bold leading-8 tracking-wide text-center" 
               style={{ fontSize: '30px' }}
               data-testid="text-portfolio-title"
             >
