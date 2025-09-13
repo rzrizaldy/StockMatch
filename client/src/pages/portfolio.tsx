@@ -266,7 +266,7 @@ export default function Portfolio() {
             </h1>
             <div className="px-4 py-2 rounded-lg">
               <p 
-                className="font-din text-white font-bold leading-5 tracking-wide" 
+                className="font-din text-white font-bold leading-5 tracking-wide text-center" 
                 style={{ fontSize: '15px' }}
                 data-testid="text-portfolio-subtitle"
               >
