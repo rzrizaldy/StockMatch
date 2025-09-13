@@ -332,7 +332,7 @@ export default function Swipe() {
           
           {/* Portfolio Strategy Display - Moved Below Buttons */}
           {likedStocks.length > 0 && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mx-4 mt-6 mb-4">
+            <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 mx-4 mt-6 mb-4 border border-gray-600/30">
               <div className="flex items-center justify-center gap-3 mb-2">
                 <currentStrategy.icon className={`w-5 h-5 ${currentStrategy.color}`} />
                 <h3 className="text-white font-bold text-lg">{currentStrategy.name}</h3>
