@@ -182,45 +182,7 @@ export default function Portfolio() {
   const stockCount = stocks.length;
 
   return (
-    <div className="w-full h-screen overflow-hidden relative" style={{ background: 'linear-gradient(59deg, #57C30A 0%, white 86%)' }}>
-      {/* Background Decorative Elements */}
-      
-      
-      {/* Scattered celebration elements - exact positioning from Figma */}
-      <div className="absolute bg-[#57C30A]" style={{ width: '24px', height: '20px', left: '304px', top: '76px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '32px', height: '20px', left: '273px', top: '232px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '16px', height: '24px', left: '453px', top: '80px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '16px', height: '24px', left: '169px', top: '279px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '16px', height: '24px', left: '484px', top: '268px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '16px', height: '28px', left: '469px', top: '166px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '20px', height: '36px', left: '437px', top: '232px' }}></div>
-      <div className="absolute bg-[#B1D671]" style={{ width: '8px', height: '12px', left: '400px', top: '80px' }}></div>
-      <div className="absolute bg-[#B1D671]" style={{ width: '8px', height: '12px', left: '288px', top: '268px' }}></div>
-      <div className="absolute bg-[#B1D671]" style={{ width: '12px', height: '8px', left: '492px', top: '108px' }}></div>
-      <div className="absolute bg-[#B1D671]" style={{ width: '12px', height: '8px', left: '452px', top: '316px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '12px', height: '8px', left: '320px', top: '300px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '8px', left: '440px', top: '140px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '8px', left: '352px', top: '92px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '8px', left: '420px', top: '284px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '8px', left: '320px', top: '188px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '8px', left: '500px', top: '236px' }}></div>
-      <div className="absolute bg-[#B1D671]" style={{ width: '12px', height: '8px', left: '400px', top: '140px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '8px', height: '12px', left: '508px', top: '332px' }}></div>
-      <div className="absolute bg-[#023341]" style={{ width: '12px', height: '12px', left: '400px', top: '156px' }}></div>
-      <div className="absolute bg-[#57C30A]" style={{ width: '12px', height: '28px', left: '204px', top: '92px' }}></div>
-      
-      {/* Mascot Image */}
-      <img 
-        src={mascotImage} 
-        alt="Portfolio Mascot"
-        className="absolute"
-        style={{ 
-          width: '116px', 
-          height: '139px', 
-          left: '129px', 
-          top: '102px'
-        }}
-      />
+    <div className="w-full h-screen bg-[#8BC34A] overflow-hidden relative">
       
       {/* Top Reset Button */}
       <button
@@ -231,33 +193,50 @@ export default function Portfolio() {
         <RefreshCw className="w-5 h-5" />
       </button>
       
-      {/* Main Content - Centered Text */}
-      <div className="absolute inset-x-0 text-center" style={{ top: '260px' }}>
-        <h1 
-          className="text-white font-bold mb-2"
-          style={{ fontSize: '30px', fontFamily: 'DIN Alternate, sans-serif', lineHeight: '32px' }}
-          data-testid="text-portfolio-title"
+      {/* Scrollable Content */}
+      <div className="w-full h-full overflow-y-auto">
+        {/* Top Section with Header and Mascot */}
+        <div className="relative min-h-[300px] px-6 pt-20 pb-8">
+          {/* Mascot Image */}
+          <img 
+            src={mascotImage} 
+            alt="Portfolio Mascot"
+            className="absolute"
+            style={{ 
+              width: '116px', 
+              height: '139px', 
+              left: '129px', 
+              top: '102px'
+            }}
+          />
+          
+          {/* Header Text */}
+          <div className="text-center mt-32">
+            <h1 
+              className="text-white font-bold mb-2"
+              style={{ fontSize: '30px', fontFamily: 'DIN Alternate, sans-serif', lineHeight: '32px' }}
+              data-testid="text-portfolio-title"
+            >
+              Portfolio Created
+            </h1>
+            <p 
+              className="text-white font-bold px-4"
+              style={{ fontSize: '15px', fontFamily: 'DIN Alternate, sans-serif', lineHeight: '20px' }}
+              data-testid="text-portfolio-subtitle"
+            >
+              We've created an equally-weighted portfolio of {stockCount} companies you loved
+            </p>
+          </div>
+        </div>
+        
+        {/* White Content Section */}
+        <div 
+          className="bg-white min-h-screen"
+          style={{ 
+            borderTopLeftRadius: '28px',
+            borderTopRightRadius: '28px'
+          }}
         >
-          Portfolio Created
-        </h1>
-        <p 
-          className="text-white font-bold px-4"
-          style={{ fontSize: '15px', fontFamily: 'DIN Alternate, sans-serif', lineHeight: '20px' }}
-          data-testid="text-portfolio-subtitle"
-        >
-          We've created an equally-weighted portfolio of {stockCount} companies you loved
-        </p>
-      </div>
-      
-      {/* White Bottom Section */}
-      <div 
-        className="absolute inset-x-0 bottom-0 bg-white overflow-y-auto"
-        style={{ 
-          top: '390px',
-          borderTopLeftRadius: '28px',
-          borderTopRightRadius: '28px'
-        }}
-      >
         <div className="p-6 space-y-6">
           {/* Portfolio Summary Cards */}
           <div className="grid grid-cols-2 gap-4">
@@ -424,6 +403,7 @@ export default function Portfolio() {
             >
               Start Over
             </button>
+          </div>
           </div>
         </div>
       </div>
