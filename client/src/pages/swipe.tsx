@@ -65,10 +65,14 @@ export default function Swipe() {
         throw new Error('At least 1 stock must be selected');
       }
       
+      // Get user profile to use their actual investment amount
+      const userProfile = await api.getUserProfile(sessionId);
+      const investmentAmount = userProfile?.investmentAmount || "10000";
+      
       return api.savePortfolio({
         sessionId,
         likedStocks,
-        totalValue: "10000"
+        totalValue: investmentAmount
       });
     },
     onSuccess: () => {

@@ -8,6 +8,46 @@ import type { StockCard } from "@shared/schema";
 import SentimentCharts from "@/components/sentiment-charts";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
+// Component for stock logo with error handling
+interface StockLogoProps {
+  stock: StockCard;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+function StockLogo({ stock, size = 'md', className = '' }: StockLogoProps) {
+  const [logoError, setLogoError] = useState(false);
+  
+  const sizeClasses = {
+    sm: 'w-6 h-6',
+    md: 'w-8 h-8',
+    lg: 'w-10 h-10'
+  };
+  
+  const textSizeClasses = {
+    sm: 'text-sm',
+    md: 'text-lg',
+    lg: 'text-xl'
+  };
+  
+  return (
+    <div className={`${sizeClasses[size]} bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 ${className}`}>
+      {stock.logoUrl && !logoError ? (
+        <img 
+          src={stock.logoUrl} 
+          alt={`${stock.name} logo`} 
+          className={`${sizeClasses[size]} rounded object-contain`}
+          onError={() => setLogoError(true)}
+        />
+      ) : (
+        <span className={`${textSizeClasses[size]} font-bold text-primary`}>
+          {stock.ticker.charAt(0)}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export default function Portfolio() {
   const [, setLocation] = useLocation();
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -242,15 +282,7 @@ export default function Portfolio() {
               {stocks.map((stock) => (
                 <div key={stock.ticker} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg" data-testid={`company-${stock.ticker}`}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                      {stock.logoUrl ? (
-                        <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
-                      ) : (
-                        <span className="text-lg font-bold text-primary">
-                          {stock.ticker.charAt(0)}
-                        </span>
-                      )}
-                    </div>
+                    <StockLogo stock={stock} size="lg" />
                     <div>
                       <div className="font-medium" data-testid={`company-name-${stock.ticker}`}>
                         {stock.name}
@@ -287,15 +319,7 @@ export default function Portfolio() {
                 <AccordionItem key={stock.ticker} value={stock.ticker} data-testid={`sentiment-accordion-item-${stock.ticker}`}>
                   <AccordionTrigger className="text-left hover:no-underline" data-testid={`sentiment-trigger-${stock.ticker}`}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        {stock.logoUrl ? (
-                          <img src={stock.logoUrl} alt={stock.name} className="w-6 h-6 rounded" />
-                        ) : (
-                          <span className="text-sm font-bold text-primary">
-                            {stock.ticker.charAt(0)}
-                          </span>
-                        )}
-                      </div>
+                      <StockLogo stock={stock} size="md" />
                       <div>
                         <div className="font-medium text-sm">{stock.name}</div>
                         <div className="text-xs text-muted-foreground">{stock.ticker}</div>
