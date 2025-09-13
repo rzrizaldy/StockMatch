@@ -3,10 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { CheckCircle, RefreshCw, ExternalLink, FileSpreadsheet, Share2, Info, TrendingUp, TrendingDown, AlertTriangle, Target, Heart } from "lucide-react";
-import bullImage from "@assets/image_1757781285111.png";
-import PortfolioChart from "@/components/portfolio-chart";
-import CompactSparkline from "@/components/compact-sparkline";
-import { BullMascot, BearMascot } from "@/components/mascot";
+import mascotImage from "@assets/image_1757788388059.png";
 import type { StockCard } from "@shared/schema";
 
 export default function Portfolio() {
