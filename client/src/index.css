@@ -150,9 +150,13 @@
   }
 }
 
-/* Green gradient background for swipe page */
+/* Financial pattern background for swipe page */
 .swipe-gradient {
-  background: linear-gradient(180deg, #57C30A 0%, white 86%);
+  background-image: url("@assets/Gemini_Generated_Image_t21yet21yet21yet_1757786640590.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* DIN Alternate font classes */
