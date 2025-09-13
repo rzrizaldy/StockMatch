@@ -23,9 +23,7 @@ export default function Home() {
         </div>
         
         {/* Description Text */}
-        <div className="w-[328px] text-center text-white text-lg font-medium leading-6 mb-12 px-4">
-          Swipe left on the companies you love, left those you don't. We'll create personalized portfolio for you.
-        </div>
+        <div className="w-[328px] text-center text-white text-lg font-medium leading-6 mb-12 px-4">Investing Made as Easy as Swiping</div>
         
         {/* Stock Card with Mascot */}
         <div className="relative mb-16">

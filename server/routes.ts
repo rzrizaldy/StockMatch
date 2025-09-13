@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserProfileSchema, insertPortfolioSchema } from "@shared/schema";
-import { generateBeginnerStockSummary, generateMockPriceData } from "./ai";
+import { generateBeginnerStockSummary, generateMockPriceData, generateSentimentAnalysis } from "./ai";
 
 // Curated fake stock data for demo purposes
 const STOCK_DATABASE = [
@@ -313,6 +313,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error fetching portfolio:", error);
       res.status(500).json({ 
         message: "Failed to fetch portfolio",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Get AI-generated sentiment analysis for stocks
+  app.post("/api/sentiment-analysis", async (req, res) => {
+    try {
+      const { tickers } = req.body;
+      
+      if (!Array.isArray(tickers) || tickers.length === 0) {
+        return res.status(400).json({ message: "Invalid tickers array" });
+      }
+
+      // Get stock data for the requested tickers
+      const stockCards = await storage.getStockCardsByTickers(tickers);
+      
+      if (stockCards.length === 0) {
+        return res.status(404).json({ message: "No stocks found for provided tickers" });
+      }
+
+      // Generate sentiment analysis for each stock
+      const sentimentAnalyses = await Promise.allSettled(
+        stockCards.map(async (stockCard) => {
+          // Find the stock data from our database to get additional info
+          const stockData = STOCK_DATABASE.find(stock => stock.ticker === stockCard.ticker);
+          
+          if (!stockData) {
+            throw new Error(`Stock data not found for ${stockCard.ticker}`);
+          }
+
+          const stockInfo = {
+            ticker: stockData.ticker,
+            name: stockData.name,
+            industry: stockData.industry,
+            marketCap: stockData.marketCap,
+            beta: stockData.beta,
+            esgScore: stockData.esgScore
+          };
+
+          const sentimentAnalysis = await generateSentimentAnalysis(stockInfo);
+          
+          return {
+            ticker: stockCard.ticker,
+            name: stockCard.name,
+            ...sentimentAnalysis
+          };
+        })
+      );
+
+      // Process results and handle any failures
+      const successfulAnalyses = sentimentAnalyses
+        .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
+        .map(result => result.value);
+
+      const failedAnalyses = sentimentAnalyses
+        .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+        .map(result => result.reason);
+
+      if (failedAnalyses.length > 0) {
+        console.warn("Some sentiment analyses failed:", failedAnalyses);
+      }
+
+      res.json({
+        analyses: successfulAnalyses,
+        totalRequested: tickers.length,
+        successfulCount: successfulAnalyses.length,
+        failedCount: failedAnalyses.length
+      });
+
+    } catch (error) {
+      console.error("Error generating sentiment analysis:", error);
+      res.status(500).json({ 
+        message: "Failed to generate sentiment analysis",
         error: error instanceof Error ? error.message : "Unknown error"
       });
     }

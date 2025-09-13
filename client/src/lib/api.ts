@@ -18,6 +18,26 @@ export interface PortfolioResponse {
   stocks: StockCard[];
 }
 
+export interface SentimentAnalysisData {
+  ticker: string;
+  name: string;
+  overallScore: number; // -1 to 1 scale (-1 very negative, 0 neutral, 1 very positive)
+  confidenceLevel: number; // 0 to 1 scale (how confident the AI is in its analysis)
+  keyInsights: string[]; // Array of 3-5 key insights about the stock's sentiment
+  marketTrend: 'bullish' | 'bearish' | 'neutral';
+  riskFactors: string[]; // Array of 2-3 main risk factors
+  opportunities: string[]; // Array of 2-3 main opportunities
+  timeHorizon: 'short-term' | 'medium-term' | 'long-term'; // Best investment timeframe
+  recommendation: string; // Overall recommendation summary
+}
+
+export interface SentimentAnalysisResponse {
+  analyses: SentimentAnalysisData[];
+  totalRequested: number;
+  successfulCount: number;
+  failedCount: number;
+}
+
 export const api = {
   async getStockDeck(profile: GetStockDeckRequest): Promise<StockCard[]> {
     const response = await apiRequest("POST", "/api/get-stock-deck", profile);
@@ -41,6 +61,11 @@ export const api = {
 
   async getPortfolio(sessionId: string): Promise<PortfolioResponse> {
     const response = await apiRequest("GET", `/api/portfolio/${sessionId}`, undefined);
+    return response.json();
+  },
+
+  async getSentimentAnalysis(tickers: string[]): Promise<SentimentAnalysisResponse> {
+    const response = await apiRequest("POST", "/api/sentiment-analysis", { tickers });
     return response.json();
   }
 };

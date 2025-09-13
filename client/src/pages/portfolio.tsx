@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { RefreshCw, AlertTriangle, FileSpreadsheet, Share2, TrendingUp } from "lucide-react";
+import { RefreshCw, AlertTriangle, FileSpreadsheet, Share2, TrendingUp, Brain } from "lucide-react";
 import mascotImage from "@assets/image_1757788388059.png";
 import type { StockCard } from "@shared/schema";
 import SentimentCharts from "@/components/sentiment-charts";
+import AISentimentAnalysis from "@/components/ai-sentiment-analysis";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 // Component for stock logo with error handling
 interface StockLogoProps {
@@ -71,6 +73,13 @@ export default function Portfolio() {
     queryKey: ['/api/user-profile', sessionId],
     queryFn: () => api.getUserProfile(sessionId!),
     enabled: !!sessionId,
+  });
+
+  // Fetch AI sentiment analysis for portfolio stocks
+  const { data: sentimentAnalysisData, isLoading: sentimentLoading } = useQuery({
+    queryKey: ['/api/sentiment-analysis', portfolioData?.portfolio.likedStocks],
+    queryFn: () => api.getSentimentAnalysis(portfolioData?.portfolio.likedStocks || []),
+    enabled: !!portfolioData?.portfolio.likedStocks && portfolioData.portfolio.likedStocks.length > 0,
   });
 
   const handleExportToSheets = () => {
@@ -311,31 +320,87 @@ export default function Portfolio() {
               </h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6" data-testid="text-sentiment-analysis-description">
-              Market sentiment analysis for your portfolio stocks based on recent news and social media.
+              Comprehensive sentiment analysis combining AI insights and market data for your portfolio stocks.
             </p>
             
             <Accordion type="single" collapsible className="w-full" data-testid="sentiment-accordion">
-              {stocks.map((stock) => (
-                <AccordionItem key={stock.ticker} value={stock.ticker} data-testid={`sentiment-accordion-item-${stock.ticker}`}>
-                  <AccordionTrigger className="text-left hover:no-underline" data-testid={`sentiment-trigger-${stock.ticker}`}>
-                    <div className="flex items-center gap-3">
-                      <StockLogo stock={stock} size="md" />
-                      <div>
-                        <div className="font-medium text-sm">{stock.name}</div>
-                        <div className="text-xs text-muted-foreground">{stock.ticker}</div>
+              {stocks.map((stock) => {
+                const aiAnalysis = sentimentAnalysisData?.analyses.find(analysis => analysis.ticker === stock.ticker);
+                
+                return (
+                  <AccordionItem key={stock.ticker} value={stock.ticker} data-testid={`sentiment-accordion-item-${stock.ticker}`}>
+                    <AccordionTrigger className="text-left hover:no-underline" data-testid={`sentiment-trigger-${stock.ticker}`}>
+                      <div className="flex items-center gap-3">
+                        <StockLogo stock={stock} size="md" />
+                        <div className="flex-1">
+                          <div className="font-medium text-sm">{stock.name}</div>
+                          <div className="text-xs text-muted-foreground">{stock.ticker}</div>
+                        </div>
+                        {aiAnalysis && (
+                          <div className="flex items-center gap-2">
+                            <Brain className="w-4 h-4 text-blue-500" />
+                            <span className={`text-xs px-2 py-1 rounded ${
+                              aiAnalysis.overallScore > 0.1 
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                                : aiAnalysis.overallScore < -0.1 
+                                ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                                : 'bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300'
+                            }`}>
+                              {aiAnalysis.overallScore > 0 ? '+' : ''}{(aiAnalysis.overallScore * 100).toFixed(0)}%
+                            </span>
+                          </div>
+                        )}
+                        {sentimentLoading && (
+                          <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                        )}
                       </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent data-testid={`sentiment-content-${stock.ticker}`}>
-                    <div className="pt-4" data-testid={`sentiment-charts-${stock.ticker}`}>
-                      <SentimentCharts 
-                        stock={stock.ticker} 
-                        className="w-full"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+                    </AccordionTrigger>
+                    <AccordionContent data-testid={`sentiment-content-${stock.ticker}`}>
+                      <div className="pt-4">
+                        <Tabs defaultValue="ai-analysis" className="w-full">
+                          <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="ai-analysis" className="flex items-center gap-2">
+                              <Brain className="w-4 h-4" />
+                              AI Insights
+                            </TabsTrigger>
+                            <TabsTrigger value="market-data" className="flex items-center gap-2">
+                              <TrendingUp className="w-4 h-4" />
+                              Market Data
+                            </TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="ai-analysis" className="mt-4">
+                            {sentimentLoading ? (
+                              <div className="flex items-center justify-center py-8" data-testid={`ai-loading-${stock.ticker}`}>
+                                <div className="text-center space-y-2">
+                                  <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+                                  <p className="text-sm text-muted-foreground">Generating AI analysis...</p>
+                                </div>
+                              </div>
+                            ) : aiAnalysis ? (
+                              <AISentimentAnalysis 
+                                analysis={aiAnalysis}
+                                className="w-full"
+                              />
+                            ) : (
+                              <div className="text-center py-8" data-testid={`ai-error-${stock.ticker}`}>
+                                <p className="text-sm text-muted-foreground">AI analysis unavailable for this stock</p>
+                              </div>
+                            )}
+                          </TabsContent>
+                          
+                          <TabsContent value="market-data" className="mt-4">
+                            <SentimentCharts 
+                              stock={stock.ticker} 
+                              className="w-full"
+                            />
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
             </Accordion>
           </div>
           
