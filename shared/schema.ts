@@ -33,6 +33,21 @@ export const stockCards = pgTable("stock_cards", {
   priceChange: text("price_change").notNull(), // Percentage change (e.g., "+2.5%")
   sentimentSummary: text("sentiment_summary").notNull(), // AI-generated beginner-friendly description
   chartData: text("chart_data").array().notNull().default(sql`ARRAY[]::text[]`), // 30-day price history for sparkline
+  
+  // CSV metadata fields
+  listingExchange: text("listing_exchange"), // N, Q, A, P, Z
+  marketCategory: text("market_category"), // CONSUMER, TECHNOLOGY, HEALTHCARE, FINANCE
+  etf: boolean("etf").notNull().default(false), // Is this an ETF
+  roundLotSize: text("round_lot_size"),
+  financialStatus: text("financial_status"), // D, H, etc.
+  nasdaqTraded: boolean("nasdaq_traded").notNull().default(true),
+  
+  // Generated sentiment and market data
+  sentimentScore: text("sentiment_score"), // 0-100 sentiment score
+  volatility: text("volatility"), // Calculated volatility
+  averageVolume: text("average_volume"), // Daily trading volume
+  fiftyTwoWeekHigh: text("fifty_two_week_high"),
+  fiftyTwoWeekLow: text("fifty_two_week_low"),
 });
 
 export const portfolios = pgTable("portfolios", {

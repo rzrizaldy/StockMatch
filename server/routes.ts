@@ -137,24 +137,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const profile = insertUserProfileSchema.parse(req.body);
       
-      // Get stocks based on risk preference
-      let availableStocks = getStocksByRisk(profile.risk);
+          // Get all stocks from database
+      const allStocks = await storage.getStockCards();
       
-      // Filter by industries if specified
-      if (profile.industries && profile.industries.length > 0) {
-        availableStocks = getStocksByIndustries(availableStocks, profile.industries);
-      }
+      // Filter stocks based on user preferences
+      let availableStocks = allStocks.filter(stock => {
+        // Risk-based filtering based on beta
+        if (profile.risk === 'conservative' && parseFloat(stock.beta || '1.0') > 1.0) {
+          return false;
+        }
+        if (profile.risk === 'aggressive' && parseFloat(stock.beta || '1.0') <= 1.5) {
+          return false;
+        }
+        // Balanced accepts all beta ranges
+        
+        // Industry filtering
+        if (profile.industries && profile.industries.length > 0) {
+          const stockCategory = stock.marketCategory?.toLowerCase() || stock.industry?.toLowerCase() || '';
+          const matchesIndustry = profile.industries.some(industry => 
+            stockCategory.includes(industry.toLowerCase()) ||
+            stock.industry?.toLowerCase().includes(industry.toLowerCase())
+          );
+          if (!matchesIndustry) return false;
+        }
+        
+        // ESG filtering
+        if (profile.esg && parseFloat(stock.esgScore || '0') < 7.0) {
+          return false;
+        }
+        
+        return true;
+      });
       
-      // Filter by ESG preferences
-      if (profile.esg) {
-        availableStocks = getStocksByESG(availableStocks, profile.esg);
-      }
-      
-      // Ensure we have enough stocks, add more if needed
+      // Ensure we have enough stocks for a good selection
       if (availableStocks.length < 15) {
-        const additionalStocks = STOCK_DATABASE.filter(stock => 
-          !availableStocks.find(existing => existing.ticker === stock.ticker)
-        );
+        // Add more stocks if needed, prioritize by ESG score if user wants ESG
+        const additionalStocks = allStocks
+          .filter(stock => !availableStocks.find(existing => existing.ticker === stock.ticker))
+          .sort((a, b) => {
+            if (profile.esg) {
+              return parseFloat(b.esgScore || '0') - parseFloat(a.esgScore || '0');
+            }
+            return Math.random() - 0.5; // Random if no ESG preference
+          })
+          .slice(0, 15 - availableStocks.length);
         availableStocks = [...availableStocks, ...additionalStocks];
       }
       
@@ -162,71 +188,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const shuffled = availableStocks.sort(() => 0.5 - Math.random());
       const selectedStocks = shuffled.slice(0, 15);
       
-      // Generate all stock cards in parallel for better performance
-      const stockCardPromises = selectedStocks.map(async (stock) => {
-        // Generate realistic sample price and change data
-        const basePrice = Math.random() * 300 + 50; // Price between $50-$350
-        const priceChange = (Math.random() - 0.5) * 10; // Change between -5% and +5%
-        const isPositive = priceChange > 0;
-        
-        // Generate GPT-powered beginner-friendly sentiment summary with timeout and fallback
-        let aiAnalysis;
-        try {
-          // Add timeout to prevent hanging API calls
-          const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('OpenAI API timeout')), 8000)
-          );
-          
-          const apiPromise = generateBeginnerStockSummary({
-            ticker: stock.ticker,
-            name: stock.name,
-            industry: stock.industry,
-            marketCap: stock.marketCap,
-            beta: stock.beta,
-            esgScore: stock.esgScore
-          });
-          
-          aiAnalysis = await Promise.race([apiPromise, timeoutPromise]) as { sentimentSummary: string; riskLevel: string; beginnerFriendly: boolean };
-        } catch (error) {
-          console.error(`Failed to generate AI summary for ${stock.ticker}:`, error);
-          // Fallback to basic summary if AI fails
-          aiAnalysis = {
-            sentimentSummary: `${stock.name} is a ${stock.industry.toLowerCase()} company with ${stock.beta <= 1.0 ? 'lower' : 'higher'} volatility, suitable for ${stock.beta <= 1.0 ? 'conservative' : 'more experienced'} investors.`,
-            riskLevel: stock.beta <= 1.0 ? 'low' : stock.beta <= 1.5 ? 'medium' : 'high',
-            beginnerFriendly: stock.beta <= 1.5
-          };
-        }
-        
-        // Generate mock price data for chart
-        const chartData = generateMockPriceData(stock.ticker, basePrice);
-        
-        const card = {
-          ticker: stock.ticker,
-          name: stock.name,
-          logoUrl: `https://api.dicebear.com/7.x/identicon/svg?seed=${stock.ticker}`, // Generate consistent logo
-          hook: stock.hook,
-          metric: `Market Cap: $${stock.marketCap}B`,
-          industry: stock.industry,
-          marketCap: stock.marketCap.toString(),
-          beta: stock.beta.toString(),
-          esgScore: stock.esgScore.toString(),
-          price: `$${basePrice.toFixed(2)}`,
-          priceChange: `${isPositive ? '+' : ''}${priceChange.toFixed(1)}%`,
-          sentimentSummary: aiAnalysis.sentimentSummary,
-          chartData: chartData.map(price => price.toString())
-        };
-        
-        return card;
-      });
-      
-      // Wait for all stock cards to be generated in parallel
-      const stockCards = await Promise.all(stockCardPromises);
-      
-      // Store all cards in memory after generation
-      const storagePromises = stockCards.map(card => storage.createStockCard(card));
-      await Promise.all(storagePromises);
-      
-      res.json(stockCards);
+      // Return the selected stocks directly from the database - they already have all the generated data
+      res.json(selectedStocks);
       
     } catch (error) {
       console.error("Error generating stock deck:", error);
