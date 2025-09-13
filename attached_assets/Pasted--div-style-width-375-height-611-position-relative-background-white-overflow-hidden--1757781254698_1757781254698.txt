@@ -1,0 +1,55 @@
+<div style={{width: 375, height: 611, position: 'relative', background: 'white', overflow: 'hidden'}}>
+  <div style={{width: 375, height: 812, left: 0, top: 0, position: 'absolute', background: 'linear-gradient(59deg, #57C30A 0%, white 86%)'}} />
+  <div style={{width: 584.76, height: 394.58, left: -125, top: -122, position: 'absolute', background: '#B6D8B6', borderRadius: 9999}} />
+  <div style={{width: 22.54, height: 21.51, left: 303.74, top: 76.45, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 31.36, height: 19.58, left: 272.56, top: 231.50, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 15.85, height: 24.47, left: 452.56, top: 79.86, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 15.85, height: 24.47, left: 169.35, top: 278.59, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 15.86, height: 24.47, left: 484.25, top: 268.13, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 17.67, height: 26.48, left: 468.76, top: 166.46, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 19.78, height: 37.64, left: 437.15, top: 232.13, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 8.98, height: 11.27, left: 397.03, top: 82.65, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 8.98, height: 11.27, left: 276.99, top: 269.72, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: 493.13, top: 116.48, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: 454.48, top: 327.68, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: 300.24, top: 299.57, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 439.15, top: 134.29, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 350.87, top: 99.01, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 418.18, top: 290.54, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 300.78, top: 193.96, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 503.46, top: 233.55, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: -41.53, top: 219.50, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 11.81, height: 9.32, left: 395.43, top: 140.74, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 9.33, height: 11.86, left: 512.56, top: 334.74, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 10.60, height: 10.77, left: 402.77, top: 151.40, position: 'absolute', background: '#023341'}} />
+  <div style={{width: 13.11, height: 29.58, left: 196.47, top: 88.63, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 31.36, height: 19.58, left: -46.22, top: 283.78, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 15.85, height: 24.47, left: 18.73, top: 79.86, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 15.86, height: 24.47, left: 20.41, top: 438.41, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 17.67, height: 26.48, left: -12.09, top: 169.23, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 18.44, height: 34.23, left: -0.98, top: 344.24, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 19.78, height: 37.64, left: 102.18, top: 145.54, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 8.98, height: 11.27, left: 81.76, top: 95.83, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: -19.87, top: 116.48, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: 44.15, top: 371.56, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: -36.44, top: 466.98, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 11.81, height: 9.76, left: 98.94, top: 220.32, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 11.81, height: 9.76, left: 143.55, top: 138.88, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 9.79, height: 10, left: 36.13, top: 134.29, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 140.11, top: 78.28, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 143.48, top: 177.12, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: -37.07, top: 394.69, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 9.79, height: 10, left: 58.80, top: 485.98, position: 'absolute', background: 'var(--Primary, #57C30A)'}} />
+  <div style={{width: 11.81, height: 9.32, left: 67.40, top: 172.10, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 10.60, height: 10.77, left: 61.28, top: 182.76, position: 'absolute', background: '#023341'}} />
+  <div style={{width: 11.81, height: 9.32, left: 224.96, top: 63.14, position: 'absolute', background: '#B1D671'}} />
+  <div style={{width: 10.60, height: 10.77, left: 218.26, top: 137.98, position: 'absolute', background: '#023341'}} />
+  <img style={{width: 116, height: 139, left: 129, top: 102, position: 'absolute'}} src="https://placehold.co/116x139" />
+  <div style={{width: 311, left: 32, top: 257, position: 'absolute', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 4, display: 'inline-flex'}}>
+    <div style={{alignSelf: 'stretch', textAlign: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'white', fontSize: 30, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 32, letterSpacing: 0.10, wordWrap: 'break-word'}}>Portfolio Created</div>
+    <div style={{alignSelf: 'stretch', paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, borderRadius: 8, justifyContent: 'center', alignItems: 'center', gap: 8, display: 'inline-flex'}}>
+      <div style={{flex: '1 1 0', textAlign: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'white', fontSize: 15, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 20, letterSpacing: 0.10, wordWrap: 'break-word'}}>We’ve created an equually-weighted portfolio of 8 companies you loved</div>
+    </div>
+  </div>
+  <div style={{width: 375, height: 967, left: 0, top: 374, position: 'absolute', background: 'white', borderRadius: 28}} />
+</div>
