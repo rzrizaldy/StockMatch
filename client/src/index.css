@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DIN+Alternate:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -154,8 +155,60 @@
   background: linear-gradient(180deg, #57C30A 0%, white 86%);
 }
 
-/* DIN Alternate font class */
+/* DIN Alternate font classes */
 .font-din {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'DIN Alternate', 'Inter', system-ui, sans-serif;
+}
+
+.font-din-ticker {
+  font-family: 'DIN Alternate', 'Inter', system-ui, sans-serif;
+  font-size: 36px;
   font-weight: 700;
+  line-height: 36px;
+  letter-spacing: 0.72px;
+}
+
+/* Typography classes matching Figma design */
+.text-company-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.26px;
+}
+
+.text-price {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.48px;
+}
+
+.text-price-change {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.26px;
+}
+
+/* Risk indicator circle styles */
+.risk-circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.risk-circle-high {
+  background-color: #EF4444;
+}
+
+.risk-circle-medium {
+  background-color: #F59E0B;
+}
+
+.risk-circle-low {
+  background-color: #10B981;
 }

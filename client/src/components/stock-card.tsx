@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { StockCard as StockCardType } from "@shared/schema";
 import StockChart from "./stock-chart";
-import { Shield, AlertTriangle, Flame, Heart, Sparkles } from "lucide-react";
+import { Heart, Sparkles } from "lucide-react";
 
 interface StockCardProps {
   stock: StockCardType;
@@ -9,6 +9,30 @@ interface StockCardProps {
   onSwipeRight: () => void;
   style?: React.CSSProperties;
 }
+
+// Generate sentiment index (0-100) based on stock data
+const generateSentimentIndex = (stock: StockCardType): number => {
+  // Use ticker and price change to generate a consistent sentiment score
+  const tickerSeed = stock.ticker.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  
+  // Factor in price change if available
+  let changeInfluence = 50; // neutral base
+  if (stock.priceChange && typeof stock.priceChange === 'string') {
+    const cleanedChange = stock.priceChange.replace(/[+%\s]/g, '');
+    const changeValue = parseFloat(cleanedChange);
+    if (!isNaN(changeValue)) {
+      if (stock.priceChange.includes('+')) {
+        changeInfluence = Math.min(85, 50 + Math.abs(changeValue) * 5);
+      } else {
+        changeInfluence = Math.max(15, 50 - Math.abs(changeValue) * 5);
+      }
+    }
+  }
+  
+  // Combine ticker seed with price change influence for consistent but varied scores
+  const baseScore = (tickerSeed % 40) + changeInfluence;
+  return Math.min(100, Math.max(0, Math.round(baseScore)));
+};
 
 // Mock sentiment generator for smooth UX when AI fails
 const getDefaultSentiment = (stock: StockCardType): string => {
@@ -60,6 +84,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
   const [dragDistance, setDragDistance] = useState(0);
   const [isAnimatingLike, setIsAnimatingLike] = useState(false);
   const [isAnimatingPass, setIsAnimatingPass] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const startPosRef = useRef({ x: 0, y: 0 });
 
@@ -171,15 +196,14 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     }
   }, [isDragging]);
 
-  // Get risk indicator with pill styling and icons
+  // Get risk indicator with circle styling matching Figma
   const getRiskIndicator = (industry: string, priceChange?: string) => {
     // Default fallback for missing or invalid price change data
     const defaultRisk = { 
-      bgColor: 'bg-yellow-500', 
-      textColor: 'text-yellow-900', 
-      label: 'Med Risk', 
-      description: 'Moderate volatility',
-      icon: AlertTriangle
+      circleClass: 'risk-circle-medium', 
+      textClass: 'text-amber-600', 
+      label: 'Medium Risk', 
+      description: 'Moderate volatility'
     };
     
     if (!priceChange || typeof priceChange !== 'string' || priceChange.trim() === '') {
@@ -194,32 +218,27 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         return defaultRisk;
       }
       
-      const isPositive = priceChange.includes('+');
-      
-      // Simple risk categorization with icons and solid pill styling
+      // Simple risk categorization with circle indicators
       if (industry.toLowerCase().includes('tech') || Math.abs(changeValue) > 5) {
         return { 
-          bgColor: 'bg-red-500', 
-          textColor: 'text-red-50', 
+          circleClass: 'risk-circle-high', 
+          textClass: 'text-red-600', 
           label: 'High Risk', 
-          description: 'Higher volatility',
-          icon: Flame
+          description: 'Higher volatility'
         };
       } else if (industry.toLowerCase().includes('healthcare') || industry.toLowerCase().includes('utility')) {
         return { 
-          bgColor: 'bg-green-500', 
-          textColor: 'text-green-50', 
+          circleClass: 'risk-circle-low', 
+          textClass: 'text-emerald-600', 
           label: 'Low Risk', 
-          description: 'More stable',
-          icon: Shield
+          description: 'More stable'
         };
       } else {
         return { 
-          bgColor: 'bg-yellow-500', 
-          textColor: 'text-yellow-900', 
-          label: 'Med Risk', 
-          description: 'Moderate volatility',
-          icon: AlertTriangle
+          circleClass: 'risk-circle-medium', 
+          textClass: 'text-amber-600', 
+          label: 'Medium Risk', 
+          description: 'Moderate volatility'
         };
       }
     } catch (error) {
@@ -237,7 +256,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       : 'text-red-600 dark:text-red-400';
   };
 
-  // Function to enhance sentiment text by bolding key terms
+  // Function to enhance sentiment text by bolding key terms - SECURE implementation
   const enhanceSentimentText = (text: string): JSX.Element => {
     const keyTerms = [
       'stable company', 'stability', 'stable', 'lower volatility', 'low volatility',
@@ -247,29 +266,72 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       'expanding market', 'market reach', 'brand recognition', 'consumer loyalty'
     ];
     
-    let enhancedText = text;
-    
     // Sort by length (descending) to avoid partial matches
     const sortedTerms = keyTerms.sort((a, b) => b.length - a.length);
     
+    // Find all matches with their positions
+    const matches: Array<{start: number, end: number, term: string}> = [];
+    
     sortedTerms.forEach(term => {
       const regex = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-      enhancedText = enhancedText.replace(regex, `<strong>$&</strong>`);
+      let match: RegExpExecArray | null;
+      while ((match = regex.exec(text)) !== null) {
+        // Check if this match overlaps with existing matches
+        const overlaps = matches.some(existing => 
+          (match!.index >= existing.start && match!.index < existing.end) ||
+          (match!.index + match![0].length > existing.start && match!.index + match![0].length <= existing.end)
+        );
+        
+        if (!overlaps) {
+          matches.push({
+            start: match.index,
+            end: match.index + match[0].length,
+            term: match[0]
+          });
+        }
+      }
     });
     
-    return <span dangerouslySetInnerHTML={{ __html: enhancedText }} />;
+    // Sort matches by position
+    matches.sort((a, b) => a.start - b.start);
+    
+    // Build React elements array
+    const elements: React.ReactNode[] = [];
+    let lastIndex = 0;
+    
+    matches.forEach((match, index) => {
+      // Add text before the match
+      if (match.start > lastIndex) {
+        elements.push(text.slice(lastIndex, match.start));
+      }
+      
+      // Add the highlighted term
+      elements.push(
+        <strong key={`highlight-${index}`}>{match.term}</strong>
+      );
+      
+      lastIndex = match.end;
+    });
+    
+    // Add remaining text
+    if (lastIndex < text.length) {
+      elements.push(text.slice(lastIndex));
+    }
+    
+    return <span>{elements}</span>;
   };
 
   const riskInfo = getRiskIndicator(stock.industry, stock.priceChange);
   const priceChangeStyle = getPriceChangeStyle(stock.priceChange);
-  const RiskIcon = riskInfo.icon;
+  const sentimentIndex = generateSentimentIndex(stock);
 
   return (
     <div
       ref={cardRef}
-      className="w-full h-[600px] bg-card rounded-2xl shadow-xl border border-border cursor-grab select-none transition-all duration-200 overflow-hidden"
+      className="w-full h-[600px] bg-white rounded-2xl cursor-grab select-none transition-all duration-200 overflow-hidden"
       style={{
         ...style,
+        boxShadow: '0px 8px 24px 0px rgba(0, 0, 0, 0.08)',
         transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out'
       }}
       onMouseDown={handleMouseDown}
@@ -280,30 +342,38 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         {/* Header: Ticker and Risk Indicator */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold text-foreground mb-1 truncate" data-testid={`stock-ticker-${stock.ticker}`}>
+            <h2 className="font-din-ticker text-black mb-1 truncate" data-testid={`stock-ticker-${stock.ticker}`}>
               {stock.ticker}
             </h2>
-            <p className="text-sm text-muted-foreground truncate" data-testid={`stock-name-${stock.ticker}`}>
+            <p className="text-company-name text-gray-600 truncate" data-testid={`stock-name-${stock.ticker}`}>
               {stock.name}
             </p>
           </div>
           <div className="flex-shrink-0">
             <div 
-              className={`${riskInfo.bgColor} ${riskInfo.textColor} px-3 py-2 rounded-full flex items-center gap-2 shadow-sm`}
+              className="flex items-center gap-2"
               title={riskInfo.description}
             >
-              <RiskIcon className="w-3 h-3" />
-              <span className="text-xs font-bold">{riskInfo.label}</span>
+              <div className={`risk-circle ${riskInfo.circleClass}`}></div>
+              <span className={`text-xs font-medium ${riskInfo.textClass}`}>{riskInfo.label}</span>
             </div>
           </div>
         </div>
 
-        {/* Price and Change */}
+        {/* Price, Change and Sentiment Index */}
         <div className="mb-4">
-          <div className="text-3xl font-bold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
-            {stock.price || '$150.25'}
+          <div className="flex items-end justify-between mb-1">
+            <div className="text-price text-black" data-testid={`stock-price-${stock.ticker}`}>
+              {stock.price || '$150.25'}
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-gray-500 mb-1">Sentiment</div>
+              <div className="text-sm font-semibold text-black" data-testid={`sentiment-index-${stock.ticker}`}>
+                {sentimentIndex}/100
+              </div>
+            </div>
           </div>
-          <div className={`text-sm font-medium ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
+          <div className={`text-price-change ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
             {stock.priceChange || '+2.5%'}
           </div>
         </div>
@@ -318,17 +388,17 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
               ticker={stock.ticker}
             />
           ) : (
-            <div className="bg-muted/30 rounded-lg p-3 border border-border/30 h-20 flex items-center justify-center">
-              <span className="text-xs text-muted-foreground">Chart data loading...</span>
+            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200 h-20 flex items-center justify-center">
+              <span className="text-xs text-gray-500">Chart data loading...</span>
             </div>
           )}
         </div>
 
         {/* AI Sentiment Summary */}
         <div className="flex-1 flex flex-col justify-center min-h-0">
-          <div className="bg-muted/50 rounded-lg p-4 border border-border/50 h-full flex flex-col">
-            <h4 className="text-xs font-medium text-muted-foreground mb-2">Why this might interest you:</h4>
-            <div className="text-sm text-foreground leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 h-full flex flex-col">
+            <h4 className="text-xs font-medium text-gray-600 mb-2">Why this might interest you:</h4>
+            <div className="text-sm text-gray-900 leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
               {enhanceSentimentText(stock.sentimentSummary || stock.hook || getDefaultSentiment(stock))}
             </div>
           </div>
@@ -336,24 +406,16 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
 
         {/* Company Logo at Bottom */}
         <div className="mt-4 flex justify-center flex-shrink-0">
-          <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-            {stock.logoUrl ? (
+          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            {stock.logoUrl && !logoError ? (
               <img 
                 src={stock.logoUrl} 
                 alt={`${stock.name} logo`} 
                 className="w-6 h-6 rounded object-contain"
-                onError={(e) => {
-                  // Fallback to ticker if logo fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const parent = target.parentElement;
-                  if (parent) {
-                    parent.innerHTML = `<span class="text-sm font-bold text-muted-foreground">${stock.ticker.charAt(0)}</span>`;
-                  }
-                }}
+                onError={() => setLogoError(true)}
               />
             ) : (
-              <span className="text-sm font-bold text-muted-foreground">{stock.ticker.charAt(0)}</span>
+              <span className="text-sm font-bold text-gray-600">{stock.ticker.charAt(0)}</span>
             )}
           </div>
         </div>
@@ -365,7 +427,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
           dragDirection === 'right' && dragDistance > 50 ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
         }`}
       >
-        <div className="bg-secondary/20 border-2 border-secondary text-secondary px-3 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 animate-pulse">
+        <div className="bg-green-100 border-2 border-green-500 text-green-700 px-3 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 animate-pulse">
           <Heart className="w-3 h-3 fill-current" />
           LIKE
         </div>
@@ -375,7 +437,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
           dragDirection === 'left' && dragDistance > 50 ? 'opacity-100 scale-110' : 'opacity-0 scale-100'
         }`}
       >
-        <div className="bg-destructive/20 border-2 border-destructive text-destructive px-3 py-2 rounded-full text-xs font-bold animate-pulse">
+        <div className="bg-red-100 border-2 border-red-500 text-red-700 px-3 py-2 rounded-full text-xs font-bold animate-pulse">
           PASS
         </div>
       </div>
@@ -385,15 +447,15 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
           {/* Main Heart */}
           <div className="relative animate-ping">
-            <Heart className="w-20 h-20 text-secondary fill-current animate-bounce" />
+            <Heart className="w-20 h-20 text-green-500 fill-current animate-bounce" />
           </div>
           {/* Burst Hearts */}
           <div className="absolute animate-pulse">
-            <Heart className="w-8 h-8 text-secondary fill-current absolute -top-8 -left-8 animate-bounce" style={{ animationDelay: '0.1s' }} />
-            <Heart className="w-6 h-6 text-secondary fill-current absolute -top-12 left-8 animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <Heart className="w-10 h-10 text-secondary fill-current absolute top-8 -right-8 animate-bounce" style={{ animationDelay: '0.15s' }} />
-            <Heart className="w-4 h-4 text-secondary fill-current absolute -bottom-6 -left-6 animate-bounce" style={{ animationDelay: '0.25s' }} />
-            <Heart className="w-7 h-7 text-secondary fill-current absolute bottom-6 right-6 animate-bounce" style={{ animationDelay: '0.05s' }} />
+            <Heart className="w-8 h-8 text-green-500 fill-current absolute -top-8 -left-8 animate-bounce" style={{ animationDelay: '0.1s' }} />
+            <Heart className="w-6 h-6 text-green-500 fill-current absolute -top-12 left-8 animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <Heart className="w-10 h-10 text-green-500 fill-current absolute top-8 -right-8 animate-bounce" style={{ animationDelay: '0.15s' }} />
+            <Heart className="w-4 h-4 text-green-500 fill-current absolute -bottom-6 -left-6 animate-bounce" style={{ animationDelay: '0.25s' }} />
+            <Heart className="w-7 h-7 text-green-500 fill-current absolute bottom-6 right-6 animate-bounce" style={{ animationDelay: '0.05s' }} />
           </div>
           {/* Sparkles */}
           <div className="absolute animate-spin">
@@ -408,9 +470,9 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       {isAnimatingPass && (
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-destructive rounded-full animate-ping" />
+            <div className="w-16 h-16 border-4 border-red-500 rounded-full animate-ping" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-destructive font-bold text-lg">✕</span>
+              <span className="text-red-500 font-bold text-lg">✕</span>
             </div>
           </div>
         </div>
