@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { X, Calendar, Plane, Building, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
+import { ArrowLeft, Calendar, Plane, Building, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
 import { BullMascot, BearMascot } from "@/components/mascot";
 import type { UserProfile } from "@/pages/quiz";
 
@@ -87,56 +87,59 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50" data-testid="quiz-modal">
-      {/* Modal Background */}
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={handleClose}></div>
+    <div className="fixed inset-0 z-50" data-testid="quiz-modal" style={{
+      background: 'linear-gradient(180deg, #57C30A 0%, white 86%)'
+    }}>
+      {/* Header with back button and title */}
+      <div className="px-6 pt-9 pb-0">
+        {/* Back button */}
+        <div className="mb-8">
+          <button 
+            onClick={handleClose}
+            className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-2xl flex items-center justify-center hover:bg-black/40 transition-colors"
+            data-testid="button-close-quiz"
+          >
+            <ArrowLeft className="w-5 h-5 text-white" />
+          </button>
+        </div>
+        
+        {/* Title */}
+        <div className="mb-8">
+          <h1 className="text-white text-[30px] font-din font-bold leading-8 tracking-[0.1px] mb-6" 
+              style={{fontFamily: 'DIN Alternate, sans-serif'}}>
+            Your investing personality check
+          </h1>
+        </div>
+      </div>
       
-      {/* Modal Content */}
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden" style={{maxWidth: '375px'}}>
-          
-          {/* Progress Header */}
-          <div className="px-6 pt-4 pb-2">
-            <div className="flex justify-end items-center mb-4">
-              <button 
-                onClick={handleClose} 
-                className="text-muted-foreground hover:text-foreground"
-                data-testid="button-close-quiz"
-              >
-                <X className="w-5 h-5" />
-              </button>
+      {/* Main content card */}
+      <div className="px-6">
+        <div className="bg-white rounded-2xl shadow-lg mx-auto" style={{maxWidth: '375px'}}>
+          {/* Mascot positioned outside card */}
+          <div className="absolute top-10 right-6" style={{zIndex: 10}}>
+            <div className="w-24 h-32">
+              <BullMascot size="quiz" className="w-full h-full" />
             </div>
-            
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-3 mt-4" style={{background: '#E5E5E5'}}>
+          </div>
+          
+          {/* Progress Bar inside card */}
+          <div className="px-5 pt-4 pb-2">
+            <div className="w-full bg-gray-200 rounded-full h-3" style={{background: '#E5E5E5'}}>
               <div 
                 className="h-3 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%`, background: '#57C30A' }}
                 data-testid="progress-quiz"
               />
             </div>
-            <p className="text-sm text-muted-foreground mt-2" data-testid="text-quiz-step">
-              {currentStep} of 4
-            </p>
           </div>
           
           {/* Quiz Steps */}
-          <div className="px-7 py-4 space-y-6">
-            
-            {/* Bull Mascot - appears on all steps */}
-            <div className="flex items-center mb-6">
-              <div className="w-20 h-28 mr-4">
-                <BullMascot size="quiz" className="w-full h-full" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.48px'}}>Your investing personality check</h3>
-              </div>
-            </div>
+          <div className="px-5 py-6 space-y-6">
             
             {/* Step 1: Money Goal */}
             {currentStep === 1 && (
               <div data-testid="quiz-step-1">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>Your money goal?</h4>
+                <h4 className="text-black text-[20px] font-bold mb-6 font-din leading-7 tracking-[0.4px]" style={{fontFamily: 'DIN Alternate, sans-serif'}}>Your money goal?</h4>
                 <div className="space-y-4">
                   <button
                     onClick={() => handleRiskSelect('short-term')}
@@ -198,7 +201,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 2: Industry Preferences */}
             {currentStep === 2 && (
               <div data-testid="quiz-step-2">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>What industries excite you?</h4>
+                <h4 className="text-black text-[20px] font-bold mb-6 font-din leading-7 tracking-[0.4px]" style={{fontFamily: 'DIN Alternate, sans-serif'}}>What industries excite you?</h4>
                 <p className="text-sm text-muted-foreground mb-4">Select all that interest you</p>
                 <div className="grid grid-cols-2 gap-3">
                   {industries.map((industry) => {
@@ -228,7 +231,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 3: ESG Preferences */}
             {currentStep === 3 && (
               <div data-testid="quiz-step-3">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>Do you value social impact?</h4>
+                <h4 className="text-black text-[20px] font-bold mb-6 font-din leading-7 tracking-[0.4px]" style={{fontFamily: 'DIN Alternate, sans-serif'}}>Do you value social impact?</h4>
                 <p className="text-sm text-muted-foreground mb-6">
                   Would you like us to prioritize companies with strong environmental, social, and governance practices?
                 </p>
@@ -276,47 +279,45 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 4: Investment Amount */}
             {currentStep === 4 && (
               <div data-testid="quiz-step-4">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>How much should you invest today?</h4>
-                <p className="text-sm text-muted-foreground mb-6">
-                  Enter the amount you're comfortable investing to get personalized projections.
-                </p>
+                <h4 className="text-black text-[20px] font-bold mb-8 font-din leading-7 tracking-[0.4px]" 
+                    style={{fontFamily: 'DIN Alternate, sans-serif'}}>How much are you <br/>starting with?</h4>
                 
                 <div className="space-y-6">
+                  {/* Custom input field matching Figma */}
                   <div className="relative">
-                    <div className="relative">
+                    <div className="w-full p-6 rounded-xl border border-[#BACBB6] border-opacity-55 flex items-end gap-2">
+                      <div className="text-black text-[40px] font-normal leading-10 tracking-[0.8px]" 
+                           style={{fontFamily: 'Inter, sans-serif'}}>$</div>
                       <input
                         type="number"
                         min="10"
                         max="1000000"
                         step="10"
-                        value={profile.investmentAmount}
-                        onChange={(e) => handleInvestmentAmountChange(Number(e.target.value))}
-                        className="w-full text-3xl font-bold text-center py-6 px-8 border-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border-primary focus:border-primary focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-xl"
-                        placeholder="10000"
+                        value={profile.investmentAmount === 10000 ? '' : profile.investmentAmount}
+                        onChange={(e) => handleInvestmentAmountChange(Number(e.target.value) || 10)}
+                        className="flex-1 text-[40px] font-normal leading-10 tracking-[0.8px] bg-transparent border-0 border-b border-[#BBCBB6] focus:outline-none focus:border-[#57C30A] text-black"
+                        placeholder=""
                         data-testid="input-investment-amount"
-                        style={{borderColor: '#57C30A', color: '#57C30A'}}
+                        style={{fontFamily: 'Inter, sans-serif'}}
                       />
-                      <div className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-bold pointer-events-none" style={{color: '#57C30A'}}>
-                        $
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        Minimum: $10 • Maximum: $1,000,000
-                      </p>
                     </div>
                     
                     {/* Quick Amount Buttons */}
-                    <div className="grid grid-cols-3 gap-2 mt-4">
-                      {[1000, 5000, 10000, 25000, 50000, 100000].map((amount) => (
+                    <div className="flex flex-wrap gap-3 mt-6">
+                      {[100, 250, 500, 1000].map((amount) => (
                         <button
                           key={amount}
                           onClick={() => handleInvestmentAmountChange(amount)}
-                          className={`p-2 text-sm border rounded-md hover:border-primary hover:bg-primary/5 transition-colors ${
-                            profile.investmentAmount === amount ? 'border-primary bg-primary/10' : 'border-border'
-                          }`}
+                          className="px-2 py-1 rounded-2xl border border-gray-500 border-opacity-55 hover:border-[#57C30A] hover:bg-[#57C30A]/5 transition-colors"
                           data-testid={`button-amount-${amount}`}
+                          style={{
+                            color: 'black',
+                            fontSize: '12px',
+                            fontFamily: 'Inter, sans-serif',
+                            fontWeight: '400',
+                            lineHeight: '16px',
+                            letterSpacing: '1.44px'
+                          }}
                         >
                           ${amount.toLocaleString()}
                         </button>
@@ -329,12 +330,12 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           </div>
           
           {/* Modal Footer */}
-          <div className="px-7 pb-6 pt-4">
+          <div className="px-5 pb-6 pt-8">
             <div className="flex space-x-3">
               {currentStep > 1 && (
                 <button
                   onClick={handleBack}
-                  className="flex-1 bg-muted text-muted-foreground py-3 px-4 rounded-lg font-medium hover:bg-muted/80 transition-colors"
+                  className="flex-1 bg-gray-100 text-gray-600 py-3 px-4 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                   data-testid="button-quiz-back"
                 >
                   Back
@@ -345,9 +346,15 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className="flex-1 bg-primary text-primary-foreground py-4 px-6 rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors text-[16px]"
+                  className="flex-1 py-4 px-6 rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#4BAE08] transition-colors text-white text-[16px]"
                   data-testid="button-quiz-next"
-                  style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.15px'}}
+                  style={{
+                    background: '#57C30A',
+                    fontFamily: 'Inter, sans-serif', 
+                    fontWeight: '500',
+                    lineHeight: '24px',
+                    letterSpacing: '0.15px'
+                  }}
                 >
                   Keep Going
                 </button>
@@ -355,8 +362,15 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 <button
                   onClick={handleFinish}
                   disabled={isLoading || !canProceed()}
-                  className="flex-1 bg-secondary text-secondary-foreground py-3 px-4 rounded-lg font-medium hover:bg-secondary/90 transition-colors disabled:opacity-50"
+                  className="flex-1 py-4 px-6 rounded-full font-medium hover:bg-[#4BAE08] transition-colors disabled:opacity-50 text-white"
                   data-testid="button-quiz-finish"
+                  style={{
+                    background: '#57C30A',
+                    fontFamily: 'Inter, sans-serif', 
+                    fontWeight: '500',
+                    lineHeight: '24px',
+                    letterSpacing: '0.15px'
+                  }}
                 >
                   {isLoading ? 'Finding Matches...' : 'Find My Matches'}
                 </button>
@@ -364,18 +378,18 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             </div>
           </div>
         </div>
-        
-        {/* Loading Overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 rounded-xl">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-              <h3 className="text-lg font-semibold">Finding your matches...</h3>
-              <p className="text-muted-foreground">Analyzing your preferences</p>
-            </div>
-          </div>
-        )}
       </div>
+      
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 rounded-xl">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+            <h3 className="text-lg font-semibold">Finding your matches...</h3>
+            <p className="text-muted-foreground">Analyzing your preferences</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

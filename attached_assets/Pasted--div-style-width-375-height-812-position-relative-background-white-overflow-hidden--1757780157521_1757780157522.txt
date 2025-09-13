@@ -1,0 +1,40 @@
+<div style={{width: 375, height: 812, position: 'relative', background: 'white', overflow: 'hidden'}}>
+  <div style={{width: 375, height: 737, left: 0, top: 0, position: 'absolute', background: 'linear-gradient(180deg, #57C30A 0%, white 86%)'}} />
+  <img style={{width: 102, height: 146, left: 250, top: 40, position: 'absolute', boxShadow: '2px 4px 5.699999809265137px rgba(0, 0, 0, 0.25)'}} src="https://placehold.co/102x146" />
+  <div style={{width: 327, height: 394, left: 24, top: 186, position: 'absolute', background: 'white', boxShadow: '0px 4px 4px -4px rgba(12, 12, 13, 0.05)', borderRadius: 16}} />
+  <div style={{width: 287, height: 12, left: 44, top: 202, position: 'absolute', background: '#E5E5E5', borderRadius: 16}} />
+  <div style={{width: 287, height: 12, left: 44, top: 202, position: 'absolute', background: '#57C30A', borderRadius: 16}} />
+  <div style={{left: 44, top: 246, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 28, letterSpacing: 0.40, wordWrap: 'break-word'}}>How much are you <br/>starting with?</div>
+  <div style={{width: 287, padding: 24, left: 44, top: 327, position: 'absolute', borderRadius: 12, outline: '1px rgba(186.55, 203.07, 182.41, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 8, display: 'inline-flex'}}>
+    <div style={{color: 'black', fontSize: 40, fontFamily: 'Inter', fontWeight: '400', lineHeight: 40, letterSpacing: 0.80, wordWrap: 'break-word'}}>$</div>
+    <div style={{flex: '1 1 0', height: 0, outline: '1px #BBCBB6 solid', outlineOffset: '-0.50px'}}></div>
+  </div>
+  <div style={{left: 61, top: 435, position: 'absolute', justifyContent: 'flex-start', alignItems: 'center', gap: 12, display: 'inline-flex'}}>
+    <div style={{paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, borderRadius: 16, outline: '1px rgba(128, 128, 128, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 8, display: 'flex'}}>
+      <div style={{color: 'black', fontSize: 12, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 1.44, wordWrap: 'break-word'}}>$100 </div>
+    </div>
+    <div style={{paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, borderRadius: 16, outline: '1px rgba(128, 128, 128, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 8, display: 'flex'}}>
+      <div style={{color: 'black', fontSize: 12, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 1.44, wordWrap: 'break-word'}}>$250 </div>
+    </div>
+    <div style={{paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, borderRadius: 16, outline: '1px rgba(128, 128, 128, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 8, display: 'flex'}}>
+      <div style={{color: 'black', fontSize: 12, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 1.44, wordWrap: 'break-word'}}>$500 </div>
+    </div>
+    <div style={{paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4, borderRadius: 16, outline: '1px rgba(128, 128, 128, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 8, display: 'flex'}}>
+      <div style={{color: 'black', fontSize: 12, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 1.44, wordWrap: 'break-word'}}>$1,000 </div>
+    </div>
+  </div>
+  <div data-show-focus-indicator="false" data-show-icon="false" data-size="Medium" data-state="Enabled" data-type="Round" style={{width: 323, left: 28, top: 647, position: 'absolute', justifyContent: 'center', alignItems: 'center', display: 'inline-flex'}}>
+    <div style={{flex: '1 1 0', background: '#57C30A', overflow: 'hidden', borderRadius: 100, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+      <div style={{paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, justifyContent: 'center', alignItems: 'center', gap: 8, display: 'flex'}}>
+        <div style={{justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'var(--Schemes-On-Primary, white)', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', lineHeight: 24, letterSpacing: 0.15, wordWrap: 'break-word'}}>Find My Matches</div>
+      </div>
+    </div>
+  </div>
+  <div style={{width: 250, left: 24, top: 90, position: 'absolute', justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'white', fontSize: 30, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 32, letterSpacing: 0.10, wordWrap: 'break-word'}}>Your investing personality check</div>
+  <div style={{width: 40, height: 40, padding: 4, left: 24, top: 36, position: 'absolute', background: 'var(--Miscellaneous-Bar-border, rgba(0, 0, 0, 0.30))', borderRadius: 16, justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex'}}>
+    <div data-style="Linear" style={{width: 32, height: 32, position: 'relative'}}>
+      <div style={{width: 8.09, height: 16.19, left: 4.67, top: 7.91, position: 'absolute', outline: '1.50px white solid', outlineOffset: '-0.75px'}} />
+      <div style={{width: 32, height: 32, left: 32, top: 32, position: 'absolute', transform: 'rotate(-180deg)', transformOrigin: 'top left', opacity: 0}} />
+    </div>
+  </div>
+</div>
