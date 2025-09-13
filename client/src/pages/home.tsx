@@ -3,6 +3,8 @@ import bullMascotImage from "@assets/home bull_1757793533798.png";
 import stockMatchLogo from "@assets/image_1757787406146.png";
 import backgroundOverlay from "@assets/image_1757787667608.png";
 
+import Bull_Read from "@assets/Bull Read.png";
+
 export default function Home() {
   return (
     <div className="w-full h-screen relative bg-[#8BC34A] overflow-hidden">
@@ -82,7 +84,7 @@ export default function Home() {
           {/* Bull Mascot positioned on the card */}
           <div className="absolute -bottom-8 -right-8 z-10">
             <img 
-              src={bullMascotImage}
+              src={Bull_Read}
               alt="StockMatch Bull Mascot"
               className="w-32 h-32"
             />
