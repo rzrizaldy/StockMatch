@@ -81,14 +81,7 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Bull Mascot positioned on the card */}
-          <div className="absolute -bottom-8 -right-8 z-10">
-            <img 
-              src={Bull_Read}
-              alt="StockMatch Bull Mascot"
-              className="w-32 h-32"
-            />
-          </div>
+          
         </div>
         
         {/* Get Started Button */}
