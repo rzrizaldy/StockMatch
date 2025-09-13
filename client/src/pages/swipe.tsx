@@ -200,7 +200,7 @@ export default function Swipe() {
       </div>
       
       {/* Card Stack Container */}
-      <div className="flex-1 flex items-center justify-center px-4 pt-32 pb-6">
+      <div className="flex-1 flex items-center justify-center px-4 pt-40 pb-6">
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-6 text-white" data-testid="state-no-cards">
