@@ -237,7 +237,7 @@ export default function Portfolio() {
           <div className="bg-card rounded-xl border border-border p-6">
             <h3 className="font-semibold text-lg mb-4" data-testid="text-selected-companies">Your Selected Companies</h3>
             <div className="space-y-3" data-testid="list-selected-companies">
-              {stocks.map((stock, index) => (
+              {stocks.map((stock) => (
                 <div key={stock.ticker} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg" data-testid={`company-${stock.ticker}`}>
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
