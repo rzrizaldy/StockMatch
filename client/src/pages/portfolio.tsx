@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { CheckCircle, RefreshCw, ExternalLink, FileSpreadsheet, Share2, Info, TrendingUp, TrendingDown, AlertTriangle, Target, Heart } from "lucide-react";
+import bullImage from "@assets/image_1757781285111.png";
 import PortfolioChart from "@/components/portfolio-chart";
 import CompactSparkline from "@/components/compact-sparkline";
 import { BullMascot, BearMascot } from "@/components/mascot";
@@ -204,360 +205,416 @@ export default function Portfolio() {
   const aiSummary = generateAISummary();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <BullMascot size="sm" />
-              <h1 className="text-xl font-semibold" data-testid="text-portfolio-title">Your StockMatch Portfolio</h1>
-            </div>
-            <button
-              onClick={handleReset}
-              className="text-muted-foreground hover:text-foreground"
-              data-testid="button-reset-header"
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Green Gradient Background with Decorative Elements */}
+      <div 
+        className="absolute inset-0" 
+        style={{ background: 'linear-gradient(59deg, #57C30A 0%, white 86%)' }}
+      >
+        {/* Large Background Circle */}
+        <div className="absolute w-[584px] h-[394px] -left-32 -top-32 bg-green-200 rounded-full opacity-30"></div>
+        
+        {/* Scattered Green Decorative Elements */}
+        <div className="absolute w-6 h-5 bg-primary rounded transform rotate-12" style={{ left: '304px', top: '76px' }}></div>
+        <div className="absolute w-8 h-5 bg-primary rounded" style={{ left: '273px', top: '232px' }}></div>
+        <div className="absolute w-4 h-6 bg-primary rounded" style={{ left: '453px', top: '80px' }}></div>
+        <div className="absolute w-4 h-6 bg-primary rounded" style={{ left: '169px', top: '279px' }}></div>
+        <div className="absolute w-4 h-6 bg-primary rounded" style={{ left: '484px', top: '268px' }}></div>
+        <div className="absolute w-4 h-7 bg-primary rounded" style={{ left: '469px', top: '166px' }}></div>
+        <div className="absolute w-5 h-10 bg-primary rounded" style={{ left: '437px', top: '232px' }}></div>
+        <div className="absolute w-3 h-3 bg-green-300 rounded" style={{ left: '397px', top: '83px' }}></div>
+        <div className="absolute w-3 h-3 bg-green-300 rounded" style={{ left: '277px', top: '270px' }}></div>
+        <div className="absolute w-3 h-2 bg-green-300 rounded" style={{ left: '493px', top: '116px' }}></div>
+        <div className="absolute w-3 h-2 bg-green-300 rounded" style={{ left: '454px', top: '328px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '300px', top: '300px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '439px', top: '134px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '351px', top: '99px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '418px', top: '291px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '301px', top: '194px' }}></div>
+        <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '503px', top: '234px' }}></div>
+      </div>
+      
+      {/* Top Reset Button */}
+      <div className="absolute top-6 right-6 z-50">
+        <button
+          onClick={handleReset}
+          className="text-white/80 hover:text-white bg-white/10 rounded-lg p-2 backdrop-blur-sm"
+          data-testid="button-reset-header"
+        >
+          <RefreshCw className="w-5 h-5" />
+        </button>
+      </div>
+      
+      {/* Bull Character */}
+      <div className="absolute z-10" style={{ left: '129px', top: '102px' }}>
+        <img 
+          src={bullImage} 
+          alt="Bull Character" 
+          style={{ width: '116px', height: '139px' }}
+        />
+      </div>
+      
+      {/* Header Text */}
+      <div className="absolute left-8 right-8 z-20" style={{ top: '257px' }}>
+        <div className="flex flex-col items-center gap-1">
+          <h1 
+            className="font-din text-white text-center font-bold leading-8 tracking-wide" 
+            style={{ fontSize: '30px' }}
+            data-testid="text-portfolio-title"
+          >
+            Portfolio Created
+          </h1>
+          <div className="px-4 py-2 rounded-lg">
+            <p 
+              className="font-din text-white text-center font-bold leading-5 tracking-wide" 
+              style={{ fontSize: '15px' }}
+              data-testid="text-portfolio-subtitle"
             >
-              <RefreshCw className="w-5 h-5" />
-            </button>
+              We've created an equally-weighted portfolio of {stockCount} companies you loved
+            </p>
           </div>
         </div>
       </div>
       
-      <div className="p-6 space-y-8">
-        {/* Success Message */}
-        <div className="text-center space-y-4 fade-in" data-testid="section-success">
-          <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto">
-            <CheckCircle className="w-10 h-10 text-secondary" />
+      {/* White Content Section */}
+      <div 
+        className="absolute inset-x-0 bg-white rounded-t-3xl overflow-y-auto" 
+        style={{ top: '374px', height: 'calc(100vh - 374px)' }}
+      >
+        <div className="px-6 py-8 space-y-6">
+          
+          {/* Success Message Card */}
+          <div className="text-center space-y-4 fade-in" data-testid="section-success">
+            <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-10 h-10 text-secondary" />
+            </div>
+            <h2 className="font-din text-2xl font-bold">🎉 Success!</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Your personalized portfolio is ready with {stockCount} carefully selected companies.
+            </p>
           </div>
-          <h2 className="text-2xl font-bold">Portfolio Created! 🎉</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Based on your preferences, we've created an equally-weighted portfolio of{' '}
-            <span className="font-semibold" data-testid="text-stock-count">{stockCount}</span> companies you loved.
-          </p>
-        </div>
-        
-        {/* Historical Performance Section */}
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center" data-testid="text-performance-title">
-              <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
-              📈 Historical Performance
-            </h3>
-            
-            <div className="space-y-4">
-              <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Your portfolio would have returned</p>
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400" data-testid="text-portfolio-return">
-                  {mockPerformance.portfolioReturn}%
-                </div>
-                <p className="text-sm text-muted-foreground">annually over the past 5 years</p>
+          
+          {/* Portfolio Value Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-card rounded-xl border border-border p-6 text-center">
+              <div className="text-2xl font-bold text-primary" data-testid="text-portfolio-value">
+                ${parseInt(portfolio.totalValue).toLocaleString()}
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground">vs S&P 500</div>
-                  <div className="text-xl font-semibold" data-testid="text-sp500-comparison">
-                    {mockPerformance.sp500Return}%
-                  </div>
-                </div>
-                <div className="text-center p-3 bg-muted/50 rounded-lg">
-                  <div className="text-sm text-muted-foreground">vs NASDAQ</div>
-                  <div className="text-xl font-semibold" data-testid="text-nasdaq-comparison">
-                    {mockPerformance.nasdaqReturn}%
-                  </div>
-                </div>
+              <div className="text-sm text-muted-foreground">Portfolio Value</div>
+            </div>
+            <div className="bg-card rounded-xl border border-border p-6 text-center">
+              <div className="text-2xl font-bold text-secondary" data-testid="text-company-count">
+                {stockCount}
               </div>
+              <div className="text-sm text-muted-foreground">Companies</div>
+            </div>
+          </div>
+
+          {/* Historical Performance Section */}
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6">
+              <h3 className="font-din text-lg font-semibold mb-4 flex items-center" data-testid="text-performance-title">
+                <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
+                Historical Performance
+              </h3>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                  <div className="text-sm text-muted-foreground">Best Year</div>
-                  <div className="font-semibold text-green-600 dark:text-green-400" data-testid="text-best-year">
-                    +{mockPerformance.bestYear.return}% ({mockPerformance.bestYear.year})
+              <div className="space-y-4">
+                <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">Your portfolio would have returned</p>
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400" data-testid="text-portfolio-return">
+                    {mockPerformance.portfolioReturn}%
+                  </div>
+                  <p className="text-sm text-muted-foreground">annually over the past 5 years</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground">vs S&P 500</div>
+                    <div className="text-xl font-semibold" data-testid="text-sp500-comparison">
+                      {mockPerformance.sp500Return}%
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-muted/50 rounded-lg">
+                    <div className="text-sm text-muted-foreground">vs NASDAQ</div>
+                    <div className="text-xl font-semibold" data-testid="text-nasdaq-comparison">
+                      {mockPerformance.nasdaqReturn}%
+                    </div>
                   </div>
                 </div>
-                <div className="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
-                  <div className="text-sm text-muted-foreground">Worst Year</div>
-                  <div className="font-semibold text-red-600 dark:text-red-400" data-testid="text-worst-year">
-                    {mockPerformance.worstYear.return}% ({mockPerformance.worstYear.year})
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    <div className="text-sm text-muted-foreground">Best Year</div>
+                    <div className="font-semibold text-green-600 dark:text-green-400" data-testid="text-best-year">
+                      +{mockPerformance.bestYear.return}% ({mockPerformance.bestYear.year})
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
+                    <div className="text-sm text-muted-foreground">Worst Year</div>
+                    <div className="font-semibold text-red-600 dark:text-red-400" data-testid="text-worst-year">
+                      {mockPerformance.worstYear.return}% ({mockPerformance.worstYear.year})
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* AI Investment Summary */}
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center" data-testid="text-ai-summary-title">
-              🤖 Your Investment Summary
-            </h3>
-            
-            <div className="space-y-4">
-              <p className="text-muted-foreground leading-relaxed" data-testid="text-ai-summary">
-                {aiSummary.summary}
-              </p>
+          {/* AI Investment Summary */}
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6">
+              <h3 className="font-din text-lg font-semibold mb-4 flex items-center" data-testid="text-ai-summary-title">
+                🤖 Your Investment Summary
+              </h3>
               
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">Key Insights:</h4>
-                <ul className="space-y-1">
-                  {aiSummary.insights.map((insight, index) => (
-                    <li key={index} className="text-sm text-muted-foreground flex items-start" data-testid={`insight-${index}`}>
-                      <span className="text-primary mr-2">•</span>
-                      {insight}
-                    </li>
-                  ))}
-                </ul>
+              <div className="space-y-4">
+                <p className="text-muted-foreground leading-relaxed" data-testid="text-ai-summary">
+                  {aiSummary.summary}
+                </p>
+                
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Key Insights:</h4>
+                  <ul className="space-y-1">
+                    {aiSummary.insights.map((insight, index) => (
+                      <li key={index} className="text-sm text-muted-foreground flex items-start" data-testid={`insight-${index}`}>
+                        <span className="text-primary mr-2">•</span>
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Expectation Setting */}
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center" data-testid="text-expectations-title">
-              <Target className="w-5 h-5 mr-2 text-blue-500" />
-              💡 What to Expect
-            </h3>
-            
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                If you invest ${baseInvestment.toLocaleString()} today, based on historical patterns:
-              </p>
+          {/* Expectation Setting */}
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6">
+              <h3 className="font-din text-lg font-semibold mb-4 flex items-center" data-testid="text-expectations-title">
+                <Target className="w-5 h-5 mr-2 text-blue-500" />
+                What to Expect
+              </h3>
               
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  If you invest ${baseInvestment.toLocaleString()} today, based on historical patterns:
+                </p>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div>
+                      <div className="font-medium">1 Year</div>
+                      <div className="text-xs text-muted-foreground">Conservative estimate</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold" data-testid="text-1year-projection">
+                        ${expectations.oneYear.low.toLocaleString()} - ${expectations.oneYear.high.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div>
+                      <div className="font-medium">5 Years</div>
+                      <div className="text-xs text-muted-foreground">Compound growth</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold" data-testid="text-5year-projection">
+                        ${expectations.fiveYear.low.toLocaleString()} - ${expectations.fiveYear.high.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                    <div>
+                      <div className="font-medium">10 Years</div>
+                      <div className="text-xs text-muted-foreground">Long-term potential</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold" data-testid="text-10year-projection">
+                        ${expectations.tenYear.low.toLocaleString()} - ${expectations.tenYear.high.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
+                  <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                  <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                    Past performance doesn't guarantee future results
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Portfolio Visualization */}
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6">
+              <h3 className="font-din text-lg font-semibold mb-4" data-testid="text-allocation-title">Portfolio Allocation</h3>
+              
+              {/* Chart Container */}
+              <div className="relative h-64 mb-6">
+                <PortfolioChart data={chartData} />
+              </div>
+            </div>
+          </div>
+          
+          {/* Liked Stocks List */}
+          <div className="bg-card rounded-xl shadow-sm border border-border">
+            <div className="p-6">
+              <h3 className="font-din text-lg font-semibold mb-4" data-testid="text-selected-companies">Your Selected Companies</h3>
+              
+              <div className="overflow-x-auto" data-testid="list-liked-stocks">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-3 px-4 font-medium text-sm text-muted-foreground">Company</th>
+                      <th className="text-center py-3 px-4 font-medium text-sm text-muted-foreground">7-Day Performance</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation %</th>
+                      <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stocks.map((stock, index) => {
+                      const performanceData = stockPerformanceData[stock.ticker];
+                      return (
+                        <tr
+                          key={stock.ticker}
+                          className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                          data-testid={`stock-item-${stock.ticker}`}
+                        >
+                          {/* Ticker Column */}
+                          <td className="py-4 px-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                {stock.logoUrl ? (
+                                  <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
+                                ) : (
+                                  <span className="text-lg font-bold text-primary">
+                                    {stock.ticker.charAt(0)}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="min-w-0">
+                                <div className="font-medium truncate" data-testid={`stock-name-${stock.ticker}`}>
+                                  {stock.name}
+                                </div>
+                                <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
+                                  {stock.ticker}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          
+                          {/* Sparkline Column */}
+                          <td className="py-4 px-4 text-center">
+                            <div className="flex flex-col items-center space-y-2">
+                              <CompactSparkline 
+                                data={performanceData.data} 
+                                ticker={stock.ticker}
+                                isPositive={performanceData.isPositive}
+                              />
+                              <div className={`text-xs font-medium ${performanceData.isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                                {performanceData.dailyChange > 0 ? '+' : ''}{performanceData.dailyChange.toFixed(1)}%
+                              </div>
+                            </div>
+                          </td>
+                          
+                          {/* Allocation Percentage Column */}
+                          <td className="py-4 px-4 text-right">
+                            <span className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
+                              {allocationPercentage}%
+                            </span>
+                          </td>
+                          
+                          {/* Allocation Value Column */}
+                          <td className="py-4 px-4 text-right">
+                            <span className="font-medium" data-testid={`stock-value-${stock.ticker}`}>
+                              ${allocationValue.toLocaleString()}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          {/* Personal Touch Closing */}
+          <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border p-6">
+            <div className="text-center space-y-4">
+              <h3 className="font-din text-xl font-semibold flex items-center justify-center" data-testid="text-ready-invest">
+                🎉 Ready to Invest?
+              </h3>
+              
+              <div className="max-w-md mx-auto">
+                <p className="text-muted-foreground mb-2" data-testid="text-personal-message">
+                  {stockCount === 1 && stocks[0]?.ticker === 'NVDA' 
+                    ? "You've chosen quality over quantity with NVIDIA - a company at the forefront of AI revolution. We hope you love this concentrated bet on the future of technology!"
+                    : stockCount <= 3 
+                    ? `You've carefully selected ${stockCount} exceptional ${stockCount === 1 ? 'company' : 'companies'} that align with your investment vision. Quality over quantity - a strategy used by legendary investors!`
+                    : `Your diversified selection of ${stockCount} companies shows excellent judgment in building a balanced portfolio. You've chosen established leaders across multiple sectors.`
+                  }
+                </p>
+                
+                {/* Confidence Score */}
+                <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium mb-4" data-testid="confidence-score">
+                  <Heart className="w-4 h-4" />
+                  92% confidence in your choices
+                </div>
+              </div>
+              
+              {/* Enhanced Action Buttons */}
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <div>
-                    <div className="font-medium">1 Year</div>
-                    <div className="text-xs text-muted-foreground">Conservative estimate</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-semibold" data-testid="text-1year-projection">
-                      ${expectations.oneYear.low.toLocaleString()} - ${expectations.oneYear.high.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
+                <button
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 px-6 rounded-lg font-semibold text-lg shadow-lg transition-colors"
+                  data-testid="button-start-investing"
+                >
+                  <ExternalLink className="w-5 h-5 mr-2 inline" />
+                  Start Investing
+                </button>
                 
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <div>
-                    <div className="font-medium">5 Years</div>
-                    <div className="text-xs text-muted-foreground">Compound growth</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-semibold" data-testid="text-5year-projection">
-                      ${expectations.fiveYear.low.toLocaleString()} - ${expectations.fiveYear.high.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <div>
-                    <div className="font-medium">10 Years</div>
-                    <div className="text-xs text-muted-foreground">Long-term potential</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-semibold" data-testid="text-10year-projection">
-                      ${expectations.tenYear.low.toLocaleString()} - ${expectations.tenYear.high.toLocaleString()}
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={handleReset}
+                    className="flex items-center justify-center space-x-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground py-3 px-4 rounded-lg font-medium transition-colors"
+                    data-testid="button-modify-portfolio"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    <span>Modify Portfolio</span>
+                  </button>
+                  
+                  <button
+                    onClick={handleSharePortfolio}
+                    className="flex items-center justify-center space-x-2 bg-accent hover:bg-accent/90 text-accent-foreground py-3 px-4 rounded-lg font-medium transition-colors"
+                    data-testid="button-share-results"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    <span>Share Results</span>
+                  </button>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
-                <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                  Past performance doesn't guarantee future results
+              {/* StockMatch Branding */}
+              <div className="pt-4 border-t border-border/50">
+                <p className="text-xs text-muted-foreground flex items-center justify-center gap-1" data-testid="text-branding">
+                  Built with <Heart className="w-3 h-3 text-red-500" /> by StockMatch
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Portfolio Visualization */}
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-allocation-title">Portfolio Allocation</h3>
-            
-            {/* Chart Container */}
-            <div className="relative h-64 mb-6">
-              <PortfolioChart data={chartData} />
-            </div>
-            
-            {/* Portfolio Summary Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="text-center p-4 bg-muted/50 rounded-lg min-w-0">
-                <div className="text-xl sm:text-2xl font-bold text-primary truncate" data-testid="text-portfolio-value">
-                  ${parseInt(portfolio.totalValue).toLocaleString()}
-                </div>
-                <div className="text-sm text-muted-foreground">Portfolio Value</div>
-              </div>
-              <div className="text-center p-4 bg-muted/50 rounded-lg min-w-0">
-                <div className="text-xl sm:text-2xl font-bold text-secondary" data-testid="text-company-count">
-                  {stockCount}
-                </div>
-                <div className="text-sm text-muted-foreground">Companies</div>
-              </div>
-            </div>
+          
+          {/* Disclaimer */}
+          <div className="bg-muted/50 rounded-lg p-4 text-center" data-testid="disclaimer">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              <Info className="w-3 h-3 inline mr-1" />
+              This is for educational purposes only and not financial advice. 
+              Please consult with a financial advisor before making investment decisions.
+            </p>
           </div>
-        </div>
-        
-        {/* Liked Stocks List */}
-        <div className="bg-card rounded-xl shadow-sm border border-border">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4" data-testid="text-selected-companies">Your Selected Companies</h3>
-            
-            <div className="overflow-x-auto" data-testid="list-liked-stocks">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 font-medium text-sm text-muted-foreground">Company</th>
-                    <th className="text-center py-3 px-4 font-medium text-sm text-muted-foreground">7-Day Performance</th>
-                    <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation %</th>
-                    <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stocks.map((stock, index) => {
-                    const performanceData = stockPerformanceData[stock.ticker];
-                    return (
-                      <tr
-                        key={stock.ticker}
-                        className="border-b border-border/50 hover:bg-muted/30 transition-colors"
-                        data-testid={`stock-item-${stock.ticker}`}
-                      >
-                        {/* Ticker Column */}
-                        <td className="py-4 px-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                              {stock.logoUrl ? (
-                                <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
-                              ) : (
-                                <span className="text-lg font-bold text-primary">
-                                  {stock.ticker.charAt(0)}
-                                </span>
-                              )}
-                            </div>
-                            <div className="min-w-0">
-                              <div className="font-medium truncate" data-testid={`stock-name-${stock.ticker}`}>
-                                {stock.name}
-                              </div>
-                              <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
-                                {stock.ticker}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        
-                        {/* Sparkline Column */}
-                        <td className="py-4 px-4 text-center">
-                          <div className="flex flex-col items-center space-y-2">
-                            <CompactSparkline 
-                              data={performanceData.data} 
-                              ticker={stock.ticker}
-                              isPositive={performanceData.isPositive}
-                            />
-                            <div className={`text-xs font-medium ${performanceData.isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                              {performanceData.dailyChange > 0 ? '+' : ''}{performanceData.dailyChange.toFixed(1)}%
-                            </div>
-                          </div>
-                        </td>
-                        
-                        {/* Allocation Percentage Column */}
-                        <td className="py-4 px-4 text-right">
-                          <span className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
-                            {allocationPercentage}%
-                          </span>
-                        </td>
-                        
-                        {/* Allocation Value Column */}
-                        <td className="py-4 px-4 text-right">
-                          <span className="font-medium" data-testid={`stock-value-${stock.ticker}`}>
-                            ${allocationValue.toLocaleString()}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        
-        {/* Personal Touch Closing */}
-        <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border p-6">
-          <div className="text-center space-y-4">
-            <h3 className="text-xl font-semibold flex items-center justify-center" data-testid="text-ready-invest">
-              🎉 Ready to Invest?
-            </h3>
-            
-            <div className="max-w-md mx-auto">
-              <p className="text-muted-foreground mb-2" data-testid="text-personal-message">
-                {stockCount === 1 && stocks[0]?.ticker === 'NVDA' 
-                  ? "You've chosen quality over quantity with NVIDIA - a company at the forefront of AI revolution. We hope you love this concentrated bet on the future of technology!"
-                  : stockCount <= 3 
-                  ? `You've carefully selected ${stockCount} exceptional ${stockCount === 1 ? 'company' : 'companies'} that align with your investment vision. Quality over quantity - a strategy used by legendary investors!`
-                  : `Your diversified selection of ${stockCount} companies shows excellent judgment in building a balanced portfolio. You've chosen established leaders across multiple sectors.`
-                }
-              </p>
-              
-              {/* Confidence Score */}
-              <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium mb-4" data-testid="confidence-score">
-                <Heart className="w-4 h-4" />
-                92% confidence in your choices
-              </div>
-            </div>
-            
-            
-            {/* Enhanced Action Buttons */}
-            <div className="space-y-3">
-              <button
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 px-6 rounded-lg font-semibold text-lg shadow-lg transition-colors"
-                data-testid="button-start-investing"
-              >
-                <ExternalLink className="w-5 h-5 mr-2 inline" />
-                Start Investing
-              </button>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={handleReset}
-                  className="flex items-center justify-center space-x-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground py-3 px-4 rounded-lg font-medium transition-colors"
-                  data-testid="button-modify-portfolio"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  <span>Modify Portfolio</span>
-                </button>
-                
-                <button
-                  onClick={handleSharePortfolio}
-                  className="flex items-center justify-center space-x-2 bg-accent hover:bg-accent/90 text-accent-foreground py-3 px-4 rounded-lg font-medium transition-colors"
-                  data-testid="button-share-results"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span>Share Results</span>
-                </button>
-              </div>
-            </div>
-            
-            {/* StockMatch Branding */}
-            <div className="pt-4 border-t border-border/50">
-              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1" data-testid="text-branding">
-                Built with <Heart className="w-3 h-3 text-red-500" /> by StockMatch
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Disclaimer */}
-        <div className="bg-muted/50 rounded-lg p-4 text-center" data-testid="disclaimer">
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            <Info className="w-3 h-3 inline mr-1" />
-            This is for educational purposes only and not financial advice. 
-            Please consult with a financial advisor before making investment decisions.
-          </p>
         </div>
       </div>
     </div>
