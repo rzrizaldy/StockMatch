@@ -1,10 +1,16 @@
 import { Link } from "wouter";
 import mascotImage from "@assets/image_1757787375430.png";
 import stockMatchLogo from "@assets/image_1757787406146.png";
+import backgroundOverlay from "@assets/image_1757787667608.png";
 
 export default function Home() {
   return (
     <div className="w-full h-screen relative bg-[#8BC34A] overflow-hidden">
+      {/* Background Overlay */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-80"
+        style={{ backgroundImage: `url(${backgroundOverlay})` }}
+      />
       {/* Main Content Container */}
       <div className="w-full h-full relative flex flex-col items-center">
         {/* StockMatch Logo */}
