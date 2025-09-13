@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { CheckCircle, RefreshCw, ExternalLink, FileSpreadsheet, Share2, Info, TrendingUp, AlertTriangle, Target, Heart } from "lucide-react";
+import { CheckCircle, RefreshCw, ExternalLink, FileSpreadsheet, Share2, Info, TrendingUp, TrendingDown, AlertTriangle, Target, Heart } from "lucide-react";
 import PortfolioChart from "@/components/portfolio-chart";
+import CompactSparkline from "@/components/compact-sparkline";
 import type { StockCard } from "@shared/schema";
 
 export default function Portfolio() {
@@ -115,6 +116,29 @@ export default function Portfolio() {
     fiveYear: { low: 14000, high: 18500 },
     tenYear: { low: 23000, high: 35000 }
   };
+
+  // Generate mock 7-day performance data for sparklines
+  const generateMockSparklineData = (ticker: string): { data: number[], dailyChange: number, isPositive: boolean } => {
+    const basePrice = Math.random() * 200 + 50; // Random base price between $50-$250
+    const volatility = ticker === 'NVDA' ? 0.08 : ticker === 'TSLA' ? 0.1 : 0.04; // Higher volatility for certain stocks
+    
+    const data: number[] = [basePrice];
+    for (let i = 1; i < 7; i++) {
+      const change = (Math.random() - 0.5) * 2 * volatility * basePrice;
+      data.push(Math.max(data[i - 1] + change, basePrice * 0.5)); // Prevent unrealistic drops
+    }
+    
+    const dailyChange = ((data[6] - data[5]) / data[5]) * 100;
+    const isPositive = dailyChange >= 0;
+    
+    return { data, dailyChange, isPositive };
+  };
+
+  // Generate performance data for each stock
+  const stockPerformanceData = stocks.reduce((acc, stock) => {
+    acc[stock.ticker] = generateMockSparklineData(stock.ticker);
+    return acc;
+  }, {} as Record<string, { data: number[], dailyChange: number, isPositive: boolean }>);
 
   // Generate AI summary based on portfolio composition
   const generateAISummary = () => {
@@ -362,41 +386,76 @@ export default function Portfolio() {
             <h3 className="text-lg font-semibold mb-4" data-testid="text-selected-companies">Your Selected Companies</h3>
             
             <div className="space-y-3" data-testid="list-liked-stocks">
-              {stocks.map((stock, index) => (
-                <div
-                  key={stock.ticker}
-                  className="flex items-center justify-between p-4 bg-muted/30 rounded-lg"
-                  data-testid={`stock-item-${stock.ticker}`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      {stock.logoUrl ? (
-                        <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
-                      ) : (
-                        <span className="text-lg font-bold text-primary">
-                          {stock.ticker.charAt(0)}
+              {stocks.map((stock, index) => {
+                const performanceData = stockPerformanceData[stock.ticker];
+                return (
+                  <div
+                    key={stock.ticker}
+                    className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/40 transition-colors"
+                    data-testid={`stock-item-${stock.ticker}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        {stock.logoUrl ? (
+                          <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
+                        ) : (
+                          <span className="text-lg font-bold text-primary">
+                            {stock.ticker.charAt(0)}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-medium" data-testid={`stock-name-${stock.ticker}`}>
+                          {stock.name}
+                        </div>
+                        <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
+                          {stock.ticker}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Middle section - Sparkline */}
+                    <div className="hidden sm:flex flex-col items-center space-y-1">
+                      <CompactSparkline 
+                        data={performanceData.data} 
+                        ticker={stock.ticker}
+                        isPositive={performanceData.isPositive}
+                      />
+                      <span className="text-xs text-muted-foreground">7-day</span>
+                    </div>
+                    
+                    {/* Right section - Performance & Allocation */}
+                    <div className="text-right space-y-1">
+                      <div className="flex items-center justify-end space-x-2">
+                        <span className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
+                          {allocationPercentage}%
                         </span>
-                      )}
-                    </div>
-                    <div>
-                      <div className="font-medium" data-testid={`stock-name-${stock.ticker}`}>
-                        {stock.name}
+                        <div className={`flex items-center ${performanceData.isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                          {performanceData.isPositive ? (
+                            <TrendingUp className="w-4 h-4" data-testid={`trend-up-${stock.ticker}`} />
+                          ) : (
+                            <TrendingDown className="w-4 h-4" data-testid={`trend-down-${stock.ticker}`} />
+                          )}
+                          <span className="text-xs ml-1" data-testid={`daily-change-${stock.ticker}`}>
+                            {performanceData.dailyChange > 0 ? '+' : ''}{performanceData.dailyChange.toFixed(1)}%
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
-                        {stock.ticker}
+                      <div className="text-sm text-muted-foreground" data-testid={`stock-value-${stock.ticker}`}>
+                        ${allocationValue.toLocaleString()}
+                      </div>
+                      {/* Mobile sparkline - shown on smaller screens */}
+                      <div className="sm:hidden mt-2">
+                        <CompactSparkline 
+                          data={performanceData.data} 
+                          ticker={stock.ticker}
+                          isPositive={performanceData.isPositive}
+                        />
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
-                      {allocationPercentage}%
-                    </div>
-                    <div className="text-sm text-muted-foreground" data-testid={`stock-value-${stock.ticker}`}>
-                      ${allocationValue.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

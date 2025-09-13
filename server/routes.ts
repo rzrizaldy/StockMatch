@@ -186,7 +186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             esgScore: stock.esgScore
           });
           
-          aiAnalysis = await Promise.race([apiPromise, timeoutPromise]);
+          aiAnalysis = await Promise.race([apiPromise, timeoutPromise]) as { sentimentSummary: string; riskLevel: string; beginnerFriendly: boolean };
         } catch (error) {
           console.error(`Failed to generate AI summary for ${stock.ticker}:`, error);
           // Fallback to basic summary if AI fails
