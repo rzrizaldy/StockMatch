@@ -92,8 +92,11 @@ export default function PortfolioChart({ data }: PortfolioChartProps) {
 
   return (
     <div className="w-full" data-testid="portfolio-donut-chart">
+      {/* Industry Legend */}
+      <IndustryLegend data={data} />
+      
       {/* Donut Chart Container */}
-      <div className="h-64 mb-4">
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -118,9 +121,6 @@ export default function PortfolioChart({ data }: PortfolioChartProps) {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      
-      {/* Industry Legend */}
-      <IndustryLegend data={data} />
     </div>
   );
 }
