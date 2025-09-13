@@ -3,9 +3,8 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Heart, X, CheckCircle, Trophy, Target, Zap, Star, ArrowRight } from "lucide-react";
+import { Heart, X, CheckCircle, ArrowLeft } from "lucide-react";
 import StockCard from "@/components/stock-card";
-import { BullMascot, BearMascot } from "@/components/mascot";
 import type { StockCard as StockCardType } from "@shared/schema";
 
 export default function Swipe() {
@@ -14,8 +13,6 @@ export default function Swipe() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [likedStocks, setLikedStocks] = useState<string[]>([]);
-  const [showInstructions, setShowInstructions] = useState(true);
-  const [progressAnimation, setProgressAnimation] = useState(false);
 
   useEffect(() => {
     const storedSessionId = sessionStorage.getItem('stockmatch_session');
@@ -87,12 +84,6 @@ export default function Swipe() {
     }
   });
 
-  useEffect(() => {
-    if (showInstructions) {
-      const timer = setTimeout(() => setShowInstructions(false), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [showInstructions]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -126,10 +117,6 @@ export default function Swipe() {
     const nextIndex = currentCardIndex + 1;
     setCurrentCardIndex(nextIndex);
     
-    // Trigger progress animation for visual feedback
-    setProgressAnimation(true);
-    setTimeout(() => setProgressAnimation(false), 600);
-    
     if (nextIndex >= stockCards.length) {
       // All cards swiped, validate minimum selection and save portfolio
       setTimeout(() => {
@@ -146,25 +133,11 @@ export default function Swipe() {
     }
   };
 
-  const progress = stockCards.length > 0 ? (currentCardIndex / stockCards.length) * 100 : 0;
-  const remainingCards = Math.max(0, stockCards.length - currentCardIndex);
-  const completedCards = currentCardIndex;
   const totalCards = stockCards.length;
-  
-  // Investment-focused progress levels based on stock selections
-  const getProgressLevel = (selectedStocks: number) => {
-    if (selectedStocks >= 7) return { level: 'Broad Spreader', icon: Trophy, color: 'text-yellow-500', bgColor: 'bg-yellow-500' };
-    if (selectedStocks >= 4) return { level: 'Balanced Diversifier', icon: Zap, color: 'text-blue-500', bgColor: 'bg-blue-500' };
-    if (selectedStocks >= 1) return { level: 'Focused Investor', icon: Target, color: 'text-green-500', bgColor: 'bg-green-500' };
-    return { level: 'Getting Started', icon: Heart, color: 'text-pink-500', bgColor: 'bg-pink-500' };
-  };
-  
-  const currentLevel = getProgressLevel(likedStocks.length);
-  const LevelIcon = currentLevel.icon;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
+      <div className="min-h-screen swipe-gradient flex flex-col justify-center items-center px-6">
         <div className="text-center space-y-6">
           <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
           <h2 className="text-2xl font-semibold" data-testid="text-loading">Finding your matches...</h2>
@@ -181,7 +154,7 @@ export default function Swipe() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
+      <div className="min-h-screen swipe-gradient flex flex-col justify-center items-center px-6">
         <div className="text-center space-y-6">
           <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
             <X className="w-8 h-8 text-destructive" />
@@ -205,143 +178,43 @@ export default function Swipe() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Enhanced Gamified Header */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <BullMascot size="sm" />
-              <h1 className="text-xl font-semibold" data-testid="text-app-title">StockMatch</h1>
-              {/* Gamified Level Badge */}
-              <div className="flex items-center space-x-2">
-                <div className={`flex items-center space-x-1 px-2 py-1 rounded-full ${currentLevel.bgColor}/10 border border-current ${currentLevel.color}`}>
-                  <LevelIcon className="w-3 h-3" />
-                  <span className="text-xs font-bold">{currentLevel.level}</span>
-                </div>
-                {/* Early Portfolio Creation Button */}
-                {likedStocks.length > 0 && currentCardIndex < stockCards.length && (
-                  <button
-                    onClick={() => savePortfolioMutation.mutate(likedStocks)}
-                    disabled={savePortfolioMutation.isPending}
-                    className="flex items-center space-x-1 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs font-medium transition-colors disabled:opacity-50"
-                    data-testid="button-create-portfolio-early"
-                  >
-                    <ArrowRight className="w-3 h-3" />
-                    <span>Create Portfolio</span>
-                  </button>
-                )}
-              </div>
-            </div>
-            <button className="text-muted-foreground hover:text-foreground" data-testid="button-settings">
-              <Settings className="w-5 h-5" />
-            </button>
-          </div>
-          
-          {/* Enhanced Progress Section */}
-          <div className="mt-4 space-y-2">
-            {/* Progress Stats */}
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <span className="font-medium text-foreground" data-testid="text-progress-stats">
-                  {likedStocks.length} stocks selected • {completedCards}/{totalCards} reviewed
-                </span>
-                <div className={`w-2 h-2 rounded-full ${currentLevel.bgColor} ${progressAnimation ? 'animate-ping' : ''}`} />
-              </div>
-              <div className="text-muted-foreground" data-testid="text-cards-remaining">
-                {remainingCards} remaining
-              </div>
-            </div>
-            
-            {/* Enhanced Progress Bar */}
-            <div className="relative">
-              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-                <div 
-                  className={`h-3 rounded-full transition-all duration-500 ease-out ${currentLevel.bgColor} ${progressAnimation ? 'animate-pulse' : ''}`}
-                  style={{ width: `${progress}%` }}
-                  data-testid="progress-swipe"
-                />
-                {/* Shine effect */}
-                <div className={`absolute top-0 left-0 h-3 w-8 bg-white/20 rounded-full transition-transform duration-1000 ${progressAnimation ? 'translate-x-full' : '-translate-x-full'}`} />
-              </div>
-              {/* Progress milestones */}
-              <div className="absolute top-0 left-0 w-full h-3 flex items-center justify-between px-1">
-                {[25, 50, 75].map((milestone) => (
-                  <div
-                    key={milestone}
-                    className={`w-1 h-1 rounded-full transition-colors duration-300 ${
-                      progress >= milestone ? 'bg-white' : 'bg-muted-foreground/30'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            {/* Clean Progress Feedback */}
-            <div className="text-center">
-              {likedStocks.length === 0 && (
-                <p className="text-xs text-muted-foreground">Start selecting stocks to build your portfolio</p>
-              )}
-              {likedStocks.length >= 1 && likedStocks.length < 4 && (
-                <p className="text-xs text-muted-foreground">Great focus! {likedStocks.length} stock{likedStocks.length > 1 ? 's' : ''} selected</p>
-              )}
-              {likedStocks.length >= 4 && likedStocks.length < 7 && (
-                <p className="text-xs text-muted-foreground">Perfect balance! {likedStocks.length} diversified picks</p>
-              )}
-              {likedStocks.length >= 7 && (
-                <p className="text-xs text-muted-foreground">Broad portfolio! {likedStocks.length} stocks selected</p>
-              )}
-              {currentCardIndex >= stockCards.length && likedStocks.length > 0 && (
-                <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio ready! {likedStocks.length} stocks chosen</p>
-              )}
-            </div>
-          </div>
+    <div className="min-h-screen swipe-gradient">
+      {/* Simple Header with Back Button */}
+      <div className="absolute top-0 left-0 right-0 z-50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setLocation('/')}
+            className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/30 transition-colors"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="w-5 h-5 text-white" />
+          </button>
+        </div>
+        
+        {/* Main Title */}
+        <div className="text-center mt-8">
+          <h1 className="text-white text-3xl font-bold font-din" data-testid="text-swipe-title">
+            Swipe the ones you vibe with
+          </h1>
         </div>
       </div>
       
-      {/* Clean Swipe Instructions */}
-      {showInstructions && (
-        <div className="px-6 py-4 text-center border-b border-border bg-gradient-to-r from-secondary/5 to-primary/5" data-testid="instructions-swipe">
-          <div className="flex items-center justify-center space-x-6 text-sm">
-            <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
-              <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/20">
-                <Heart className="w-3 h-3 fill-current" />
-              </div>
-              <span className="font-medium">Swipe right to invest</span>
-            </div>
-            <div className="w-px h-4 bg-border" />
-            <div className="flex items-center space-x-2 text-red-600 dark:text-red-400">
-              <div className="p-1 rounded-full bg-red-100 dark:bg-red-900/20">
-                <X className="w-3 h-3" />
-              </div>
-              <span className="font-medium">Swipe left to pass</span>
-            </div>
-          </div>
-        </div>
-      )}
-      
       {/* Card Stack Container */}
-      <div className="flex-1 flex items-center justify-center px-4 py-6">
+      <div className="flex-1 flex items-center justify-center px-4 pt-32 pb-6">
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
-            <div className="text-center space-y-6" data-testid="state-no-cards">
+            <div className="text-center space-y-6 text-white" data-testid="state-no-cards">
               {/* Clean Success Message */}
-              <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-10 h-10 text-white" />
               </div>
               
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-foreground">Portfolio Complete!</h3>
-                <p className="text-lg text-green-600 dark:text-green-400 font-medium">Ready to review your selections</p>
-                <p className="text-muted-foreground">
+                <h3 className="text-2xl font-bold text-white">Portfolio Complete!</h3>
+                <p className="text-lg text-white/90 font-medium">Ready to review your selections</p>
+                <p className="text-white/70">
                   You've reviewed {totalCards} stocks and selected {likedStocks.length} for your portfolio
                 </p>
-              </div>
-              
-              {/* Achievement Badge */}
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-full">
-                <Trophy className="w-4 h-4 text-purple-500" />
-                <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">Portfolio Builder</span>
               </div>
             </div>
           ) : (

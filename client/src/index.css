@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -145,4 +147,15 @@
   50% { 
     box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); 
   }
+}
+
+/* Green gradient background for swipe page */
+.swipe-gradient {
+  background: linear-gradient(180deg, #57C30A 0%, white 86%);
+}
+
+/* DIN Alternate font class */
+.font-din {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
 }
