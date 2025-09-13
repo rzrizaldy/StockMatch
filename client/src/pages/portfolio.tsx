@@ -93,6 +93,7 @@ export default function Portfolio() {
     name: stock.name,
     ticker: stock.ticker,
     value: allocationPercentage,
+    industry: stock.industry,
     color: `hsl(${(index * 360) / stockCount}, 70%, 50%)`
   }));
 
@@ -117,8 +118,8 @@ export default function Portfolio() {
 
   // Generate AI summary based on portfolio composition
   const generateAISummary = () => {
-    const riskLevel = portfolio.riskTolerance || 'moderate';
-    const timeline = portfolio.timeline || '5+ years';
+    const riskLevel = 'moderate'; // Default risk level
+    const timeline = '5+ years'; // Default timeline
     const hasNVIDIA = stocks.some(stock => stock.ticker === 'NVDA');
     const hasTech = stocks.some(stock => 
       ['NVDA', 'GOOGL', 'MSFT', 'AAPL', 'AMZN', 'META', 'TSLA'].includes(stock.ticker)
