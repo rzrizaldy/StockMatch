@@ -147,44 +147,19 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
           preserveAspectRatio="none"
           viewBox={`0 0 ${width} ${height}`}
         >
-          <defs>
-            {/* Price gradient */}
-            <linearGradient id={`price-gradient-${ticker}`} x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor={strokeColor} stopOpacity="0.2"/>
-              <stop offset="100%" stopColor={strokeColor} stopOpacity="0"/>
-            </linearGradient>
-            {/* Sentiment gradient */}
-            <linearGradient id={`sentiment-gradient-${ticker}`} x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#FFA500" stopOpacity="0.1"/>
-              <stop offset="100%" stopColor="#FFA500" stopOpacity="0"/>
-            </linearGradient>
-          </defs>
-          
-          {/* Price line with gradient fill */}
-          <polygon
-            fill={`url(#price-gradient-${ticker})`}
-            points={`${padding},${height} ${pricePoints} ${width-padding},${height}`}
-          />
           <polyline
             fill="none"
             stroke={strokeColor}
             strokeWidth="1.5"
             points={pricePoints}
-            opacity="0.8"
             data-testid={`price-line-${ticker}`}
           />
           
-          {/* Sentiment line with subtle gradient fill */}
-          <polygon
-            fill={`url(#sentiment-gradient-${ticker})`}
-            points={`${padding},${height} ${sentimentPoints} ${width-padding},${height}`}
-          />
           <polyline
             fill="none"
             stroke="#FF8C00"
             strokeWidth="2"
             points={sentimentPoints}
-            opacity="0.9"
             strokeDasharray="3,2"
             data-testid={`sentiment-line-${ticker}`}
           />
