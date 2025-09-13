@@ -96,9 +96,9 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           {/* Back button */}
           <div className="mb-8">
             <button 
-              onClick={handleClose}
+              onClick={currentStep === 1 ? handleClose : handleBack}
               className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-2xl flex items-center justify-center hover:bg-black/40 transition-colors"
-              data-testid="button-close-quiz"
+              data-testid="button-back-quiz"
             >
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
