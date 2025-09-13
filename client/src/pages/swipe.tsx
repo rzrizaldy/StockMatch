@@ -183,7 +183,7 @@ export default function Swipe() {
       <div className="absolute top-0 left-0 right-0 z-50 px-6 py-4">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setLocation('/')}
+            onClick={() => window.history.back()}
             className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/30 transition-colors"
             data-testid="button-back"
           >
