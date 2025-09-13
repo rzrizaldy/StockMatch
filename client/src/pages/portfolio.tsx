@@ -129,111 +129,6 @@ export default function Portfolio() {
 
   const { portfolio, stocks } = portfolioData;
   const stockCount = stocks.length;
-  const allocationPercentage = stockCount > 0 ? Math.round(100 / stockCount) : 0;
-  const allocationValue = stockCount > 0 ? Math.round(parseInt(portfolio.totalValue) / stockCount) : 0;
-
-  const chartData = stocks.map((stock, index) => ({
-    name: stock.name,
-    ticker: stock.ticker,
-    value: allocationPercentage,
-    industry: stock.industry,
-    color: `hsl(${(index * 360) / stockCount}, 70%, 50%)`
-  }));
-
-  // Mock historical performance data
-  const mockPerformance = {
-    portfolioReturn: 12.3,
-    sp500Return: 10.8,
-    nasdaqReturn: 11.4,
-    bestYear: { year: 2021, return: 28.4 },
-    worstYear: { year: 2022, return: -15.2 },
-    volatility: 1.6,
-    revenueGrowth: 22
-  };
-
-  // Calculate expectation data based on user's actual investment amount
-  const baseInvestment = userProfile ? parseInt(userProfile.investmentAmount) : 10000;
-  const expectations = {
-    oneYear: { 
-      low: Math.round(baseInvestment * 1.05), 
-      high: Math.round(baseInvestment * 1.12) 
-    },
-    fiveYear: { 
-      low: Math.round(baseInvestment * 1.4), 
-      high: Math.round(baseInvestment * 1.85) 
-    },
-    tenYear: { 
-      low: Math.round(baseInvestment * 2.3), 
-      high: Math.round(baseInvestment * 3.5) 
-    }
-  };
-
-  // Generate mock 7-day performance data for sparklines
-  const generateMockSparklineData = (ticker: string): { data: number[], dailyChange: number, isPositive: boolean } => {
-    const basePrice = Math.random() * 200 + 50; // Random base price between $50-$250
-    const volatility = ticker === 'NVDA' ? 0.08 : ticker === 'TSLA' ? 0.1 : 0.04; // Higher volatility for certain stocks
-    
-    const data: number[] = [basePrice];
-    for (let i = 1; i < 7; i++) {
-      const change = (Math.random() - 0.5) * 2 * volatility * basePrice;
-      data.push(Math.max(data[i - 1] + change, basePrice * 0.5)); // Prevent unrealistic drops
-    }
-    
-    const dailyChange = ((data[6] - data[5]) / data[5]) * 100;
-    const isPositive = dailyChange >= 0;
-    
-    return { data, dailyChange, isPositive };
-  };
-
-  // Generate performance data for each stock
-  const stockPerformanceData = stocks.reduce((acc, stock) => {
-    acc[stock.ticker] = generateMockSparklineData(stock.ticker);
-    return acc;
-  }, {} as Record<string, { data: number[], dailyChange: number, isPositive: boolean }>);
-
-  // Generate AI summary based on portfolio composition
-  const generateAISummary = () => {
-    const riskLevel = userProfile?.risk === 'conservative' ? 'conservative' : 
-                     userProfile?.risk === 'aggressive' ? 'aggressive' : 'moderate';
-    const timeline = '5+ years'; // Default timeline
-    const hasNVIDIA = stocks.some(stock => stock.ticker === 'NVDA');
-    const hasTech = stocks.some(stock => 
-      ['NVDA', 'GOOGL', 'MSFT', 'AAPL', 'AMZN', 'META', 'TSLA'].includes(stock.ticker)
-    );
-    
-    if (stockCount === 1 && hasNVIDIA) {
-      return {
-        summary: `Based on your ${riskLevel} risk profile and ${timeline} timeline, this portfolio maximizes conviction in AI leadership. NVIDIA's dominant position in the semiconductor revolution aligns perfectly with your tech preference and concentrated investment approach.`,
-        insights: [
-          'Exceptional growth potential in AI/semiconductor sector',
-          `Moderate to high volatility (β: ${mockPerformance.volatility})`,
-          `Strong fundamentals (Revenue growth: ${mockPerformance.revenueGrowth}% annually)`
-        ]
-      };
-    }
-    
-    if (hasTech && stockCount <= 3) {
-      return {
-        summary: `Based on your ${riskLevel} risk profile and ${timeline} timeline, this focused portfolio balances growth potential with quality. Your tech-heavy selection shows conviction in innovation while maintaining diversification across market leaders.`,
-        insights: [
-          'High growth potential in technology sector',
-          `Balanced volatility for concentrated portfolio`,
-          'Exposure to multiple innovation themes'
-        ]
-      };
-    }
-    
-    return {
-      summary: `Based on your ${riskLevel} risk profile and ${timeline} timeline, this diversified portfolio balances growth potential with stability. Your selections show a balanced approach to building long-term wealth across multiple sectors.`,
-      insights: [
-        'Diversified exposure across sectors',
-        'Balanced risk-return profile',
-        'Suitable for long-term wealth building'
-      ]
-    };
-  };
-
-  const aiSummary = generateAISummary();
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -286,7 +181,7 @@ export default function Portfolio() {
               data-testid="text-portfolio-title"
             >
               <img 
-                src={bullImage} 
+                src={mascotImage} 
                 alt="Bull Character" 
                 className="w-[60px] h-[72px] flex-shrink-0"
               />
