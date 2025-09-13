@@ -380,18 +380,18 @@ export default function Portfolio() {
             <button
               onClick={handleSharePortfolio}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
-              data-testid="button-share-portfolio"
+              data-testid="button-start-trading"
             >
-              <Share2 className="w-5 h-5" />
-              Share Portfolio
+              <TrendingUp className="w-5 h-5" />
+              Start Trading
             </button>
             <button
               onClick={handleExportToSheets}
               className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
-              data-testid="button-export-sheets"
+              data-testid="button-share"
             >
-              <FileSpreadsheet className="w-5 h-5" />
-              Export to Sheets
+              <Share2 className="w-5 h-5" />
+              Share
             </button>
           </div>
           
