@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import mascotImage from "@assets/image_1757787375430.png";
+import bullMascotImage from "@assets/home bull_1757793533798.png";
 import stockMatchLogo from "@assets/image_1757787406146.png";
 import backgroundOverlay from "@assets/image_1757787667608.png";
 
@@ -28,8 +28,8 @@ export default function Home() {
         {/* Stock Card with Mascot */}
         <div className="relative mb-16">
           {/* Stock Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-[280px] relative">
-            <div className="flex justify-between items-start mb-2">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-[340px] relative">
+            <div className="flex justify-between items-start mb-4">
               <div>
                 <div className="text-2xl font-bold text-gray-800">TSLA</div>
                 <div className="text-gray-500 text-sm">Tesla Inc.</div>
@@ -42,7 +42,36 @@ export default function Home() {
             
             <div className="mb-4">
               <div className="text-3xl font-bold text-gray-800">$283.41</div>
-              <div className="text-green-500 text-sm">+2.4%</div>
+              <div className="text-green-500 text-sm font-medium">+2.4%</div>
+            </div>
+            
+            {/* 30-day trend & sentiment section */}
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-2">30-day trend & sentiment</div>
+              <div className="flex justify-between items-center text-xs mb-2">
+                <span className="text-gray-600">Price</span>
+                <span className="text-gray-600">Sentiment</span>
+                <span className="text-red-500">-4.71%</span>
+                <span className="text-orange-500">25%</span>
+              </div>
+              
+              {/* Simple chart representation */}
+              <div className="relative h-16 mb-4 bg-gray-50 rounded-lg overflow-hidden">
+                <svg className="w-full h-full" viewBox="0 0 280 60" preserveAspectRatio="none">
+                  <polyline
+                    fill="none"
+                    stroke="#FFA726"
+                    strokeWidth="2"
+                    points="10,40 30,35 50,42 70,38 90,30 110,25 130,32 150,28 170,35 190,30 210,38 230,33 250,40 270,35"
+                  />
+                  <polyline
+                    fill="none"
+                    stroke="#66BB6A"
+                    strokeWidth="2"
+                    points="10,50 30,45 50,48 70,44 90,40 110,35 130,42 150,38 170,45 190,40 210,47 230,42 250,48 270,44"
+                  />
+                </svg>
+              </div>
             </div>
             
             <div className="text-gray-600 text-sm leading-relaxed">
@@ -50,12 +79,12 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Mascot positioned on the card */}
-          <div className="absolute -bottom-4 -right-4">
+          {/* Bull Mascot positioned on the card */}
+          <div className="absolute -bottom-8 -right-8 z-10">
             <img 
-              src={mascotImage}
-              alt="StockMatch Mascot"
-              className="w-20 h-20"
+              src={bullMascotImage}
+              alt="StockMatch Bull Mascot"
+              className="w-32 h-32"
             />
           </div>
         </div>
