@@ -247,21 +247,19 @@ export default function Portfolio() {
       
       {/* Header with Bull Character and Text in Row */}
       <div className="absolute left-8 right-8 z-20" style={{ top: '120px' }}>
-        <div className="flex items-center justify-center gap-4">
-          {/* Bull Character */}
-          <img 
-            src={bullImage} 
-            alt="Bull Character" 
-            className="w-[120px] h-[144px] flex-shrink-0"
-          />
-          
+        <div className="flex flex-col items-center justify-center gap-2">
           {/* Header Text */}
           <div className="flex flex-col gap-2">
             <h1 
-              className="font-din text-white font-bold leading-8 tracking-wide text-center" 
+              className="font-din text-white font-bold leading-8 tracking-wide text-center flex items-center justify-center gap-3" 
               style={{ fontSize: '30px' }}
               data-testid="text-portfolio-title"
             >
+              <img 
+                src={bullImage} 
+                alt="Bull Character" 
+                className="w-[60px] h-[72px] flex-shrink-0"
+              />
               Portfolio Created
             </h1>
             <div className="px-4 py-2 rounded-lg">
