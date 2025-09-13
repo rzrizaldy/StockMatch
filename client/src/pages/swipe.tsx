@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Heart, X, CheckCircle, Trophy, Target, Zap, Star } from "lucide-react";
+import { Settings, Heart, X, CheckCircle, Trophy, Target, Zap, Star, ArrowRight } from "lucide-react";
 import StockCard from "@/components/stock-card";
 import { BullMascot, BearMascot } from "@/components/mascot";
 import type { StockCard as StockCardType } from "@shared/schema";
@@ -64,6 +64,10 @@ export default function Swipe() {
     mutationFn: async (likedStocks: string[]) => {
       if (!sessionId) throw new Error('No session ID');
       
+      if (likedStocks.length === 0) {
+        throw new Error('At least 1 stock must be selected');
+      }
+      
       return api.savePortfolio({
         sessionId,
         likedStocks,
@@ -76,7 +80,7 @@ export default function Swipe() {
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to save your portfolio. Please try again.",
+        description: error.message || "Failed to save your portfolio. Please try again.",
         variant: "destructive"
       });
       console.error('Portfolio save error:', error);
@@ -127,8 +131,16 @@ export default function Swipe() {
     setTimeout(() => setProgressAnimation(false), 600);
     
     if (nextIndex >= stockCards.length) {
-      // All cards swiped, save portfolio with the most up-to-date liked stocks
+      // All cards swiped, validate minimum selection and save portfolio
       setTimeout(() => {
+        if (currentLikedStocks.length === 0) {
+          toast({
+            title: "No Stocks Selected",
+            description: "Please select at least 1 stock to create your portfolio.",
+            variant: "destructive"
+          });
+          return;
+        }
         savePortfolioMutation.mutate(currentLikedStocks);
       }, 500);
     }
@@ -139,16 +151,15 @@ export default function Swipe() {
   const completedCards = currentCardIndex;
   const totalCards = stockCards.length;
   
-  // Investment-focused progress levels
-  const getProgressLevel = (progress: number) => {
-    if (progress >= 100) return { level: 'Broad Spreader', icon: Trophy, color: 'text-yellow-500', bgColor: 'bg-yellow-500' };
-    if (progress >= 75) return { level: 'Active Investor', icon: Star, color: 'text-purple-500', bgColor: 'bg-purple-500' };
-    if (progress >= 50) return { level: 'Balanced Diversifier', icon: Zap, color: 'text-blue-500', bgColor: 'bg-blue-500' };
-    if (progress >= 25) return { level: 'Selective Trader', icon: Target, color: 'text-green-500', bgColor: 'bg-green-500' };
-    return { level: 'Focused Investor', icon: Heart, color: 'text-pink-500', bgColor: 'bg-pink-500' };
+  // Investment-focused progress levels based on stock selections
+  const getProgressLevel = (selectedStocks: number) => {
+    if (selectedStocks >= 7) return { level: 'Broad Spreader', icon: Trophy, color: 'text-yellow-500', bgColor: 'bg-yellow-500' };
+    if (selectedStocks >= 4) return { level: 'Balanced Diversifier', icon: Zap, color: 'text-blue-500', bgColor: 'bg-blue-500' };
+    if (selectedStocks >= 1) return { level: 'Focused Investor', icon: Target, color: 'text-green-500', bgColor: 'bg-green-500' };
+    return { level: 'Getting Started', icon: Heart, color: 'text-pink-500', bgColor: 'bg-pink-500' };
   };
   
-  const currentLevel = getProgressLevel(progress);
+  const currentLevel = getProgressLevel(likedStocks.length);
   const LevelIcon = currentLevel.icon;
 
   if (isLoading) {
@@ -215,6 +226,18 @@ export default function Swipe() {
                   <LevelIcon className="w-3 h-3" />
                   <span className="text-xs font-bold">{currentLevel.level}</span>
                 </div>
+                {/* Early Portfolio Creation Button */}
+                {likedStocks.length > 0 && currentCardIndex < stockCards.length && (
+                  <button
+                    onClick={() => savePortfolioMutation.mutate(likedStocks)}
+                    disabled={savePortfolioMutation.isPending}
+                    className="flex items-center space-x-1 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs font-medium transition-colors disabled:opacity-50"
+                    data-testid="button-create-portfolio-early"
+                  >
+                    <ArrowRight className="w-3 h-3" />
+                    <span>Create Portfolio</span>
+                  </button>
+                )}
               </div>
             </div>
             <button className="text-muted-foreground hover:text-foreground" data-testid="button-settings">
@@ -228,7 +251,7 @@ export default function Swipe() {
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center space-x-2">
                 <span className="font-medium text-foreground" data-testid="text-progress-stats">
-                  {completedCards} of {totalCards} completed
+                  {likedStocks.length} stocks selected • {completedCards}/{totalCards} reviewed
                 </span>
                 <div className={`w-2 h-2 rounded-full ${currentLevel.bgColor} ${progressAnimation ? 'animate-ping' : ''}`} />
               </div>
@@ -263,34 +286,34 @@ export default function Swipe() {
             
             {/* Motivational Message with Mascots */}
             <div className="text-center space-y-2">
-              {progress < 25 && (
+              {likedStocks.length === 0 && (
                 <div className="flex items-center justify-center space-x-2">
                   <BearMascot mood="encouraging" size="sm" />
-                  <p className="text-xs text-muted-foreground">Great start! Keep building your portfolio</p>
+                  <p className="text-xs text-muted-foreground">Start selecting stocks to build your portfolio!</p>
                 </div>
               )}
-              {progress >= 25 && progress < 50 && (
+              {likedStocks.length >= 1 && likedStocks.length < 4 && (
                 <div className="flex items-center justify-center space-x-2">
                   <BullMascot mood="happy" size="sm" />
-                  <p className="text-xs text-muted-foreground">You're on fire! The market loves you</p>
+                  <p className="text-xs text-muted-foreground">Great focus! {likedStocks.length} stock{likedStocks.length > 1 ? 's' : ''} selected • Ready to build portfolio!</p>
                 </div>
               )}
-              {progress >= 50 && progress < 75 && (
+              {likedStocks.length >= 4 && likedStocks.length < 7 && (
                 <div className="flex items-center justify-center space-x-2">
                   <BullMascot mood="celebrating" size="sm" />
-                  <p className="text-xs text-muted-foreground">Almost there! You're doing amazing</p>
+                  <p className="text-xs text-muted-foreground">Perfect balance! {likedStocks.length} diversified picks</p>
                 </div>
               )}
-              {progress >= 75 && progress < 100 && (
+              {likedStocks.length >= 7 && (
                 <div className="flex items-center justify-center space-x-2">
                   <BullMascot mood="encouraging" size="sm" />
-                  <p className="text-xs text-muted-foreground">Final push! Bull run incoming!</p>
+                  <p className="text-xs text-muted-foreground">Broad portfolio! {likedStocks.length} stocks selected</p>
                 </div>
               )}
-              {progress >= 100 && (
+              {currentCardIndex >= stockCards.length && likedStocks.length > 0 && (
                 <div className="flex items-center justify-center space-x-2">
                   <BullMascot mood="celebrating" size="sm" animated={true} />
-                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio goal complete! 🎉</p>
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio ready! {likedStocks.length} stocks chosen 🎉</p>
                 </div>
               )}
             </div>

@@ -1,3 +1,5 @@
+import mascotImage from "@assets/BullBear_1757731653767.png";
+
 interface MascotProps {
   type: 'bull' | 'bear';
   mood?: 'normal' | 'happy' | 'loading' | 'celebrating' | 'thoughtful' | 'encouraging';
@@ -15,12 +17,12 @@ export default function Mascot({
   message,
   className = '' 
 }: MascotProps) {
-  // Size configurations
+  // Size configurations for the image
   const sizeClasses = {
-    sm: 'text-2xl w-8 h-8',
-    md: 'text-3xl w-12 h-12',
-    lg: 'text-4xl w-16 h-16',
-    xl: 'text-6xl w-24 h-24'
+    sm: 'w-12 h-12',
+    md: 'w-16 h-16',
+    lg: 'w-24 h-24',
+    xl: 'w-32 h-32'
   };
 
   // Animation classes
@@ -33,35 +35,11 @@ export default function Mascot({
     encouraging: animated ? 'animate-bounce' : ''
   };
 
-  // Mascot characters with mood variations
-  const getMascotCharacter = () => {
-    if (type === 'bull') {
-      switch (mood) {
-        case 'happy':
-        case 'celebrating':
-          return '🐂'; // Bull face - positive/bullish
-        case 'encouraging':
-          return '📈'; // Chart going up with bull energy
-        case 'loading':
-        case 'thoughtful':
-          return '🐂'; // Standard bull
-        default:
-          return '🐂'; // Standard bull
-      }
-    } else {
-      switch (mood) {
-        case 'thoughtful':
-          return '🐻'; // Bear face - thoughtful/cautious
-        case 'encouraging':
-          return '🤔'; // Thinking face for guidance
-        case 'loading':
-          return '🐻'; // Standard bear
-        case 'happy':
-          return '🐻'; // Happy bear for positive guidance
-        default:
-          return '🐻'; // Standard bear
-      }
-    }
+  // Alt text based on type and mood for accessibility
+  const getAltText = () => {
+    const typeText = type === 'bull' ? 'Bull' : 'Bear';
+    const moodText = mood !== 'normal' ? ` in ${mood} mood` : '';
+    return `${typeText} mascot${moodText}`;
   };
 
   // Message styling based on type
@@ -77,9 +55,11 @@ export default function Mascot({
           transition-transform duration-300 hover:scale-110
         `}
       >
-        <span className="select-none">
-          {getMascotCharacter()}
-        </span>
+        <img 
+          src={mascotImage} 
+          alt={getAltText()}
+          className="w-full h-full object-contain select-none"
+        />
       </div>
       
       {message && (

@@ -59,15 +59,15 @@ const IndustryLegend = ({ data }: { data: ChartData[] }) => {
 
   return (
     <div className="mt-4" data-testid="industry-legend">
-      <h4 className="text-sm font-medium mb-2">Industry Sectors</h4>
-      <div className="flex flex-wrap gap-3">
+      <h4 className="text-sm font-medium mb-3 text-center">Industry Sectors</h4>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2 max-w-2xl mx-auto">
         {industries.map((industry) => (
-          <div key={industry} className="flex items-center text-xs" data-testid={`legend-${industry}`}>
+          <div key={industry} className="flex items-center text-xs whitespace-nowrap" data-testid={`legend-${industry}`}>
             <div
-              className="w-3 h-3 rounded mr-2"
+              className="w-3 h-3 rounded mr-2 flex-shrink-0"
               style={{ backgroundColor: getIndustryColor(industry) }}
             />
-            <span className="text-muted-foreground">{industry}</span>
+            <span className="text-muted-foreground truncate">{industry}</span>
           </div>
         ))}
       </div>

@@ -69,7 +69,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
       case 3:
         return true; // ESG is optional
       case 4:
-        return profile.investmentAmount >= 100; // Minimum $100
+        return profile.investmentAmount >= 10; // Minimum $10
       default:
         return false;
     }
@@ -283,9 +283,9 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                     <div className="relative">
                       <input
                         type="number"
-                        min="100"
+                        min="10"
                         max="1000000"
-                        step="100"
+                        step="10"
                         value={profile.investmentAmount}
                         onChange={(e) => handleInvestmentAmountChange(Number(e.target.value))}
                         className="w-full text-2xl text-center py-4 px-6 border-2 rounded-lg bg-background focus:border-primary focus:outline-none transition-colors"
@@ -299,7 +299,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                     
                     <div className="mt-4 text-center">
                       <p className="text-sm text-muted-foreground">
-                        Minimum: $100 • Maximum: $1,000,000
+                        Minimum: $10 • Maximum: $1,000,000
                       </p>
                     </div>
                     
