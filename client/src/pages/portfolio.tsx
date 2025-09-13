@@ -245,33 +245,35 @@ export default function Portfolio() {
         </button>
       </div>
       
-      {/* Bull Character */}
-      <div className="absolute z-10" style={{ left: '129px', top: '102px' }}>
-        <img 
-          src={bullImage} 
-          alt="Bull Character" 
-          style={{ width: '116px', height: '139px' }}
-        />
-      </div>
-      
-      {/* Header Text */}
-      <div className="absolute left-8 right-8 z-20" style={{ top: '257px' }}>
-        <div className="flex flex-col items-center gap-1">
-          <h1 
-            className="font-din text-white text-center font-bold leading-8 tracking-wide" 
-            style={{ fontSize: '30px' }}
-            data-testid="text-portfolio-title"
-          >
-            Portfolio Created
-          </h1>
-          <div className="px-4 py-2 rounded-lg">
-            <p 
-              className="font-din text-white text-center font-bold leading-5 tracking-wide" 
-              style={{ fontSize: '15px' }}
-              data-testid="text-portfolio-subtitle"
+      {/* Header with Bull Character and Text in Row */}
+      <div className="absolute left-8 right-8 z-20" style={{ top: '180px' }}>
+        <div className="flex items-center justify-center gap-4">
+          {/* Bull Character */}
+          <img 
+            src={bullImage} 
+            alt="Bull Character" 
+            style={{ width: '80px', height: '96px' }}
+            className="flex-shrink-0"
+          />
+          
+          {/* Header Text */}
+          <div className="flex flex-col gap-1">
+            <h1 
+              className="font-din text-white font-bold leading-8 tracking-wide" 
+              style={{ fontSize: '30px' }}
+              data-testid="text-portfolio-title"
             >
-              We've created an equally-weighted portfolio of {stockCount} companies you loved
-            </p>
+              Portfolio Created
+            </h1>
+            <div className="px-2 py-1 rounded-lg">
+              <p 
+                className="font-din text-white font-bold leading-5 tracking-wide" 
+                style={{ fontSize: '15px' }}
+                data-testid="text-portfolio-subtitle"
+              >
+                We've created an equally-weighted portfolio of {stockCount} companies you loved
+              </p>
+            </div>
           </div>
         </div>
       </div>
