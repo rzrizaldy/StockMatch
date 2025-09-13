@@ -246,8 +246,8 @@ export default function Portfolio() {
       </div>
       
       {/* Header with Bull Character and Text in Row */}
-      <div className="absolute left-8 right-8 z-20" style={{ top: '160px' }}>
-        <div className="flex flex-col items-center justify-center gap-6">
+      <div className="absolute left-8 right-8 z-20" style={{ top: '120px' }}>
+        <div className="flex items-center justify-center gap-4">
           {/* Bull Character */}
           <img 
             src={bullImage} 
@@ -256,7 +256,7 @@ export default function Portfolio() {
           />
           
           {/* Header Text */}
-          <div className="flex flex-col gap-2 text-center">
+          <div className="flex flex-col gap-2">
             <h1 
               className="font-din text-white font-bold leading-8 tracking-wide text-center" 
               style={{ fontSize: '30px' }}
@@ -280,7 +280,7 @@ export default function Portfolio() {
       {/* White Content Section */}
       <div 
         className="absolute inset-x-0 bg-white rounded-t-3xl overflow-y-auto" 
-        style={{ top: '410px', height: 'calc(100vh - 410px)' }}
+        style={{ top: '430px', height: 'calc(100vh - 430px)' }}
       >
         <div className="px-6 py-8 space-y-6">
           
