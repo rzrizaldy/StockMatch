@@ -92,7 +92,7 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
   
   // Generate SVG path dimensions
   const width = 120;
-  const height = 40;
+  const height = 60;
   const padding = 4;
   
   // Generate price line points
@@ -135,7 +135,7 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
             <span>Price</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-0.5 bg-orange-500"></div>
+            <div className="w-2 h-0.5 bg-orange-600"></div>
             <span>Sentiment</span>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
         <svg 
           width={width} 
           height={height} 
-          className="w-full h-8"
+          className="w-full h-12"
           preserveAspectRatio="none"
           viewBox={`0 0 ${width} ${height}`}
         >
@@ -181,11 +181,11 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
           />
           <polyline
             fill="none"
-            stroke="#FFA500"
-            strokeWidth="1"
+            stroke="#FF8C00"
+            strokeWidth="2"
             points={sentimentPoints}
-            opacity="0.7"
-            strokeDasharray="2,2"
+            opacity="0.9"
+            strokeDasharray="3,2"
             data-testid={`sentiment-line-${ticker}`}
           />
         </svg>
