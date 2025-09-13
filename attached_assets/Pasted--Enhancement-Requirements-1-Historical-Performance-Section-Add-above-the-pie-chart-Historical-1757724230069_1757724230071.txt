@@ -1,0 +1,90 @@
+🚀 Enhancement Requirements
+1. Historical Performance Section
+Add above the pie chart:
+📈 Historical Performance
+Your portfolio would have returned 12.3% annually over the past 5 years
+vs S&P 500: 10.8% | vs NASDAQ: 11.4%
+
+Best Year: +28.4% (2021)
+Worst Year: -15.2% (2022)
+2. AI-Generated Investment Summary
+Replace the generic text with personalized AI summary:
+🤖 Your Investment Summary
+
+Based on your moderate risk profile and 5+ year timeline, this portfolio balances growth potential with stability. NVIDIA's strong AI leadership aligns with your tech preference, while the concentrated approach maximizes conviction in your favorite pick.
+
+Key Insights:
+- High growth potential in AI/semiconductor sector
+- Moderate volatility (β: 1.6)
+- Strong fundamentals (Revenue growth: 22% annually)
+3. Expectation Setting
+Add before "Your Selected Companies":
+💡 What to Expect
+
+If you invest $10,000 today, based on historical patterns:
+- 1 Year: $10,500 - $11,200 (conservative estimate)
+- 5 Years: $14,000 - $18,500 (compound growth)
+- 10 Years: $23,000 - $35,000 (long-term potential)
+
+⚠️ Past performance doesn't guarantee future results
+4. Personal Touch Closing
+Replace bottom section with:
+🎉 Ready to Invest?
+
+You've chosen quality over quantity with NVIDIA - a company at the forefront of AI revolution. We hope you love this concentrated bet on the future of technology!
+
+[Start Investing] [Modify Portfolio] [Share Results]
+
+Built with ❤️ by StockMatch
+📊 Data Requirements
+Historical Returns API Integration:
+javascriptconst getPortfolioReturns = async (tickers, weights, years = 5) => {
+  // Fetch historical data for each ticker
+  // Calculate weighted portfolio returns
+  // Compare against benchmarks (SPY, QQQ)
+  // Return performance metrics
+}
+AI Summary Generator:
+javascriptconst generateAISummary = (portfolio, userProfile) => {
+  // Analyze risk level, sectors, timeline
+  // Generate personalized insights
+  // Include key metrics and expectations
+  // Return formatted summary
+}
+🎨 Visual Enhancements
+
+Performance Chart: Small line chart showing 5-year trajectory
+Risk Indicator: Visual risk meter (1-10 scale)
+Confidence Score: "92% confidence in your choices" badge
+Expected Range: Visual slider showing potential outcomes
+
+⚡ Implementation Priority
+Phase 1 (Quick Wins):
+
+Add mock historical returns
+Create AI summary template
+Add expectation ranges
+
+Phase 2 (Full Integration):
+
+Real historical data API
+Dynamic AI summary generation
+Interactive performance charts
+
+🔧 Technical Notes
+
+Use Yahoo Finance API for historical data
+Implement caching for performance data (1-hour TTL)
+Generate AI summaries client-side using templates
+Make all text dynamic based on actual portfolio composition
+Add loading states for data fetching
+
+📱 Mobile Considerations
+
+Keep performance data concise for small screens
+Use collapsible sections for detailed metrics
+Ensure charts are touch-friendly
+Optimize for thumb navigation
+
+
+Goal: Transform a basic portfolio display into a compelling, data-rich experience that builds user confidence and excitement about their investment choices.
