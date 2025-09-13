@@ -15,6 +15,7 @@ export const userProfiles = pgTable("user_profiles", {
   risk: text("risk").notNull(), // 'conservative', 'balanced', 'aggressive'
   industries: text("industries").array().notNull().default(sql`ARRAY[]::text[]`),
   esg: boolean("esg").notNull().default(false),
+  investmentAmount: text("investment_amount").notNull().default("10000"), // Store as string for precision
 });
 
 export const stockCards = pgTable("stock_cards", {

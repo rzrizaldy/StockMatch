@@ -53,7 +53,8 @@ export class MemStorage implements IStorage {
       ...insertProfile, 
       id,
       industries: insertProfile.industries || [],
-      esg: insertProfile.esg || false
+      esg: insertProfile.esg || false,
+      investmentAmount: insertProfile.investmentAmount || "10000"
     };
     this.userProfiles.set(insertProfile.sessionId, profile);
     return profile;
@@ -75,7 +76,8 @@ export class MemStorage implements IStorage {
       logoUrl: insertCard.logoUrl || null,
       marketCap: insertCard.marketCap || null,
       beta: insertCard.beta || null,
-      esgScore: insertCard.esgScore || null
+      esgScore: insertCard.esgScore || null,
+      chartData: insertCard.chartData || []
     };
     this.stockCards.set(insertCard.ticker, card);
     return card;
@@ -87,11 +89,15 @@ export class MemStorage implements IStorage {
 
   async createPortfolio(insertPortfolio: InsertPortfolio): Promise<Portfolio> {
     const id = randomUUID();
+    // Get user profile to use their investment amount
+    const userProfile = await this.getUserProfile(insertPortfolio.sessionId);
+    const investmentAmount = userProfile?.investmentAmount || "10000";
+    
     const portfolio: Portfolio = { 
       ...insertPortfolio, 
       id,
       likedStocks: insertPortfolio.likedStocks || [],
-      totalValue: insertPortfolio.totalValue || "10000"
+      totalValue: insertPortfolio.totalValue || investmentAmount
     };
     this.portfolios.set(insertPortfolio.sessionId, portfolio);
     return portfolio;

@@ -9,6 +9,7 @@ export interface UserProfile {
   risk: string;
   industries: string[];
   esg: boolean;
+  investmentAmount: number;
 }
 
 export default function Quiz() {
@@ -22,7 +23,8 @@ export default function Quiz() {
         sessionId,
         risk: profile.risk,
         industries: profile.industries,
-        esg: profile.esg
+        esg: profile.esg,
+        investmentAmount: profile.investmentAmount.toString()
       });
     },
     onSuccess: () => {

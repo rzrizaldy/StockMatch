@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { X, Shield, TrendingUp, Rocket, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart } from "lucide-react";
+import { X, Shield, TrendingUp, Rocket, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
 import type { UserProfile } from "@/pages/quiz";
 
 interface QuizModalProps {
@@ -14,7 +14,8 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
   const [profile, setProfile] = useState<UserProfile>({
     risk: '',
     industries: [],
-    esg: false
+    esg: false,
+    investmentAmount: 10000
   });
 
   const handleClose = () => {
@@ -38,8 +39,12 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
     setProfile(prev => ({ ...prev, esg }));
   };
 
+  const handleInvestmentAmountChange = (amount: number) => {
+    setProfile(prev => ({ ...prev, investmentAmount: amount }));
+  };
+
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -62,12 +67,14 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
         return profile.industries.length > 0;
       case 3:
         return true; // ESG is optional
+      case 4:
+        return profile.investmentAmount >= 100; // Minimum $100
       default:
         return false;
     }
   };
 
-  const progress = (currentStep / 3) * 100;
+  const progress = (currentStep / 4) * 100;
 
   const industries = [
     { id: 'tech', name: 'Technology', icon: Smartphone, color: 'text-primary' },
@@ -111,7 +118,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
               />
             </div>
             <p className="text-sm text-muted-foreground mt-2" data-testid="text-quiz-step">
-              {currentStep} of 3
+              {currentStep} of 4
             </p>
           </div>
           
@@ -257,6 +264,63 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 </div>
               </div>
             )}
+            
+            {/* Step 4: Investment Amount */}
+            {currentStep === 4 && (
+              <div data-testid="quiz-step-4">
+                <h3 className="text-lg font-medium mb-4">How much would you like to invest today?</h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Enter the amount you're comfortable investing to get personalized projections.
+                </p>
+                
+                <div className="space-y-6">
+                  <div className="relative">
+                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <DollarSign className="w-8 h-8 text-primary" />
+                    </div>
+                    
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min="100"
+                        max="1000000"
+                        step="100"
+                        value={profile.investmentAmount}
+                        onChange={(e) => handleInvestmentAmountChange(Number(e.target.value))}
+                        className="w-full text-2xl text-center py-4 px-6 border-2 rounded-lg bg-background focus:border-primary focus:outline-none transition-colors"
+                        placeholder="10000"
+                        data-testid="input-investment-amount"
+                      />
+                      <div className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-muted-foreground pointer-events-none">
+                        $
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        Minimum: $100 • Maximum: $1,000,000
+                      </p>
+                    </div>
+                    
+                    {/* Quick Amount Buttons */}
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                      {[1000, 5000, 10000, 25000, 50000, 100000].map((amount) => (
+                        <button
+                          key={amount}
+                          onClick={() => handleInvestmentAmountChange(amount)}
+                          className={`p-2 text-sm border rounded-md hover:border-primary hover:bg-primary/5 transition-colors ${
+                            profile.investmentAmount === amount ? 'border-primary bg-primary/10' : 'border-border'
+                          }`}
+                          data-testid={`button-amount-${amount}`}
+                        >
+                          ${amount.toLocaleString()}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           
           {/* Modal Footer */}
@@ -272,7 +336,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 </button>
               )}
               
-              {currentStep < 3 ? (
+              {currentStep < 4 ? (
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
@@ -284,7 +348,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
               ) : (
                 <button
                   onClick={handleFinish}
-                  disabled={isLoading}
+                  disabled={isLoading || !canProceed()}
                   className="flex-1 bg-secondary text-secondary-foreground py-3 px-4 rounded-lg font-medium hover:bg-secondary/90 transition-colors disabled:opacity-50"
                   data-testid="button-quiz-finish"
                 >

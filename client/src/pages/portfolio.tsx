@@ -26,6 +26,12 @@ export default function Portfolio() {
     enabled: !!sessionId,
   });
 
+  const { data: userProfile } = useQuery({
+    queryKey: ['/api/user-profile', sessionId],
+    queryFn: () => api.getUserProfile(sessionId!),
+    enabled: !!sessionId,
+  });
+
   const handleExportToSheets = () => {
     alert('Export to Sheets functionality would integrate with Google Sheets API');
   };
@@ -109,12 +115,21 @@ export default function Portfolio() {
     revenueGrowth: 22
   };
 
-  // Mock expectation data based on $10,000 investment
-  const baseInvestment = 10000;
+  // Calculate expectation data based on user's actual investment amount
+  const baseInvestment = userProfile ? parseInt(userProfile.investmentAmount) : 10000;
   const expectations = {
-    oneYear: { low: 10500, high: 11200 },
-    fiveYear: { low: 14000, high: 18500 },
-    tenYear: { low: 23000, high: 35000 }
+    oneYear: { 
+      low: Math.round(baseInvestment * 1.05), 
+      high: Math.round(baseInvestment * 1.12) 
+    },
+    fiveYear: { 
+      low: Math.round(baseInvestment * 1.4), 
+      high: Math.round(baseInvestment * 1.85) 
+    },
+    tenYear: { 
+      low: Math.round(baseInvestment * 2.3), 
+      high: Math.round(baseInvestment * 3.5) 
+    }
   };
 
   // Generate mock 7-day performance data for sparklines
@@ -142,7 +157,8 @@ export default function Portfolio() {
 
   // Generate AI summary based on portfolio composition
   const generateAISummary = () => {
-    const riskLevel = 'moderate'; // Default risk level
+    const riskLevel = userProfile?.risk === 'conservative' ? 'conservative' : 
+                     userProfile?.risk === 'aggressive' ? 'aggressive' : 'moderate';
     const timeline = '5+ years'; // Default timeline
     const hasNVIDIA = stocks.some(stock => stock.ticker === 'NVDA');
     const hasTech = stocks.some(stock => 
