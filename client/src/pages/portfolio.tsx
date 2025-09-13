@@ -203,10 +203,10 @@ export default function Portfolio() {
             alt="Portfolio Mascot"
             className="absolute"
             style={{ 
-              width: '116px', 
-              height: '139px', 
+              width: '81px', 
+              height: '97px', 
               left: '129px', 
-              top: '102px'
+              top: '80px'
             }}
           />
           
