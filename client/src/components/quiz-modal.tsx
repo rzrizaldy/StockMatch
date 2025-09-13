@@ -133,16 +133,16 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
               </div>
               <div className="flex-1">
                 {currentStep === 1 && (
-                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h3>
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.48px'}}>Your money goal?</h3>
                 )}
                 {currentStep === 2 && (
-                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>What industries excite you?</h3>
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.48px'}}>What industries excite you?</h3>
                 )}
                 {currentStep === 3 && (
-                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Do you value social impact?</h3>
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.48px'}}>Do you value social impact?</h3>
                 )}
                 {currentStep === 4 && (
-                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>How much should you invest today?</h3>
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.48px'}}>How much should you invest today?</h3>
                 )}
               </div>
             </div>
