@@ -205,8 +205,9 @@ export default function Portfolio() {
             style={{ 
               width: '81px', 
               height: '97px', 
-              left: '129px', 
-              top: '80px'
+              left: '50%', 
+              top: '80px',
+              transform: 'translateX(-50%)'
             }}
           />
           
