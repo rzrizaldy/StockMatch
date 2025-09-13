@@ -283,10 +283,6 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 
                 <div className="space-y-6">
                   <div className="relative">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <DollarSign className="w-8 h-8 text-primary" />
-                    </div>
-                    
                     <div className="relative">
                       <input
                         type="number"
@@ -295,11 +291,12 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                         step="10"
                         value={profile.investmentAmount}
                         onChange={(e) => handleInvestmentAmountChange(Number(e.target.value))}
-                        className="w-full text-2xl text-center py-4 px-6 border-2 rounded-lg bg-background focus:border-primary focus:outline-none transition-colors"
+                        className="w-full text-3xl font-bold text-center py-6 px-8 border-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border-primary focus:border-primary focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all duration-300 shadow-lg hover:shadow-xl"
                         placeholder="10000"
                         data-testid="input-investment-amount"
+                        style={{borderColor: '#57C30A', color: '#57C30A'}}
                       />
-                      <div className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-muted-foreground pointer-events-none">
+                      <div className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-bold pointer-events-none" style={{color: '#57C30A'}}>
                         $
                       </div>
                     </div>
