@@ -209,11 +209,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return { stock, weight: finalWeight };
       });
       
-      // Sort by weight (descending) and add some randomness
-      const sortedByWeight = weightedStocks.sort((a, b) => {
-        // Add small random variation to prevent strict ordering
-        const randomVariation = (Math.random() - 0.5) * 0.1;
-        return (b.weight + randomVariation) - a.weight;
+      // Shuffle the array for true randomization, then sort by weight with more randomness
+      const shuffledStocks = weightedStocks.sort(() => Math.random() - 0.5);
+      
+      // Sort by weight but with much stronger randomization
+      const sortedByWeight = shuffledStocks.sort((a, b) => {
+        // Add strong random variation (up to 50% variance) to prevent alphabet bias
+        const randomVariationA = (Math.random() - 0.5) * 0.5;
+        const randomVariationB = (Math.random() - 0.5) * 0.5;
+        const finalWeightA = a.weight + randomVariationA;
+        const finalWeightB = b.weight + randomVariationB;
+        return finalWeightB - finalWeightA;
       });
       
       const selectedStocks = sortedByWeight.slice(0, 15).map(item => item.stock);

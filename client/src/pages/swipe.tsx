@@ -235,43 +235,16 @@ export default function Swipe() {
           </button>
         </div>
         
-        {/* Main Title and Strategy Info */}
+        {/* Main Title */}
         <div className="text-center mt-8">
           <h1 className="text-white text-3xl font-bold font-din mb-4" data-testid="text-swipe-title">
             Swipe the ones you vibe with
           </h1>
-          
-          {/* Portfolio Strategy Display */}
-          {likedStocks.length > 0 && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mx-4 mb-4">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <currentStrategy.icon className={`w-5 h-5 ${currentStrategy.color}`} />
-                <h3 className="text-white font-bold text-lg">{currentStrategy.name}</h3>
-              </div>
-              <p className="text-white/80 text-sm mb-1">{currentStrategy.description}</p>
-              <p className="text-white/60 text-xs">{currentStrategy.subtitle}</p>
-              <div className="text-white/70 text-sm mt-2">
-                {likedStocks.length} stock{likedStocks.length !== 1 ? 's' : ''} selected
-              </div>
-            </div>
-          )}
-          
-          {/* Done with Portfolio Button */}
-          {likedStocks.length > 0 && (
-            <button
-              onClick={handleFinishEarly}
-              disabled={savePortfolioMutation.isPending}
-              className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-medium text-sm font-din disabled:opacity-50"
-              data-testid="button-finish-portfolio"
-            >
-              {savePortfolioMutation.isPending ? 'Creating Portfolio...' : `Build My ${currentStrategy.name} Portfolio`}
-            </button>
-          )}
         </div>
       </div>
       
       {/* Card Stack Container */}
-      <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-6" style={{ marginTop: likedStocks.length > 0 ? '160px' : '120px' }}>
+      <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-6">
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-6 text-white" data-testid="state-no-cards">
@@ -356,6 +329,35 @@ export default function Swipe() {
           <p className="text-center text-xs text-muted-foreground mt-3">
             Or use keyboard: ← for pass, → for like
           </p>
+          
+          {/* Portfolio Strategy Display - Moved Below Buttons */}
+          {likedStocks.length > 0 && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mx-4 mt-6 mb-4">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <currentStrategy.icon className={`w-5 h-5 ${currentStrategy.color}`} />
+                <h3 className="text-white font-bold text-lg">{currentStrategy.name}</h3>
+              </div>
+              <p className="text-white/80 text-sm mb-1">{currentStrategy.description}</p>
+              <p className="text-white/60 text-xs">{currentStrategy.subtitle}</p>
+              <div className="text-white/70 text-sm mt-2">
+                {likedStocks.length} stock{likedStocks.length !== 1 ? 's' : ''} selected
+              </div>
+            </div>
+          )}
+          
+          {/* Done with Portfolio Button - Moved Below Strategy */}
+          {likedStocks.length > 0 && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleFinishEarly}
+                disabled={savePortfolioMutation.isPending}
+                className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-medium text-sm font-din disabled:opacity-50"
+                data-testid="button-finish-portfolio"
+              >
+                {savePortfolioMutation.isPending ? 'Creating Portfolio...' : `Build My ${currentStrategy.name} Portfolio`}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
