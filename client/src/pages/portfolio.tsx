@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { RefreshCw, AlertTriangle, FileSpreadsheet, Share2 } from "lucide-react";
+import { RefreshCw, AlertTriangle, FileSpreadsheet, Share2, TrendingUp } from "lucide-react";
 import mascotImage from "@assets/image_1757788388059.png";
 import type { StockCard } from "@shared/schema";
+import SentimentCharts from "@/components/sentiment-charts";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 export default function Portfolio() {
   const [, setLocation] = useLocation();
@@ -266,6 +268,51 @@ export default function Portfolio() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Sentiment Analysis Section */}
+          <div className="bg-card rounded-xl border border-border p-6" data-testid="sentiment-analysis-section">
+            <div className="flex items-center gap-3 mb-4">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-lg" data-testid="text-sentiment-analysis-title">
+                Sentiment Analysis
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6" data-testid="text-sentiment-analysis-description">
+              Market sentiment analysis for your portfolio stocks based on recent news and social media.
+            </p>
+            
+            <Accordion type="single" collapsible className="w-full" data-testid="sentiment-accordion">
+              {stocks.map((stock) => (
+                <AccordionItem key={stock.ticker} value={stock.ticker} data-testid={`sentiment-accordion-item-${stock.ticker}`}>
+                  <AccordionTrigger className="text-left hover:no-underline" data-testid={`sentiment-trigger-${stock.ticker}`}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        {stock.logoUrl ? (
+                          <img src={stock.logoUrl} alt={stock.name} className="w-6 h-6 rounded" />
+                        ) : (
+                          <span className="text-sm font-bold text-primary">
+                            {stock.ticker.charAt(0)}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm">{stock.name}</div>
+                        <div className="text-xs text-muted-foreground">{stock.ticker}</div>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent data-testid={`sentiment-content-${stock.ticker}`}>
+                    <div className="pt-4" data-testid={`sentiment-charts-${stock.ticker}`}>
+                      <SentimentCharts 
+                        stock={stock.ticker} 
+                        className="w-full"
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
           
           {/* Action Buttons */}
