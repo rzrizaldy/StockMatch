@@ -257,7 +257,6 @@ export default function Portfolio() {
         <div className="absolute w-4 h-7 bg-primary rounded" style={{ left: '469px', top: '166px' }}></div>
         <div className="absolute w-5 h-10 bg-primary rounded" style={{ left: '437px', top: '232px' }}></div>
         <div className="absolute w-3 h-3 bg-green-300 rounded" style={{ left: '397px', top: '83px' }}></div>
-        <div className="absolute w-3 h-3 bg-green-300 rounded" style={{ left: '277px', top: '270px' }}></div>
         <div className="absolute w-3 h-2 bg-green-300 rounded" style={{ left: '493px', top: '116px' }}></div>
         <div className="absolute w-3 h-2 bg-green-300 rounded" style={{ left: '454px', top: '328px' }}></div>
         <div className="absolute w-3 h-2 bg-primary rounded" style={{ left: '300px', top: '300px' }}></div>
