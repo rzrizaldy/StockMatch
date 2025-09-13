@@ -7,6 +7,57 @@ export interface SentimentRecord {
   sentiment: 'positive' | 'negative' | 'neutral';
 }
 
+// Cache for parsed sentiment data to avoid repeated CSV parsing
+let _cachedSentimentData: SentimentRecord[] | null = null;
+
+/**
+ * Robust date parser that normalizes date strings for cross-browser compatibility
+ * Handles formats like "2020-05-22 09:36:00-04:00" by converting to ISO format
+ */
+function parseDate(dateString: string): Date | null {
+  if (!dateString || typeof dateString !== 'string') {
+    return null;
+  }
+
+  try {
+    // Normalize the date string by replacing space with 'T' for ISO format
+    // This handles formats like "2020-05-22 09:36:00-04:00" -> "2020-05-22T09:36:00-04:00"
+    let normalizedDate = dateString.trim();
+    
+    // Replace first space with 'T' if it looks like a datetime string
+    const spaceIndex = normalizedDate.indexOf(' ');
+    if (spaceIndex > 0 && spaceIndex < normalizedDate.length - 1) {
+      // Check if this looks like a date-time separator (not part of the date itself)
+      const beforeSpace = normalizedDate.substring(0, spaceIndex);
+      const afterSpace = normalizedDate.substring(spaceIndex + 1);
+      
+      // Basic check: before space should look like a date (YYYY-MM-DD)
+      // and after space should start with time (HH:MM)
+      if (beforeSpace.match(/^\d{4}-\d{2}-\d{2}$/) && afterSpace.match(/^\d{2}:\d{2}/)) {
+        normalizedDate = beforeSpace + 'T' + afterSpace;
+      }
+    }
+
+    const parsedDate = new Date(normalizedDate);
+    
+    // Validate that the date is not Invalid Date and is within reasonable bounds
+    if (isNaN(parsedDate.getTime())) {
+      return null;
+    }
+    
+    // Check if date is within reasonable bounds (e.g., between 1970 and 2030)
+    const year = parsedDate.getFullYear();
+    if (year < 1970 || year > 2030) {
+      return null;
+    }
+
+    return parsedDate;
+  } catch (error) {
+    console.warn('Failed to parse date:', dateString, error);
+    return null;
+  }
+}
+
 export interface SentimentMetrics {
   positive: number;
   negative: number;
@@ -74,24 +125,52 @@ function parseCSV(csvText: string): any[] {
 }
 
 /**
- * Parse the CSV data and return structured sentiment data
+ * Parse the CSV data and return structured sentiment data with caching
  */
 export function parseSentimentData(): SentimentRecord[] {
+  // Return cached data if available
+  if (_cachedSentimentData !== null) {
+    return _cachedSentimentData;
+  }
+
   try {
     const records = parseCSV(sentimentCsvData);
 
-    return records.map((record: any) => ({
-      title: (record.title || '').replace(/"/g, ''), // Remove quotes
-      date: new Date(record.date),
-      stock: record.stock || '',
-      sentiment: record.sentiment as 'positive' | 'negative' | 'neutral',
-    })).filter((record: SentimentRecord) => 
-      record.sentiment && ['positive', 'negative', 'neutral'].includes(record.sentiment)
-    );
+    const parsedRecords = records.map((record: any) => {
+      const parsedDate = parseDate(record.date);
+      
+      return {
+        title: (record.title || '').replace(/"/g, ''), // Remove quotes
+        date: parsedDate,
+        stock: record.stock || '',
+        sentiment: record.sentiment as 'positive' | 'negative' | 'neutral',
+      };
+    }).filter((record: any): record is SentimentRecord => {
+      // Filter out records with invalid data
+      return (
+        record.date !== null && // Valid date
+        record.sentiment && 
+        ['positive', 'negative', 'neutral'].includes(record.sentiment) &&
+        record.stock && // Valid stock symbol
+        record.title // Valid title
+      );
+    });
+
+    // Cache the parsed data for future calls
+    _cachedSentimentData = parsedRecords;
+    
+    return parsedRecords;
   } catch (error) {
     console.error('Error parsing sentiment CSV data:', error);
     return [];
   }
+}
+
+/**
+ * Clear the cached sentiment data (useful for testing or when data source changes)
+ */
+export function clearSentimentDataCache(): void {
+  _cachedSentimentData = null;
 }
 
 /**
@@ -140,8 +219,14 @@ export function calculateSentimentMetrics(records: SentimentRecord[]): Sentiment
  * Group sentiment data by time periods and calculate metrics
  */
 export function groupSentimentByTimePeriods(records: SentimentRecord[]): TimePeriodMetrics {
-  // Sort records by date
-  const sortedRecords = [...records].sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Filter out records with invalid dates and sort by date
+  const validRecords = records.filter(record => {
+    return record.date && 
+           record.date instanceof Date && 
+           !isNaN(record.date.getTime());
+  });
+
+  const sortedRecords = [...validRecords].sort((a, b) => a.date.getTime() - b.date.getTime());
 
   // Group by day
   const dailyGroups = new Map<string, SentimentRecord[]>();
@@ -151,28 +236,36 @@ export function groupSentimentByTimePeriods(records: SentimentRecord[]): TimePer
   sortedRecords.forEach(record => {
     const date = record.date;
     
-    // Daily grouping (YYYY-MM-DD)
-    const dayKey = date.toISOString().split('T')[0];
-    if (!dailyGroups.has(dayKey)) {
-      dailyGroups.set(dayKey, []);
-    }
-    dailyGroups.get(dayKey)!.push(record);
+    try {
+      // Use local date components to avoid timezone issues
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      
+      // Daily grouping (YYYY-MM-DD) using local time
+      const dayKey = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      if (!dailyGroups.has(dayKey)) {
+        dailyGroups.set(dayKey, []);
+      }
+      dailyGroups.get(dayKey)!.push(record);
 
-    // Weekly grouping (year-week)
-    const year = date.getFullYear();
-    const week = getWeekNumber(date);
-    const weekKey = `${year}-W${week.toString().padStart(2, '0')}`;
-    if (!weeklyGroups.has(weekKey)) {
-      weeklyGroups.set(weekKey, []);
-    }
-    weeklyGroups.get(weekKey)!.push(record);
+      // Weekly grouping (year-week)
+      const week = getWeekNumber(date);
+      const weekKey = `${year}-W${week.toString().padStart(2, '0')}`;
+      if (!weeklyGroups.has(weekKey)) {
+        weeklyGroups.set(weekKey, []);
+      }
+      weeklyGroups.get(weekKey)!.push(record);
 
-    // Monthly grouping (YYYY-MM)
-    const monthKey = `${year}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-    if (!monthlyGroups.has(monthKey)) {
-      monthlyGroups.set(monthKey, []);
+      // Monthly grouping (YYYY-MM)
+      const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
+      if (!monthlyGroups.has(monthKey)) {
+        monthlyGroups.set(monthKey, []);
+      }
+      monthlyGroups.get(monthKey)!.push(record);
+    } catch (error) {
+      console.warn('Error processing date for grouping:', date, error);
     }
-    monthlyGroups.get(monthKey)!.push(record);
   });
 
   return {

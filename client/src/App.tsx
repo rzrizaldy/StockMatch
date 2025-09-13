@@ -8,6 +8,7 @@ import Quiz from "@/pages/quiz";
 import Swipe from "@/pages/swipe";
 import Portfolio from "@/pages/portfolio";
 import NotFound from "@/pages/not-found";
+import SentimentTest from "@/pages/sentiment-test";
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/quiz" component={Quiz} />
       <Route path="/swipe" component={Swipe} />
       <Route path="/portfolio" component={Portfolio} />
+      <Route path="/sentiment-test" component={SentimentTest} />
       <Route component={NotFound} />
     </Switch>
   );
