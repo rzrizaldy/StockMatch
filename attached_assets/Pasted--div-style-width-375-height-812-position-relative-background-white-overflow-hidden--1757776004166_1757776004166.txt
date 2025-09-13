@@ -1,0 +1,62 @@
+<div style={{width: 375, height: 812, position: 'relative', background: 'white', overflow: 'hidden'}}>
+  <img style={{width: 87, height: 125, left: 20, top: 157, position: 'absolute'}} src="https://placehold.co/87x125" />
+  <div style={{width: 287, height: 12, left: 78, top: 111, position: 'absolute', background: '#E5E5E5', borderRadius: 16}} />
+  <div style={{width: 95.67, height: 12, left: 78, top: 111, position: 'absolute', background: '#57C30A', borderRadius: 16}} />
+  <div style={{left: 28, top: 318, position: 'absolute', color: 'black', fontSize: 24, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 16, letterSpacing: 0.48, wordWrap: 'break-word'}}>Your money goal?</div>
+  <div style={{width: 323, left: 28, top: 359, position: 'absolute', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 16, display: 'inline-flex'}}>
+    <div style={{alignSelf: 'stretch', paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, borderRadius: 8, outline: '1px rgba(186.55, 203.07, 182.41, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'center', gap: 16, display: 'inline-flex'}}>
+      <div data-style="Broken" style={{width: 24, height: 24, position: 'relative'}}>
+        <div style={{width: 16, height: 12, left: 3.97, top: 10, position: 'absolute', outline: '1.50px #57C30A solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 19, height: 5, left: 2.50, top: 5, position: 'absolute', outline: '1.50px #57C30A solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 5.77, height: 3, left: 5.87, top: 2, position: 'absolute', outline: '1.50px #57C30A solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 5.77, height: 3, left: 12.35, top: 2, position: 'absolute', outline: '1.50px #57C30A solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 6.03, height: 6.14, left: 8.94, top: 10, position: 'absolute', outline: '1.50px #57C30A solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 24, height: 24, left: 0, top: 0, position: 'absolute', opacity: 0}} />
+      </div>
+      <div style={{width: 137, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 8, display: 'inline-flex'}}>
+        <div style={{alignSelf: 'stretch', color: '#322F35', fontSize: 15, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.30, wordWrap: 'break-word'}}>Short-term treats</div>
+        <div style={{alignSelf: 'stretch', color: 'var(--Grays-Gray, #8E8E93)', fontSize: 13, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.26, wordWrap: 'break-word'}}>Around 1 year</div>
+      </div>
+    </div>
+    <div style={{alignSelf: 'stretch', paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, borderRadius: 8, outline: '1px rgba(187, 203, 182, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'center', gap: 16, display: 'inline-flex'}}>
+      <div data-style="Broken" style={{width: 24, height: 24, position: 'relative'}}>
+        <div style={{width: 18.01, height: 19.60, left: 2.99, top: 2.20, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 24, height: 24, left: 0, top: 0, position: 'absolute', opacity: 0}} />
+      </div>
+      <div style={{width: 137, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 8, display: 'inline-flex'}}>
+        <div style={{alignSelf: 'stretch', color: '#322F35', fontSize: 15, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.30, wordWrap: 'break-word'}}>Medium dreams</div>
+        <div style={{alignSelf: 'stretch', color: 'var(--Grays-Gray, #8E8E93)', fontSize: 13, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.26, wordWrap: 'break-word'}}>Around 3 years</div>
+      </div>
+    </div>
+    <div style={{alignSelf: 'stretch', paddingLeft: 16, paddingRight: 16, paddingTop: 12, paddingBottom: 12, borderRadius: 8, outline: '1px rgba(187, 203, 182, 0.55) solid', outlineOffset: '-1px', justifyContent: 'flex-start', alignItems: 'center', gap: 16, display: 'inline-flex'}}>
+      <div data-style="Broken" style={{width: 24, height: 24, position: 'relative'}}>
+        <div style={{width: 20, height: 20, left: 2, top: 2, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 1.46, height: 9, left: 7.54, top: 12, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 1.10, height: 4.46, left: 7.90, top: 3, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 1.13, height: 4.64, left: 15, top: 16.36, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 1.46, height: 9, left: 15, top: 3, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 18, height: 1.46, left: 3, top: 15, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 18, height: 1.46, left: 3, top: 7.54, position: 'absolute', outline: '1.50px var(--Primary, #57C30A) solid', outlineOffset: '-0.75px'}} />
+        <div style={{width: 24, height: 24, left: 0, top: 0, position: 'absolute', opacity: 0}} />
+      </div>
+      <div style={{width: 137, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 8, display: 'inline-flex'}}>
+        <div style={{alignSelf: 'stretch', color: '#322F35', fontSize: 15, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.30, wordWrap: 'break-word'}}>Big future plans</div>
+        <div style={{alignSelf: 'stretch', color: 'var(--Grays-Gray, #8E8E93)', fontSize: 13, fontFamily: 'Inter', fontWeight: '400', lineHeight: 16, letterSpacing: 0.26, wordWrap: 'break-word'}}>5+ years</div>
+      </div>
+    </div>
+  </div>
+  <div data-show-focus-indicator="false" data-show-icon="false" data-size="Medium" data-state="Enabled" data-type="Round" style={{width: 323, left: 28, top: 710, position: 'absolute', justifyContent: 'center', alignItems: 'center', display: 'inline-flex'}}>
+    <div style={{flex: '1 1 0', background: '#57C30A', overflow: 'hidden', borderRadius: 100, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+      <div style={{paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, justifyContent: 'center', alignItems: 'center', gap: 8, display: 'flex'}}>
+        <div style={{justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'var(--Schemes-On-Primary, white)', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', lineHeight: 24, letterSpacing: 0.15, wordWrap: 'break-word'}}>Keep Going </div>
+      </div>
+    </div>
+  </div>
+  <div style={{width: 250, left: 120, top: 188, position: 'absolute', justifyContent: 'center', display: 'flex', flexDirection: 'column', color: 'var(--Miscellaneous-Floating-Tab---Text-Unselected, #090909)', fontSize: 30, fontFamily: 'DIN Alternate', fontWeight: '700', lineHeight: 32, letterSpacing: 0.10, wordWrap: 'break-word'}}>Your investing personality check</div>
+  <div style={{width: 40, height: 40, padding: 4, left: 24, top: 99, position: 'absolute', background: 'var(--Miscellaneous-Bar-border, rgba(0, 0, 0, 0.30))', borderRadius: 16, justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex'}}>
+    <div data-style="Linear" style={{width: 32, height: 32, position: 'relative'}}>
+      <div style={{width: 8.09, height: 16.19, left: 4.67, top: 7.91, position: 'absolute', outline: '1.50px white solid', outlineOffset: '-0.75px'}} />
+      <div style={{width: 32, height: 32, left: 32, top: 32, position: 'absolute', transform: 'rotate(-180deg)', transformOrigin: 'top left', opacity: 0}} />
+    </div>
+  </div>
+</div>

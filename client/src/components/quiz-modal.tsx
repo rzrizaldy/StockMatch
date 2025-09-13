@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { X, Shield, TrendingUp, Rocket, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
+import { X, Calendar, Plane, Building, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
 import { BullMascot, BearMascot } from "@/components/mascot";
 import type { UserProfile } from "@/pages/quiz";
 
@@ -63,7 +63,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return profile.risk !== '';
+        return profile.risk !== '' && ['short-term', 'medium-term', 'long-term'].includes(profile.risk);
       case 2:
         return profile.industries.length > 0;
       case 3:
@@ -93,13 +93,13 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
       
       {/* Modal Content */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <div className="bg-card rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden" style={{maxWidth: '375px'}}>
           
           {/* Progress Header */}
-          <div className="p-6 border-b border-border">
+          <div className="px-6 pt-4 pb-2">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold" data-testid="text-quiz-title">
-                Let's personalize your experience
+              <h2 className="text-2xl font-bold text-center" data-testid="text-quiz-title" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '30px', fontWeight: '700', lineHeight: '32px', letterSpacing: '0.10px', color: '#090909'}}>
+                Your investing personality check
               </h2>
               <button 
                 onClick={handleClose} 
@@ -111,10 +111,10 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             </div>
             
             {/* Progress Bar */}
-            <div className="w-full bg-muted rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-3 mt-4" style={{background: '#E5E5E5'}}>
               <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
+                className="h-3 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%`, background: '#57C30A' }}
                 data-testid="progress-quiz"
               />
             </div>
@@ -124,63 +124,70 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           </div>
           
           {/* Quiz Steps */}
-          <div className="p-6 space-y-6">
+          <div className="px-7 py-4 space-y-6">
             
-            {/* Step 1: Investment Style */}
+            {/* Step 1: Money Goal */}
             {currentStep === 1 && (
               <div data-testid="quiz-step-1">
-                <h3 className="text-lg font-medium mb-4">What's your investment style?</h3>
-                <div className="space-y-3">
+                <div className="flex items-center mb-6">
+                  <div className="w-20 h-28 mr-4">
+                    <BullMascot className="w-full h-full" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h3>
+                  </div>
+                </div>
+                <div className="space-y-4">
                   <button
-                    onClick={() => handleRiskSelect('conservative')}
-                    className={`w-full p-4 border rounded-lg text-left hover:border-primary hover:bg-primary/5 transition-colors ${
-                      profile.risk === 'conservative' ? 'border-primary bg-primary/10' : 'border-border'
+                    onClick={() => handleRiskSelect('short-term')}
+                    className={`w-full px-4 py-3 border rounded-lg text-left hover:border-primary/55 transition-colors ${
+                      profile.risk === 'short-term' ? 'border-primary/55 outline outline-1 outline-primary/55' : 'border-primary/20'
                     }`}
-                    data-testid="button-risk-conservative"
+                    data-testid="button-goal-short-term"
                   >
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mr-4">
-                        <Shield className="w-6 h-6 text-secondary" />
+                      <div className="w-6 h-6 mr-4 flex items-center justify-center">
+                        <Calendar className="w-6 h-6 text-primary" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <div className="font-medium">Slow & Steady</div>
-                        <div className="text-sm text-muted-foreground">Conservative, stable growth</div>
+                        <div className="font-normal text-[15px] text-[#322F35]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.30px'}}>Short-term treats</div>
+                        <div className="text-[13px] text-[#8E8E93]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.26px'}}>Around 1 year</div>
                       </div>
                     </div>
                   </button>
                   
                   <button
-                    onClick={() => handleRiskSelect('balanced')}
-                    className={`w-full p-4 border rounded-lg text-left hover:border-primary hover:bg-primary/5 transition-colors ${
-                      profile.risk === 'balanced' ? 'border-primary bg-primary/10' : 'border-border'
+                    onClick={() => handleRiskSelect('medium-term')}
+                    className={`w-full px-4 py-3 border rounded-lg text-left hover:border-primary/55 transition-colors ${
+                      profile.risk === 'medium-term' ? 'border-primary/55 outline outline-1 outline-primary/55' : 'border-primary/20'
                     }`}
-                    data-testid="button-risk-balanced"
+                    data-testid="button-goal-medium-term"
                   >
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mr-4">
-                        <TrendingUp className="w-6 h-6 text-primary" />
+                      <div className="w-6 h-6 mr-4 flex items-center justify-center">
+                        <Plane className="w-6 h-6 text-primary" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <div className="font-medium">Balanced Growth</div>
-                        <div className="text-sm text-muted-foreground">Mix of growth and stability</div>
+                        <div className="font-normal text-[15px] text-[#322F35]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.30px'}}>Medium dreams</div>
+                        <div className="text-[13px] text-[#8E8E93]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.26px'}}>Around 3 years</div>
                       </div>
                     </div>
                   </button>
                   
                   <button
-                    onClick={() => handleRiskSelect('aggressive')}
-                    className={`w-full p-4 border rounded-lg text-left hover:border-primary hover:bg-primary/5 transition-colors ${
-                      profile.risk === 'aggressive' ? 'border-primary bg-primary/10' : 'border-border'
+                    onClick={() => handleRiskSelect('long-term')}
+                    className={`w-full px-4 py-3 border rounded-lg text-left hover:border-primary/55 transition-colors ${
+                      profile.risk === 'long-term' ? 'border-primary/55 outline outline-1 outline-primary/55' : 'border-primary/20'
                     }`}
-                    data-testid="button-risk-aggressive"
+                    data-testid="button-goal-long-term"
                   >
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mr-4">
-                        <Rocket className="w-6 h-6 text-accent" />
+                      <div className="w-6 h-6 mr-4 flex items-center justify-center">
+                        <Building className="w-6 h-6 text-primary" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <div className="font-medium">High Flyer</div>
-                        <div className="text-sm text-muted-foreground">High growth potential</div>
+                        <div className="font-normal text-[15px] text-[#322F35]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.30px'}}>Big future plans</div>
+                        <div className="text-[13px] text-[#8E8E93]" style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.26px'}}>5+ years</div>
                       </div>
                     </div>
                   </button>
@@ -325,7 +332,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           </div>
           
           {/* Modal Footer */}
-          <div className="p-6 border-t border-border">
+          <div className="px-7 pb-6 pt-4">
             <div className="flex space-x-3">
               {currentStep > 1 && (
                 <button
@@ -341,10 +348,11 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className="flex-1 bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                  className="flex-1 bg-primary text-primary-foreground py-4 px-6 rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors text-[16px]"
                   data-testid="button-quiz-next"
+                  style={{fontFamily: 'Inter, sans-serif', letterSpacing: '0.15px'}}
                 >
-                  Next
+                  Keep Going
                 </button>
               ) : (
                 <button
