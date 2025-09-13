@@ -136,7 +136,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 1: Money Goal */}
             {currentStep === 1 && (
               <div data-testid="quiz-step-1">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h4>
+                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>Your money goal?</h4>
                 <div className="space-y-4">
                   <button
                     onClick={() => handleRiskSelect('short-term')}
@@ -198,7 +198,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 2: Industry Preferences */}
             {currentStep === 2 && (
               <div data-testid="quiz-step-2">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>What industries excite you?</h4>
+                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>What industries excite you?</h4>
                 <p className="text-sm text-muted-foreground mb-4">Select all that interest you</p>
                 <div className="grid grid-cols-2 gap-3">
                   {industries.map((industry) => {
@@ -228,7 +228,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 3: ESG Preferences */}
             {currentStep === 3 && (
               <div data-testid="quiz-step-3">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Do you value social impact?</h4>
+                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>Do you value social impact?</h4>
                 <p className="text-sm text-muted-foreground mb-6">
                   Would you like us to prioritize companies with strong environmental, social, and governance practices?
                 </p>
@@ -276,7 +276,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 4: Investment Amount */}
             {currentStep === 4 && (
               <div data-testid="quiz-step-4">
-                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>How much should you invest today?</h4>
+                <h4 className="text-lg font-bold mb-6" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '24px', letterSpacing: '0.48px'}}>How much should you invest today?</h4>
                 <p className="text-sm text-muted-foreground mb-6">
                   Enter the amount you're comfortable investing to get personalized projections.
                 </p>
