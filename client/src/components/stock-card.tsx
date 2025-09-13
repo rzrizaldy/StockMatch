@@ -396,7 +396,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
 
         {/* AI Sentiment Summary */}
         <div className="flex-1 flex flex-col justify-center min-h-0">
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 h-full flex flex-col">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 h-full flex flex-col pt-[24px] pb-[24px] pl-[18px] pr-[18px]">
             <h4 className="text-xs font-medium text-gray-600 mb-2">Why this might interest you:</h4>
             <div className="text-sm text-gray-900 leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
               {enhanceSentimentText(stock.sentimentSummary || stock.hook || getDefaultSentiment(stock))}
@@ -420,7 +420,6 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
           </div>
         </div>
       </div>
-      
       {/* Enhanced Swipe Action Hints with Animations */}
       <div 
         className={`absolute top-4 right-4 transition-all duration-200 ${
@@ -441,7 +440,6 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
           PASS
         </div>
       </div>
-      
       {/* Celebratory Heart Burst Effect */}
       {isAnimatingLike && (
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -465,7 +463,6 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
           </div>
         </div>
       )}
-      
       {/* Pass Animation Effect */}
       {isAnimatingPass && (
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
