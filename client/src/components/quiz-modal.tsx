@@ -131,7 +131,7 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
               <div data-testid="quiz-step-1">
                 <div className="flex items-center mb-6">
                   <div className="w-20 h-28 mr-4">
-                    <BullMascot className="w-full h-full" />
+                    <BullMascot size="quiz" className="w-full h-full" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h3>
