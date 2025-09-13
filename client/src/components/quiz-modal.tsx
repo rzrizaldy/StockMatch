@@ -211,7 +211,6 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 2: Industry Preferences */}
             {currentStep === 2 && (
               <div data-testid="quiz-step-2">
-                <h3 className="text-lg font-medium mb-4">What industries excite you?</h3>
                 <p className="text-sm text-muted-foreground mb-4">Select all that interest you</p>
                 <div className="grid grid-cols-2 gap-3">
                   {industries.map((industry) => {
@@ -241,7 +240,6 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 3: ESG Preferences */}
             {currentStep === 3 && (
               <div data-testid="quiz-step-3">
-                <h3 className="text-lg font-medium mb-4">Do you value social impact?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Would you like us to prioritize companies with strong environmental, social, and governance practices?
                 </p>
@@ -289,7 +287,6 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             {/* Step 4: Investment Amount */}
             {currentStep === 4 && (
               <div data-testid="quiz-step-4">
-                <h3 className="text-lg font-medium mb-4">How much would you like to invest today?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Enter the amount you're comfortable investing to get personalized projections.
                 </p>
