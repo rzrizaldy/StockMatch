@@ -63,7 +63,7 @@ Respond with JSON in this exact format:
       ],
       response_format: { type: "json_object" },
       max_tokens: 200,
-      temperature: 1.0 // Explicitly set to supported value for gpt-4o-mini
+      // Remove temperature parameter as gpt-4o-mini uses default of 1.0
     });
 
     const result = JSON.parse(response.choices[0].message.content || '{}');

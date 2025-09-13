@@ -216,8 +216,8 @@ export default function Swipe() {
       )}
       
       {/* Card Stack Container */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="relative w-full max-w-sm">
+      <div className="flex-1 flex items-center justify-center px-4 py-6">
+        <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-4" data-testid="state-no-cards">
               <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto">
@@ -227,7 +227,7 @@ export default function Swipe() {
               <p className="text-muted-foreground">Ready to see your portfolio?</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="relative w-full h-full">
               {/* Current Card */}
               {stockCards[currentCardIndex] && (
                 <StockCard
@@ -242,7 +242,7 @@ export default function Swipe() {
               {/* Next Cards (preview) */}
               {stockCards[currentCardIndex + 1] && (
                 <div
-                  className="absolute inset-0 transform scale-95 opacity-90"
+                  className="absolute top-0 left-0 w-full h-full transform scale-95 opacity-90"
                   style={{ zIndex: 20, pointerEvents: 'none' }}
                 >
                   <StockCard
@@ -255,7 +255,7 @@ export default function Swipe() {
               
               {stockCards[currentCardIndex + 2] && (
                 <div
-                  className="absolute inset-0 transform scale-90 opacity-80"
+                  className="absolute top-0 left-0 w-full h-full transform scale-90 opacity-80"
                   style={{ zIndex: 10, pointerEvents: 'none' }}
                 >
                   <StockCard

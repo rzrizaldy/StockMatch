@@ -9,6 +9,50 @@ interface StockCardProps {
   style?: React.CSSProperties;
 }
 
+// Mock sentiment generator for smooth UX when AI fails
+const getDefaultSentiment = (stock: StockCardType): string => {
+  const sentiments = {
+    tech: [
+      "This tech innovator shows strong growth potential in the digital transformation space.",
+      "A solid technology play with expanding market reach and competitive positioning.",
+      "This company is well-positioned for the future of digital innovation and growth."
+    ],
+    healthcare: [
+      "Healthcare companies offer stability and steady demand in all market conditions.",
+      "This health sector leader provides essential services with defensive characteristics.", 
+      "Strong fundamentals in the growing healthcare industry make this appealing."
+    ],
+    finance: [
+      "Financial companies tend to be stable for long-term wealth building strategies.",
+      "This established financial player offers dividend potential and market stability.",
+      "Banking and finance sectors provide foundational stability to portfolios."
+    ],
+    consumer: [
+      "Consumer brands with daily-use products tend to show resilient performance.",
+      "This company serves everyday consumer needs with proven market demand.",
+      "Strong consumer loyalty and brand recognition drive consistent returns."
+    ],
+    energy: [
+      "Energy companies offer exposure to commodity cycles and infrastructure growth.",
+      "This energy play provides diversification and potential inflation protection.",
+      "The energy transition creates opportunities for established industry players."
+    ],
+    automotive: [
+      "The automotive industry is transforming with electric vehicles and new technology.",
+      "This company is positioned in the future of transportation and mobility.",
+      "Strong engineering and innovation drive competitive advantages in automotive."
+    ]
+  };
+
+  const industry = stock.industry.toLowerCase();
+  const categoryKey = Object.keys(sentiments).find(key => industry.includes(key)) || 'tech';
+  const options = sentiments[categoryKey as keyof typeof sentiments];
+  
+  // Use ticker as seed for consistent selection
+  const seedValue = stock.ticker.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return options[seedValue % options.length];
+};
+
 export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: StockCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
@@ -163,7 +207,7 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
   return (
     <div
       ref={cardRef}
-      className="absolute inset-0 bg-card rounded-xl shadow-lg border border-border p-6 cursor-grab select-none transition-all duration-200"
+      className="w-full h-[600px] bg-card rounded-2xl shadow-xl border border-border cursor-grab select-none transition-all duration-200 overflow-hidden"
       style={{
         ...style,
         transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out'
@@ -172,73 +216,79 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       onTouchStart={handleTouchStart}
       data-testid={`stock-card-${stock.ticker}`}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full p-6">
         {/* Header: Ticker and Risk Indicator */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h2 className="text-3xl font-bold text-foreground mb-1" data-testid={`stock-ticker-${stock.ticker}`}>
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl font-bold text-foreground mb-1 truncate" data-testid={`stock-ticker-${stock.ticker}`}>
               {stock.ticker}
             </h2>
-            <p className="text-lg text-muted-foreground" data-testid={`stock-name-${stock.ticker}`}>
+            <p className="text-sm text-muted-foreground truncate" data-testid={`stock-name-${stock.ticker}`}>
               {stock.name}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <div className={`w-3 h-3 rounded-full ${riskInfo.color}`} title={riskInfo.description}></div>
-            <span className="text-sm text-muted-foreground">{riskInfo.label}</span>
+            <span className="text-xs text-muted-foreground">{riskInfo.label}</span>
           </div>
         </div>
 
         {/* Price and Change */}
-        <div className="mb-6">
-          <div className="text-2xl font-semibold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
+        <div className="mb-4">
+          <div className="text-xl font-semibold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
             {stock.price || '$150.25'}
           </div>
-          <div className={`text-lg font-medium ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
+          <div className={`text-sm font-medium ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
             {stock.priceChange || '+2.5%'}
           </div>
         </div>
 
         {/* Price Chart */}
-        {stock.chartData && stock.chartData.length > 0 && (
-          <StockChart 
-            data={stock.chartData.map(price => parseFloat(price))}
-            currentPrice={parseFloat(stock.price?.replace('$', '') || '0')}
-            priceChange={stock.priceChange}
-            ticker={stock.ticker}
-          />
-        )}
+        <div className="mb-4">
+          {stock.chartData && stock.chartData.length > 0 ? (
+            <StockChart 
+              data={stock.chartData.map(price => parseFloat(price))}
+              currentPrice={parseFloat(stock.price?.replace('$', '') || '0')}
+              priceChange={stock.priceChange}
+              ticker={stock.ticker}
+            />
+          ) : (
+            <div className="bg-muted/30 rounded-lg p-3 border border-border/30 h-20 flex items-center justify-center">
+              <span className="text-xs text-muted-foreground">Chart data loading...</span>
+            </div>
+          )}
+        </div>
 
         {/* AI Sentiment Summary */}
-        <div className="flex-1 flex flex-col justify-center">
-          <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-            <h4 className="text-sm font-medium text-muted-foreground mb-2">Why this might interest you:</h4>
-            <p className="text-foreground leading-relaxed" data-testid={`stock-sentiment-${stock.ticker}`}>
-              {stock.sentimentSummary || stock.hook || "This company represents a solid investment opportunity with growth potential in its industry sector."}
+        <div className="flex-1 flex flex-col justify-center min-h-0">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border/50 h-full flex flex-col">
+            <h4 className="text-xs font-medium text-muted-foreground mb-2">Why this might interest you:</h4>
+            <p className="text-sm text-foreground leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
+              {stock.sentimentSummary || stock.hook || getDefaultSentiment(stock)}
             </p>
           </div>
         </div>
 
         {/* Company Logo at Bottom */}
-        <div className="mt-6 flex justify-center">
-          <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+        <div className="mt-4 flex justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
             {stock.logoUrl ? (
               <img 
                 src={stock.logoUrl} 
                 alt={`${stock.name} logo`} 
-                className="w-8 h-8 rounded object-contain"
+                className="w-6 h-6 rounded object-contain"
                 onError={(e) => {
                   // Fallback to ticker if logo fails to load
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   const parent = target.parentElement;
                   if (parent) {
-                    parent.innerHTML = `<span class="text-lg font-bold text-muted-foreground">${stock.ticker.charAt(0)}</span>`;
+                    parent.innerHTML = `<span class="text-sm font-bold text-muted-foreground">${stock.ticker.charAt(0)}</span>`;
                   }
                 }}
               />
             ) : (
-              <span className="text-lg font-bold text-muted-foreground">{stock.ticker.charAt(0)}</span>
+              <span className="text-sm font-bold text-muted-foreground">{stock.ticker.charAt(0)}</span>
             )}
           </div>
         </div>
@@ -246,20 +296,20 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       
       {/* Swipe Action Hints */}
       <div 
-        className={`absolute top-4 right-4 transition-opacity ${
+        className={`absolute top-4 right-4 transition-opacity duration-200 ${
           dragDirection === 'right' && dragDistance > 50 ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="bg-secondary/20 border-2 border-secondary text-secondary px-3 py-1 rounded-full text-sm font-medium">
+        <div className="bg-secondary/20 border-2 border-secondary text-secondary px-2 py-1 rounded-full text-xs font-medium">
           LIKE
         </div>
       </div>
       <div 
-        className={`absolute top-4 left-4 transition-opacity ${
+        className={`absolute top-4 left-4 transition-opacity duration-200 ${
           dragDirection === 'left' && dragDistance > 50 ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="bg-destructive/20 border-2 border-destructive text-destructive px-3 py-1 rounded-full text-sm font-medium">
+        <div className="bg-destructive/20 border-2 border-destructive text-destructive px-2 py-1 rounded-full text-xs font-medium">
           PASS
         </div>
       </div>
