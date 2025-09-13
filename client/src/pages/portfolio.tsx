@@ -246,18 +246,17 @@ export default function Portfolio() {
       </div>
       
       {/* Header with Bull Character and Text in Row */}
-      <div className="absolute left-8 right-8 z-20" style={{ top: '180px' }}>
-        <div className="flex items-center justify-center gap-4">
+      <div className="absolute left-8 right-8 z-20" style={{ top: '160px' }}>
+        <div className="flex flex-col items-center justify-center gap-6">
           {/* Bull Character */}
           <img 
             src={bullImage} 
             alt="Bull Character" 
-            style={{ width: '80px', height: '96px' }}
-            className="flex-shrink-0"
+            className="w-[120px] h-[144px] flex-shrink-0"
           />
           
           {/* Header Text */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2 text-center">
             <h1 
               className="font-din text-white font-bold leading-8 tracking-wide" 
               style={{ fontSize: '30px' }}
@@ -265,7 +264,7 @@ export default function Portfolio() {
             >
               Portfolio Created
             </h1>
-            <div className="px-2 py-1 rounded-lg">
+            <div className="px-4 py-2 rounded-lg">
               <p 
                 className="font-din text-white font-bold leading-5 tracking-wide" 
                 style={{ fontSize: '15px' }}
@@ -281,20 +280,9 @@ export default function Portfolio() {
       {/* White Content Section */}
       <div 
         className="absolute inset-x-0 bg-white rounded-t-3xl overflow-y-auto" 
-        style={{ top: '374px', height: 'calc(100vh - 374px)' }}
+        style={{ top: '410px', height: 'calc(100vh - 410px)' }}
       >
         <div className="px-6 py-8 space-y-6">
-          
-          {/* Success Message Card */}
-          <div className="text-center space-y-4 fade-in" data-testid="section-success">
-            <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-10 h-10 text-secondary" />
-            </div>
-            <h2 className="font-din text-2xl font-bold">🎉 Success!</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Your personalized portfolio is ready with {stockCount} carefully selected companies.
-            </p>
-          </div>
           
           {/* Portfolio Value Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
