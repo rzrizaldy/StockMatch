@@ -126,17 +126,30 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           {/* Quiz Steps */}
           <div className="px-7 py-4 space-y-6">
             
+            {/* Bull Mascot - appears on all steps */}
+            <div className="flex items-center mb-6">
+              <div className="w-20 h-28 mr-4">
+                <BullMascot size="quiz" className="w-full h-full" />
+              </div>
+              <div className="flex-1">
+                {currentStep === 1 && (
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h3>
+                )}
+                {currentStep === 2 && (
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>What industries excite you?</h3>
+                )}
+                {currentStep === 3 && (
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Do you value social impact?</h3>
+                )}
+                {currentStep === 4 && (
+                  <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>How much should you invest today?</h3>
+                )}
+              </div>
+            </div>
+            
             {/* Step 1: Money Goal */}
             {currentStep === 1 && (
               <div data-testid="quiz-step-1">
-                <div className="flex items-center mb-6">
-                  <div className="w-20 h-28 mr-4">
-                    <BullMascot size="quiz" className="w-full h-full" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold" style={{fontFamily: 'DIN Alternate, sans-serif', fontSize: '24px', fontWeight: '700', lineHeight: '16px', letterSpacing: '0.48px'}}>Your money goal?</h3>
-                  </div>
-                </div>
                 <div className="space-y-4">
                   <button
                     onClick={() => handleRiskSelect('short-term')}
