@@ -331,51 +331,39 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           
           {/* Modal Footer */}
           <div className="px-5 pb-6 pt-8">
-            <div className="flex space-x-3">
-              {currentStep > 1 && (
-                <button
-                  onClick={handleBack}
-                  className="flex-1 bg-gray-100 text-gray-600 py-3 px-4 rounded-xl font-medium hover:bg-gray-200 transition-colors"
-                  data-testid="button-quiz-back"
-                >
-                  Back
-                </button>
-              )}
-              
-              {currentStep < 4 ? (
-                <button
-                  onClick={handleNext}
-                  disabled={!canProceed()}
-                  className="flex-1 py-4 px-6 rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#4BAE08] transition-colors text-white text-[16px]"
-                  data-testid="button-quiz-next"
-                  style={{
-                    background: '#57C30A',
-                    fontFamily: 'Inter, sans-serif', 
-                    fontWeight: '500',
-                    lineHeight: '24px',
-                    letterSpacing: '0.15px'
-                  }}
-                >
-                  Keep Going
-                </button>
-              ) : (
-                <button
-                  onClick={handleFinish}
-                  disabled={isLoading || !canProceed()}
-                  className="flex-1 py-4 px-6 rounded-full font-medium hover:bg-[#4BAE08] transition-colors disabled:opacity-50 text-white"
-                  data-testid="button-quiz-finish"
-                  style={{
-                    background: '#57C30A',
-                    fontFamily: 'Inter, sans-serif', 
-                    fontWeight: '500',
-                    lineHeight: '24px',
-                    letterSpacing: '0.15px'
-                  }}
-                >
-                  {isLoading ? 'Finding Matches...' : 'Find My Matches'}
-                </button>
-              )}
-            </div>
+            {currentStep < 4 ? (
+              <button
+                onClick={handleNext}
+                disabled={!canProceed()}
+                className="w-full py-4 px-6 rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#4BAE08] transition-colors text-white text-[16px]"
+                data-testid="button-quiz-next"
+                style={{
+                  background: '#57C30A',
+                  fontFamily: 'Inter, sans-serif', 
+                  fontWeight: '500',
+                  lineHeight: '24px',
+                  letterSpacing: '0.15px'
+                }}
+              >
+                Keep Going
+              </button>
+            ) : (
+              <button
+                onClick={handleFinish}
+                disabled={isLoading || !canProceed()}
+                className="w-full py-4 px-6 rounded-full font-medium hover:bg-[#4BAE08] transition-colors disabled:opacity-50 text-white"
+                data-testid="button-quiz-finish"
+                style={{
+                  background: '#57C30A',
+                  fontFamily: 'Inter, sans-serif', 
+                  fontWeight: '500',
+                  lineHeight: '24px',
+                  letterSpacing: '0.15px'
+                }}
+              >
+                {isLoading ? 'Finding Matches...' : 'Find My Matches'}
+              </button>
+            )}
           </div>
         </div>
       </div>
