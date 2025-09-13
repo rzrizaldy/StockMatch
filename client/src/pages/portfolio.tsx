@@ -63,8 +63,37 @@ export default function Portfolio() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
-        <div className="text-center space-y-6">
+      <div className="min-h-screen flex flex-col justify-center items-center px-6 relative bg-white overflow-hidden">
+        {/* Portfolio Background */}
+        <div className="absolute inset-0 w-full h-full" style={{background: 'linear-gradient(59deg, #57C30A 0%, white 86%)'}}>
+          {/* Large decorative circle */}
+          <div className="absolute w-[584px] h-[394px] -left-32 -top-32 bg-[#B6D8B6] rounded-full"></div>
+          
+          {/* Scattered celebration shapes */}
+          <div className="absolute w-6 h-5 left-80 top-20 bg-[#57C30A]"></div>
+          <div className="absolute w-8 h-5 left-72 top-60 bg-[#57C30A]"></div>
+          <div className="absolute w-4 h-6 left-[450px] top-20 bg-[#57C30A]"></div>
+          <div className="absolute w-4 h-6 left-44 top-72 bg-[#57C30A]"></div>
+          <div className="absolute w-4 h-6 left-[480px] top-68 bg-[#57C30A]"></div>
+          <div className="absolute w-4 h-7 left-[470px] top-42 bg-[#57C30A]"></div>
+          <div className="absolute w-5 h-9 left-[440px] top-60 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-3 left-[400px] top-20 bg-[#B1D671]"></div>
+          <div className="absolute w-2 h-3 left-72 top-68 bg-[#B1D671]"></div>
+          <div className="absolute w-3 h-2 left-[490px] top-28 bg-[#B1D671]"></div>
+          <div className="absolute w-3 h-2 left-[450px] top-80 bg-[#B1D671]"></div>
+          <div className="absolute w-3 h-2 left-80 top-76 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-2 left-[440px] top-36 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-2 left-88 top-24 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-2 left-[420px] top-72 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-2 left-80 top-48 bg-[#57C30A]"></div>
+          <div className="absolute w-2 h-2 left-[500px] top-60 bg-[#57C30A]"></div>
+          <div className="absolute w-3 h-2 left-[400px] top-36 bg-[#B1D671]"></div>
+          <div className="absolute w-2 h-3 left-[510px] top-84 bg-[#57C30A]"></div>
+          <div className="absolute w-3 h-3 left-[400px] top-40 bg-[#023341]"></div>
+          <div className="absolute w-3 h-7 left-52 top-24 bg-[#57C30A]"></div>
+        </div>
+        
+        <div className="text-center space-y-6 relative z-10">
           <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
           <h2 className="text-2xl font-semibold" data-testid="text-loading-portfolio">Creating your portfolio...</h2>
           <p className="text-muted-foreground">Analyzing your preferences and building your personalized investment portfolio</p>
@@ -75,8 +104,13 @@ export default function Portfolio() {
 
   if (error || !portfolioData) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
-        <div className="text-center space-y-6">
+      <div className="min-h-screen flex flex-col justify-center items-center px-6 relative bg-white overflow-hidden">
+        {/* Portfolio Background */}
+        <div className="absolute inset-0 w-full h-full" style={{background: 'linear-gradient(59deg, #57C30A 0%, white 86%)'}}>
+          <div className="absolute w-[584px] h-[394px] -left-32 -top-32 bg-[#B6D8B6] rounded-full"></div>
+        </div>
+        
+        <div className="text-center space-y-6 relative z-10">
           <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
             <AlertTriangle className="w-8 h-8 text-destructive" />
           </div>
