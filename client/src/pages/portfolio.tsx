@@ -184,16 +184,7 @@ export default function Portfolio() {
   return (
     <div className="w-full h-screen overflow-hidden relative" style={{ background: 'linear-gradient(59deg, #57C30A 0%, white 86%)' }}>
       {/* Background Decorative Elements */}
-      {/* Large background circle */}
-      <div 
-        className="absolute bg-[#B6D8B6] rounded-full"
-        style={{ 
-          width: '584.76px', 
-          height: '394.58px', 
-          left: '-125px', 
-          top: '-122px'
-        }}
-      ></div>
+      
       
       {/* Scattered celebration elements - exact positioning from Figma */}
       <div className="absolute bg-[#57C30A]" style={{ width: '24px', height: '20px', left: '304px', top: '76px' }}></div>
