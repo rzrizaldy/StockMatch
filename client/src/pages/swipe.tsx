@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, X, CheckCircle, ArrowLeft, ThumbsDown } from "lucide-react";
+import { Heart, X, CheckCircle, ArrowLeft, ThumbsDown, Target, TrendingUp, Layers } from "lucide-react";
 import StockCard from "@/components/stock-card";
 import type { StockCard as StockCardType } from "@shared/schema";
 
@@ -83,6 +83,50 @@ export default function Swipe() {
       console.error('Portfolio save error:', error);
     }
   });
+
+  const handleFinishEarly = () => {
+    if (likedStocks.length === 0) {
+      toast({
+        title: "Select at least one stock",
+        description: "Choose some companies you like before creating your portfolio!",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    savePortfolioMutation.mutate(likedStocks);
+  };
+
+  // Get portfolio strategy info based on selection count
+  const getPortfolioStrategy = (count: number) => {
+    if (count >= 1 && count <= 3) {
+      return {
+        name: "The Sniper 🎯",
+        description: "Focused precision investing",
+        subtitle: "Quality over quantity - targeting your strongest convictions",
+        icon: Target,
+        color: "text-blue-500"
+      };
+    } else if (count >= 4 && count <= 8) {
+      return {
+        name: "The Balanced Explorer 📈", 
+        description: "Smart diversification strategy",
+        subtitle: "Well-balanced mix across different opportunities",
+        icon: TrendingUp,
+        color: "text-green-500"
+      };
+    } else {
+      return {
+        name: "The Maximalist 🚀",
+        description: "Maximum diversification approach", 
+        subtitle: "Cast a wide net to capture every opportunity",
+        icon: Layers,
+        color: "text-purple-500"
+      };
+    }
+  };
+
+  const currentStrategy = getPortfolioStrategy(likedStocks.length);
 
 
   useEffect(() => {
@@ -191,16 +235,43 @@ export default function Swipe() {
           </button>
         </div>
         
-        {/* Main Title */}
+        {/* Main Title and Strategy Info */}
         <div className="text-center mt-8">
-          <h1 className="text-white text-3xl font-bold font-din" data-testid="text-swipe-title">
+          <h1 className="text-white text-3xl font-bold font-din mb-4" data-testid="text-swipe-title">
             Swipe the ones you vibe with
           </h1>
+          
+          {/* Portfolio Strategy Display */}
+          {likedStocks.length > 0 && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mx-4 mb-4">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <currentStrategy.icon className={`w-5 h-5 ${currentStrategy.color}`} />
+                <h3 className="text-white font-bold text-lg">{currentStrategy.name}</h3>
+              </div>
+              <p className="text-white/80 text-sm mb-1">{currentStrategy.description}</p>
+              <p className="text-white/60 text-xs">{currentStrategy.subtitle}</p>
+              <div className="text-white/70 text-sm mt-2">
+                {likedStocks.length} stock{likedStocks.length !== 1 ? 's' : ''} selected
+              </div>
+            </div>
+          )}
+          
+          {/* Done with Portfolio Button */}
+          {likedStocks.length > 0 && (
+            <button
+              onClick={handleFinishEarly}
+              disabled={savePortfolioMutation.isPending}
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-medium text-sm font-din disabled:opacity-50"
+              data-testid="button-finish-portfolio"
+            >
+              {savePortfolioMutation.isPending ? 'Creating Portfolio...' : `Build My ${currentStrategy.name} Portfolio`}
+            </button>
+          )}
         </div>
       </div>
       
       {/* Card Stack Container */}
-      <div className="flex-1 flex items-center justify-center px-4 pt-40 pb-6">
+      <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-6" style={{ marginTop: likedStocks.length > 0 ? '160px' : '120px' }}>
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-6 text-white" data-testid="state-no-cards">
