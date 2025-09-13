@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, X, CheckCircle, ArrowLeft } from "lucide-react";
+import { Heart, X, CheckCircle, ArrowLeft, ThumbsDown } from "lucide-react";
 import StockCard from "@/components/stock-card";
 import type { StockCard as StockCardType } from "@shared/schema";
 
@@ -264,20 +264,22 @@ export default function Swipe() {
       {/* Action Buttons */}
       {currentCardIndex < stockCards.length && (
         <div className="px-6 pb-8">
-          <div className="flex justify-center space-x-8">
+          <div className="flex justify-center space-x-4">
             <button
               onClick={handleSwipeLeft}
-              className="w-16 h-16 bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-full flex items-center justify-center transition-colors"
+              className="bg-white border border-gray-400/55 rounded-[20px] px-4 py-2 flex items-center space-x-2 hover:bg-gray-50 transition-colors font-din text-sm font-bold leading-4"
               data-testid="button-swipe-left"
             >
-              <X className="w-8 h-8" />
+              <ThumbsDown className="w-5 h-5" style={{ color: '#E9BD1B' }} />
+              <span className="text-black">PASS</span>
             </button>
             <button
               onClick={handleSwipeRight}
-              className="w-16 h-16 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-full flex items-center justify-center transition-colors"
+              className="bg-white border border-gray-400/55 rounded-[20px] px-4 py-2 flex items-center space-x-2 hover:bg-gray-50 transition-colors font-din text-sm font-bold leading-4"
               data-testid="button-swipe-right"
             >
-              <Heart className="w-8 h-8" />
+              <Heart className="w-5 h-5" style={{ color: '#EE5012' }} />
+              <span className="text-black">LIKE IT</span>
             </button>
           </div>
           <p className="text-center text-xs text-muted-foreground mt-3">
