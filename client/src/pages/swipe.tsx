@@ -165,16 +165,11 @@ export default function Swipe() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
-        <div className="text-center space-y-6 fade-in">
-          <BullMascot 
-            mood="loading" 
-            size="xl" 
-            animated={true}
-            message="Bull market ahead! Finding your perfect stock matches..."
-          />
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
           <h2 className="text-2xl font-semibold" data-testid="text-loading">Finding your matches...</h2>
           <p className="text-muted-foreground">
-            We're curating the perfect stocks based on your preferences
+            Curating personalized stocks based on your preferences
           </p>
           <div className="w-48 bg-muted rounded-full h-2 mx-auto">
             <div className="bg-primary h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
@@ -188,12 +183,9 @@ export default function Swipe() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6">
-          <BearMascot 
-            mood="thoughtful" 
-            size="xl" 
-            animated={true}
-            message="Bear with us! Let's check your connection and try again."
-          />
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+            <X className="w-8 h-8 text-destructive" />
+          </div>
           <h2 className="text-2xl font-semibold text-destructive" data-testid="text-error">
             Failed to load stocks
           </h2>
@@ -219,6 +211,7 @@ export default function Swipe() {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
+              <BullMascot size="sm" />
               <h1 className="text-xl font-semibold" data-testid="text-app-title">StockMatch</h1>
               {/* Gamified Level Badge */}
               <div className="flex items-center space-x-2">
@@ -284,53 +277,31 @@ export default function Swipe() {
               </div>
             </div>
             
-            {/* Motivational Message with Mascots */}
-            <div className="text-center space-y-2">
+            {/* Clean Progress Feedback */}
+            <div className="text-center">
               {likedStocks.length === 0 && (
-                <div className="flex items-center justify-center space-x-2">
-                  <BearMascot mood="encouraging" size="sm" />
-                  <p className="text-xs text-muted-foreground">Start selecting stocks to build your portfolio!</p>
-                </div>
+                <p className="text-xs text-muted-foreground">Start selecting stocks to build your portfolio</p>
               )}
               {likedStocks.length >= 1 && likedStocks.length < 4 && (
-                <div className="flex items-center justify-center space-x-2">
-                  <BullMascot mood="happy" size="sm" />
-                  <p className="text-xs text-muted-foreground">Great focus! {likedStocks.length} stock{likedStocks.length > 1 ? 's' : ''} selected • Ready to build portfolio!</p>
-                </div>
+                <p className="text-xs text-muted-foreground">Great focus! {likedStocks.length} stock{likedStocks.length > 1 ? 's' : ''} selected</p>
               )}
               {likedStocks.length >= 4 && likedStocks.length < 7 && (
-                <div className="flex items-center justify-center space-x-2">
-                  <BullMascot mood="celebrating" size="sm" />
-                  <p className="text-xs text-muted-foreground">Perfect balance! {likedStocks.length} diversified picks</p>
-                </div>
+                <p className="text-xs text-muted-foreground">Perfect balance! {likedStocks.length} diversified picks</p>
               )}
               {likedStocks.length >= 7 && (
-                <div className="flex items-center justify-center space-x-2">
-                  <BullMascot mood="encouraging" size="sm" />
-                  <p className="text-xs text-muted-foreground">Broad portfolio! {likedStocks.length} stocks selected</p>
-                </div>
+                <p className="text-xs text-muted-foreground">Broad portfolio! {likedStocks.length} stocks selected</p>
               )}
               {currentCardIndex >= stockCards.length && likedStocks.length > 0 && (
-                <div className="flex items-center justify-center space-x-2">
-                  <BullMascot mood="celebrating" size="sm" animated={true} />
-                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio ready! {likedStocks.length} stocks chosen 🎉</p>
-                </div>
+                <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio ready! {likedStocks.length} stocks chosen</p>
               )}
             </div>
           </div>
         </div>
       </div>
       
-      {/* Enhanced Swipe Instructions with Mascot */}
+      {/* Clean Swipe Instructions */}
       {showInstructions && (
         <div className="px-6 py-4 text-center border-b border-border bg-gradient-to-r from-secondary/5 to-primary/5" data-testid="instructions-swipe">
-          <div className="flex items-center justify-center space-x-4 mb-3">
-            <BearMascot 
-              mood="thoughtful" 
-              size="sm" 
-              message="Quick tip: Trust your instincts and swipe based on companies you believe in!"
-            />
-          </div>
           <div className="flex items-center justify-center space-x-6 text-sm">
             <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
               <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/20">
@@ -354,34 +325,14 @@ export default function Swipe() {
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-6" data-testid="state-no-cards">
-              {/* Bull Market Celebration */}
-              <div className="relative">
-                <BullMascot 
-                  mood="celebrating" 
-                  size="xl" 
-                  animated={true}
-                  message="🎉 Bull market ahead! You've built an amazing portfolio!"
-                />
-                {/* Particle Effects */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {[...Array(6)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`absolute animate-ping`}
-                      style={{
-                        animation: `ping 1s ease-out ${i * 0.1}s infinite`,
-                        transform: `rotate(${i * 60}deg) translateX(50px)`,
-                      }}
-                    >
-                      <Star className={`w-4 h-4 text-green-400 fill-current`} />
-                    </div>
-                  ))}
-                </div>
+              {/* Clean Success Message */}
+              <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
               </div>
               
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-foreground animate-pulse">Portfolio Complete! 🎯</h3>
-                <p className="text-lg text-green-600 dark:text-green-400 font-medium">Ready to charge the market!</p>
+                <h3 className="text-2xl font-bold text-foreground">Portfolio Complete!</h3>
+                <p className="text-lg text-green-600 dark:text-green-400 font-medium">Ready to review your selections</p>
                 <p className="text-muted-foreground">
                   You've reviewed {totalCards} stocks and selected {likedStocks.length} for your portfolio
                 </p>

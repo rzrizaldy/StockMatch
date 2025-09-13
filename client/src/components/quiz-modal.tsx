@@ -364,17 +364,9 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
         {isLoading && (
           <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 rounded-xl">
             <div className="text-center space-y-4">
-              <BullMascot 
-                mood="happy" 
-                size="xl" 
-                animated={true}
-                message="Great choices! Finding your perfect stock matches..."
-              />
-              <div className="animate-pulse">
-                <div className="w-32 bg-primary/20 rounded-full h-1 mx-auto">
-                  <div className="bg-primary h-1 rounded-full w-3/4 animate-bounce"></div>
-                </div>
-              </div>
+              <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+              <h3 className="text-lg font-semibold">Finding your matches...</h3>
+              <p className="text-muted-foreground">Analyzing your preferences</p>
             </div>
           </div>
         )}

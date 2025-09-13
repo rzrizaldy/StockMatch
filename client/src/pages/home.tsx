@@ -5,6 +5,11 @@ import { BullMascot, BearMascot } from "@/components/mascot";
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-gradient-to-br from-primary/10 via-background to-accent/10">
+      {/* Subtle Mascot in Header Area - Duolingo Style */}
+      <div className="absolute top-6 right-6">
+        <BullMascot size="md" />
+      </div>
+      
       <div className="text-center max-w-md mx-auto space-y-8 fade-in">
         {/* App Logo/Branding */}
         <div className="space-y-2">
@@ -17,16 +22,6 @@ export default function Home() {
           <p className="text-muted-foreground text-lg">
             Discover your perfect portfolio in 30 seconds
           </p>
-        </div>
-        
-        {/* Bull Mascot Welcome */}
-        <div className="flex justify-center mb-4">
-          <BullMascot 
-            mood="encouraging" 
-            size="lg" 
-            animated={true}
-            message="Ready to charge into the market? Let's build your perfect portfolio!"
-          />
         </div>
         
         {/* Value Proposition */}

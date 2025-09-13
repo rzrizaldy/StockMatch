@@ -63,14 +63,10 @@ export default function Portfolio() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
-        <div className="text-center space-y-6 fade-in">
-          <BullMascot 
-            mood="celebrating" 
-            size="xl" 
-            animated={true}
-            message="Your investment portfolio is taking shape! Time to build wealth!"
-          />
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
           <h2 className="text-2xl font-semibold" data-testid="text-loading-portfolio">Creating your portfolio...</h2>
+          <p className="text-muted-foreground">Analyzing your preferences and building your personalized investment portfolio</p>
         </div>
       </div>
     );
@@ -80,15 +76,13 @@ export default function Portfolio() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6">
-          <BearMascot 
-            mood="encouraging" 
-            size="xl" 
-            animated={true}
-            message="Don't worry! Let's start fresh and build your perfect portfolio."
-          />
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-8 h-8 text-destructive" />
+          </div>
           <h2 className="text-2xl font-semibold text-destructive" data-testid="text-error-portfolio">
             Failed to load portfolio
           </h2>
+          <p className="text-muted-foreground">Please try again or start over to create a new portfolio</p>
           <button
             onClick={() => setLocation('/')}
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium"
@@ -215,7 +209,10 @@ export default function Portfolio() {
       <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold" data-testid="text-portfolio-title">Your StockMatch Portfolio</h1>
+            <div className="flex items-center space-x-3">
+              <BullMascot size="sm" />
+              <h1 className="text-xl font-semibold" data-testid="text-portfolio-title">Your StockMatch Portfolio</h1>
+            </div>
             <button
               onClick={handleReset}
               className="text-muted-foreground hover:text-foreground"
@@ -510,15 +507,6 @@ export default function Portfolio() {
               </div>
             </div>
             
-            {/* Bull Mascot Guidance */}
-            <div className="flex justify-center py-4">
-              <BullMascot 
-                mood="encouraging" 
-                size="md" 
-                animated={true}
-                message="Great portfolio! Ready to take charge of your financial future?"
-              />
-            </div>
             
             {/* Enhanced Action Buttons */}
             <div className="space-y-3">
