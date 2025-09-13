@@ -63,23 +63,13 @@ export default function Home() {
         </div>
         
         {/* Get Started Button */}
-        <div className="w-[323px] absolute bottom-16 space-y-4">
+        <div className="w-[323px] absolute bottom-16">
           <Link href="/quiz">
             <button 
               data-testid="button-get-started"
               className="w-full bg-white text-[#57C30A] font-semibold text-lg py-4 rounded-full hover:bg-gray-50 transition-colors"
             >
               Get Started
-            </button>
-          </Link>
-          
-          {/* Temporary Test Link */}
-          <Link href="/sentiment-test">
-            <button 
-              data-testid="button-sentiment-test"
-              className="w-full bg-blue-600 text-white font-semibold text-sm py-3 rounded-full hover:bg-blue-700 transition-colors"
-            >
-              Test Sentiment Charts
             </button>
           </Link>
         </div>
