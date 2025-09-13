@@ -115,7 +115,7 @@ export default function StockChart({ data, currentPrice, priceChange, ticker, se
 
   return (
     <div className="mb-4" data-testid={`stock-chart-${ticker}`}>
-      <div className="bg-muted/30 rounded-lg p-3 border border-border/30">
+      <div className="bg-white rounded-lg p-3 border border-gray-200">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted-foreground">30-day trend & sentiment</span>
           <div className="flex items-center gap-2 text-xs">
