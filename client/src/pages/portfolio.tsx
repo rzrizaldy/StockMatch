@@ -408,77 +408,80 @@ export default function Portfolio() {
           <div className="p-6">
             <h3 className="text-lg font-semibold mb-4" data-testid="text-selected-companies">Your Selected Companies</h3>
             
-            <div className="space-y-3" data-testid="list-liked-stocks">
-              {stocks.map((stock, index) => {
-                const performanceData = stockPerformanceData[stock.ticker];
-                return (
-                  <div
-                    key={stock.ticker}
-                    className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/40 transition-colors"
-                    data-testid={`stock-item-${stock.ticker}`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                        {stock.logoUrl ? (
-                          <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
-                        ) : (
-                          <span className="text-lg font-bold text-primary">
-                            {stock.ticker.charAt(0)}
+            <div className="overflow-x-auto" data-testid="list-liked-stocks">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 font-medium text-sm text-muted-foreground">Company</th>
+                    <th className="text-center py-3 px-4 font-medium text-sm text-muted-foreground">7-Day Performance</th>
+                    <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation %</th>
+                    <th className="text-right py-3 px-4 font-medium text-sm text-muted-foreground">Allocation Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stocks.map((stock, index) => {
+                    const performanceData = stockPerformanceData[stock.ticker];
+                    return (
+                      <tr
+                        key={stock.ticker}
+                        className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                        data-testid={`stock-item-${stock.ticker}`}
+                      >
+                        {/* Ticker Column */}
+                        <td className="py-4 px-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                              {stock.logoUrl ? (
+                                <img src={stock.logoUrl} alt={stock.name} className="w-8 h-8 rounded" />
+                              ) : (
+                                <span className="text-lg font-bold text-primary">
+                                  {stock.ticker.charAt(0)}
+                                </span>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="font-medium truncate" data-testid={`stock-name-${stock.ticker}`}>
+                                {stock.name}
+                              </div>
+                              <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
+                                {stock.ticker}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        
+                        {/* Sparkline Column */}
+                        <td className="py-4 px-4 text-center">
+                          <div className="flex flex-col items-center space-y-2">
+                            <CompactSparkline 
+                              data={performanceData.data} 
+                              ticker={stock.ticker}
+                              isPositive={performanceData.isPositive}
+                            />
+                            <div className={`text-xs font-medium ${performanceData.isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                              {performanceData.dailyChange > 0 ? '+' : ''}{performanceData.dailyChange.toFixed(1)}%
+                            </div>
+                          </div>
+                        </td>
+                        
+                        {/* Allocation Percentage Column */}
+                        <td className="py-4 px-4 text-right">
+                          <span className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
+                            {allocationPercentage}%
                           </span>
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-medium" data-testid={`stock-name-${stock.ticker}`}>
-                          {stock.name}
-                        </div>
-                        <div className="text-sm text-muted-foreground" data-testid={`stock-ticker-${stock.ticker}`}>
-                          {stock.ticker}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Middle section - Sparkline */}
-                    <div className="hidden sm:flex flex-col items-center space-y-1">
-                      <CompactSparkline 
-                        data={performanceData.data} 
-                        ticker={stock.ticker}
-                        isPositive={performanceData.isPositive}
-                      />
-                      <span className="text-xs text-muted-foreground">7-day</span>
-                    </div>
-                    
-                    {/* Right section - Performance & Allocation */}
-                    <div className="text-right space-y-1">
-                      <div className="flex items-center justify-end space-x-2">
-                        <span className="font-semibold" data-testid={`stock-allocation-${stock.ticker}`}>
-                          {allocationPercentage}%
-                        </span>
-                        <div className={`flex items-center ${performanceData.isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                          {performanceData.isPositive ? (
-                            <TrendingUp className="w-4 h-4" data-testid={`trend-up-${stock.ticker}`} />
-                          ) : (
-                            <TrendingDown className="w-4 h-4" data-testid={`trend-down-${stock.ticker}`} />
-                          )}
-                          <span className="text-xs ml-1" data-testid={`daily-change-${stock.ticker}`}>
-                            {performanceData.dailyChange > 0 ? '+' : ''}{performanceData.dailyChange.toFixed(1)}%
+                        </td>
+                        
+                        {/* Allocation Value Column */}
+                        <td className="py-4 px-4 text-right">
+                          <span className="font-medium" data-testid={`stock-value-${stock.ticker}`}>
+                            ${allocationValue.toLocaleString()}
                           </span>
-                        </div>
-                      </div>
-                      <div className="text-sm text-muted-foreground" data-testid={`stock-value-${stock.ticker}`}>
-                        ${allocationValue.toLocaleString()}
-                      </div>
-                      {/* Mobile sparkline - shown on smaller screens */}
-                      <div className="sm:hidden mt-2">
-                        <CompactSparkline 
-                          data={performanceData.data} 
-                          ticker={stock.ticker}
-                          isPositive={performanceData.isPositive}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
