@@ -39,13 +39,6 @@ export default function Mascot({
 
   return (
     <div className={`flex items-center justify-center ${className}`} data-testid={`mascot-${type}`}>
-      <div className={`${sizeClasses[size]} flex items-center justify-center`}>
-        <img 
-          src={getImageSrc()} 
-          alt={getAltText()}
-          className="w-full h-full object-contain select-none"
-        />
-      </div>
     </div>
   );
 }
