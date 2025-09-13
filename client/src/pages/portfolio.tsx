@@ -386,15 +386,15 @@ export default function Portfolio() {
             </div>
             
             {/* Portfolio Summary Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="text-center p-4 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-primary" data-testid="text-portfolio-value">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="text-center p-4 bg-muted/50 rounded-lg min-w-0">
+                <div className="text-xl sm:text-2xl font-bold text-primary truncate" data-testid="text-portfolio-value">
                   ${parseInt(portfolio.totalValue).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">Portfolio Value</div>
               </div>
-              <div className="text-center p-4 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-secondary" data-testid="text-company-count">
+              <div className="text-center p-4 bg-muted/50 rounded-lg min-w-0">
+                <div className="text-xl sm:text-2xl font-bold text-secondary" data-testid="text-company-count">
                   {stockCount}
                 </div>
                 <div className="text-sm text-muted-foreground">Companies</div>
