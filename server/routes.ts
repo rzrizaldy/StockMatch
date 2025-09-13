@@ -184,9 +184,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
         availableStocks = [...availableStocks, ...additionalStocks];
       }
       
-      // Shuffle and take 15 stocks
-      const shuffled = availableStocks.sort(() => 0.5 - Math.random());
-      const selectedStocks = shuffled.slice(0, 15);
+      // Weighted randomization prioritizing good sentiment and positive price changes
+      const weightedStocks = availableStocks.map(stock => {
+        // Calculate weight based on sentiment score and price change
+        const sentimentScore = parseFloat(stock.sentimentScore || '50'); // 0-100 scale
+        const priceChangeStr = stock.priceChange?.replace(/[+%]/g, '') || '0';
+        const priceChange = parseFloat(priceChangeStr);
+        
+        // Weight formula: sentiment contributes 70%, price change 30%
+        // Sentiment: scale from 0-100 to 0-1
+        const sentimentWeight = sentimentScore / 100;
+        
+        // Price change: normalize around 0, positive is good, cap at ±10%
+        const normalizedPriceChange = Math.max(-10, Math.min(10, priceChange));
+        const priceWeight = (normalizedPriceChange + 10) / 20; // Scale to 0-1
+        
+        // Combined weight (higher is better)
+        const totalWeight = (sentimentWeight * 0.7) + (priceWeight * 0.3);
+        
+        // Add random factor to prevent deterministic ordering
+        const randomFactor = Math.random() * 0.3; // 30% randomness
+        const finalWeight = (totalWeight * 0.7) + randomFactor;
+        
+        return { stock, weight: finalWeight };
+      });
+      
+      // Sort by weight (descending) and add some randomness
+      const sortedByWeight = weightedStocks.sort((a, b) => {
+        // Add small random variation to prevent strict ordering
+        const randomVariation = (Math.random() - 0.5) * 0.1;
+        return (b.weight + randomVariation) - a.weight;
+      });
+      
+      const selectedStocks = sortedByWeight.slice(0, 15).map(item => item.stock);
       
       // Return the selected stocks directly from the database - they already have all the generated data
       res.json(selectedStocks);
