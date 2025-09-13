@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { StockCard as StockCardType } from "@shared/schema";
 import StockChart from "./stock-chart";
+import { Shield, AlertTriangle, Flame } from "lucide-react";
 
 interface StockCardProps {
   stock: StockCardType;
@@ -159,10 +160,16 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     }
   }, [isDragging]);
 
-  // Get risk indicator based on industry and price change
+  // Get risk indicator with pill styling and icons
   const getRiskIndicator = (industry: string, priceChange?: string) => {
     // Default fallback for missing or invalid price change data
-    const defaultRisk = { color: 'bg-yellow-500', label: 'Med Risk', description: 'Moderate volatility' };
+    const defaultRisk = { 
+      bgColor: 'bg-yellow-500', 
+      textColor: 'text-yellow-900', 
+      label: 'Med Risk', 
+      description: 'Moderate volatility',
+      icon: AlertTriangle
+    };
     
     if (!priceChange || typeof priceChange !== 'string' || priceChange.trim() === '') {
       return defaultRisk;
@@ -178,13 +185,31 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       
       const isPositive = priceChange.includes('+');
       
-      // Simple risk categorization
+      // Simple risk categorization with icons and solid pill styling
       if (industry.toLowerCase().includes('tech') || Math.abs(changeValue) > 5) {
-        return { color: 'bg-red-500', label: 'High Risk', description: 'Higher volatility' };
+        return { 
+          bgColor: 'bg-red-500', 
+          textColor: 'text-red-50', 
+          label: 'High Risk', 
+          description: 'Higher volatility',
+          icon: Flame
+        };
       } else if (industry.toLowerCase().includes('healthcare') || industry.toLowerCase().includes('utility')) {
-        return { color: 'bg-green-500', label: 'Low Risk', description: 'More stable' };
+        return { 
+          bgColor: 'bg-green-500', 
+          textColor: 'text-green-50', 
+          label: 'Low Risk', 
+          description: 'More stable',
+          icon: Shield
+        };
       } else {
-        return { color: 'bg-yellow-500', label: 'Med Risk', description: 'Moderate volatility' };
+        return { 
+          bgColor: 'bg-yellow-500', 
+          textColor: 'text-yellow-900', 
+          label: 'Med Risk', 
+          description: 'Moderate volatility',
+          icon: AlertTriangle
+        };
       }
     } catch (error) {
       console.warn('Error parsing price change:', priceChange, error);
@@ -201,8 +226,32 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       : 'text-red-600 dark:text-red-400';
   };
 
+  // Function to enhance sentiment text by bolding key terms
+  const enhanceSentimentText = (text: string): JSX.Element => {
+    const keyTerms = [
+      'stable company', 'stability', 'stable', 'lower volatility', 'low volatility',
+      'competition', 'competitive', 'growth potential', 'strong growth', 'growth',
+      'market leader', 'innovation', 'innovative', 'dividend', 'profitable',
+      'well-positioned', 'strong fundamentals', 'proven', 'resilient', 'defensive',
+      'expanding market', 'market reach', 'brand recognition', 'consumer loyalty'
+    ];
+    
+    let enhancedText = text;
+    
+    // Sort by length (descending) to avoid partial matches
+    const sortedTerms = keyTerms.sort((a, b) => b.length - a.length);
+    
+    sortedTerms.forEach(term => {
+      const regex = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+      enhancedText = enhancedText.replace(regex, `<strong>$&</strong>`);
+    });
+    
+    return <span dangerouslySetInnerHTML={{ __html: enhancedText }} />;
+  };
+
   const riskInfo = getRiskIndicator(stock.industry, stock.priceChange);
   const priceChangeStyle = getPriceChangeStyle(stock.priceChange);
+  const RiskIcon = riskInfo.icon;
 
   return (
     <div
@@ -227,15 +276,20 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
               {stock.name}
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <div className={`w-3 h-3 rounded-full ${riskInfo.color}`} title={riskInfo.description}></div>
-            <span className="text-xs text-muted-foreground">{riskInfo.label}</span>
+          <div className="flex-shrink-0">
+            <div 
+              className={`${riskInfo.bgColor} ${riskInfo.textColor} px-3 py-2 rounded-full flex items-center gap-2 shadow-sm`}
+              title={riskInfo.description}
+            >
+              <RiskIcon className="w-3 h-3" />
+              <span className="text-xs font-bold">{riskInfo.label}</span>
+            </div>
           </div>
         </div>
 
         {/* Price and Change */}
         <div className="mb-4">
-          <div className="text-xl font-semibold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
+          <div className="text-3xl font-bold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
             {stock.price || '$150.25'}
           </div>
           <div className={`text-sm font-medium ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
@@ -263,9 +317,9 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
         <div className="flex-1 flex flex-col justify-center min-h-0">
           <div className="bg-muted/50 rounded-lg p-4 border border-border/50 h-full flex flex-col">
             <h4 className="text-xs font-medium text-muted-foreground mb-2">Why this might interest you:</h4>
-            <p className="text-sm text-foreground leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
-              {stock.sentimentSummary || stock.hook || getDefaultSentiment(stock)}
-            </p>
+            <div className="text-sm text-foreground leading-relaxed overflow-hidden" data-testid={`stock-sentiment-${stock.ticker}`}>
+              {enhanceSentimentText(stock.sentimentSummary || stock.hook || getDefaultSentiment(stock))}
+            </div>
           </div>
         </div>
 
