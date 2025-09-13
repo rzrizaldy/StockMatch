@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft, Calendar, Plane, Building, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
-import { BullMascot, BearMascot } from "@/components/mascot";
+import { BullMascot } from "@/components/mascot";
 import type { UserProfile } from "@/pages/quiz";
+import bearIcon from '@assets/image_1757791809801.png';
 
 interface QuizModalProps {
   onComplete: (profile: UserProfile) => void;
@@ -106,10 +107,18 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
           
           {/* Title */}
           <div className="mb-8 max-w-[250px]">
-            <h1 className="text-white text-[30px] font-din font-bold leading-8 tracking-[0.1px] mb-6 text-left" 
-                style={{fontFamily: 'DIN Alternate, sans-serif'}}>
-              Your investing personality check
-            </h1>
+            <div className="flex items-center gap-3 mb-6">
+              <img 
+                src={bearIcon} 
+                alt="Bear Icon" 
+                className="w-10 h-10"
+                data-testid="bear-icon-personality"
+              />
+              <h1 className="text-white text-[30px] font-din font-bold leading-8 tracking-[0.1px] text-left" 
+                  style={{fontFamily: 'DIN Alternate, sans-serif'}}>
+                Your investing personality check
+              </h1>
+            </div>
           </div>
         </div>
         
