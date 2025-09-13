@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import type { StockCard as StockCardType } from "@shared/schema";
+import StockChart from "./stock-chart";
 
 interface StockCardProps {
   stock: StockCardType;
@@ -114,28 +115,50 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
     }
   }, [isDragging]);
 
-  // Get industry colors/categories
-  const getIndustryInfo = (industry: string) => {
-    const industryMap: Record<string, { color: string; category: string }> = {
-      'Technology': { color: 'bg-primary/10 text-primary', category: 'Technology' },
-      'Software': { color: 'bg-primary/10 text-primary', category: 'Technology' },
-      'Healthcare': { color: 'bg-secondary/10 text-secondary', category: 'Healthcare' },
-      'Finance': { color: 'bg-accent/10 text-accent', category: 'Finance' },
-      'Consumer': { color: 'bg-chart-4/10 text-chart-4', category: 'Consumer' },
-      'Energy': { color: 'bg-secondary/10 text-secondary', category: 'Energy' },
-      'Entertainment': { color: 'bg-chart-5/10 text-chart-5', category: 'Media' }
-    };
+  // Get risk indicator based on industry and price change
+  const getRiskIndicator = (industry: string, priceChange?: string) => {
+    // Default fallback for missing or invalid price change data
+    const defaultRisk = { color: 'bg-yellow-500', label: 'Med Risk', description: 'Moderate volatility' };
     
-    for (const [key, value] of Object.entries(industryMap)) {
-      if (industry.toLowerCase().includes(key.toLowerCase())) {
-        return value;
-      }
+    if (!priceChange || typeof priceChange !== 'string' || priceChange.trim() === '') {
+      return defaultRisk;
     }
     
-    return { color: 'bg-primary/10 text-primary', category: 'Technology' };
+    try {
+      const cleanedChange = priceChange.replace(/[+%\s]/g, '');
+      const changeValue = parseFloat(cleanedChange);
+      
+      if (isNaN(changeValue)) {
+        return defaultRisk;
+      }
+      
+      const isPositive = priceChange.includes('+');
+      
+      // Simple risk categorization
+      if (industry.toLowerCase().includes('tech') || Math.abs(changeValue) > 5) {
+        return { color: 'bg-red-500', label: 'High Risk', description: 'Higher volatility' };
+      } else if (industry.toLowerCase().includes('healthcare') || industry.toLowerCase().includes('utility')) {
+        return { color: 'bg-green-500', label: 'Low Risk', description: 'More stable' };
+      } else {
+        return { color: 'bg-yellow-500', label: 'Med Risk', description: 'Moderate volatility' };
+      }
+    } catch (error) {
+      console.warn('Error parsing price change:', priceChange, error);
+      return defaultRisk;
+    }
   };
 
-  const industryInfo = getIndustryInfo(stock.industry);
+  // Get price change styling
+  const getPriceChangeStyle = (priceChange?: string) => {
+    if (!priceChange || typeof priceChange !== 'string') return 'text-muted-foreground';
+    const isPositive = priceChange.startsWith('+');
+    return isPositive 
+      ? 'text-green-600 dark:text-green-400' 
+      : 'text-red-600 dark:text-red-400';
+  };
+
+  const riskInfo = getRiskIndicator(stock.industry, stock.priceChange);
+  const priceChangeStyle = getPriceChangeStyle(stock.priceChange);
 
   return (
     <div
@@ -149,57 +172,75 @@ export default function StockCard({ stock, onSwipeLeft, onSwipeRight, style }: S
       onTouchStart={handleTouchStart}
       data-testid={`stock-card-${stock.ticker}`}
     >
-      <div className="space-y-4">
-        {/* Company Logo and Basic Info */}
-        <div className="flex items-center space-x-4">
-          <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center">
+      <div className="flex flex-col h-full">
+        {/* Header: Ticker and Risk Indicator */}
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-foreground mb-1" data-testid={`stock-ticker-${stock.ticker}`}>
+              {stock.ticker}
+            </h2>
+            <p className="text-lg text-muted-foreground" data-testid={`stock-name-${stock.ticker}`}>
+              {stock.name}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${riskInfo.color}`} title={riskInfo.description}></div>
+            <span className="text-sm text-muted-foreground">{riskInfo.label}</span>
+          </div>
+        </div>
+
+        {/* Price and Change */}
+        <div className="mb-6">
+          <div className="text-2xl font-semibold text-foreground mb-1" data-testid={`stock-price-${stock.ticker}`}>
+            {stock.price || '$150.25'}
+          </div>
+          <div className={`text-lg font-medium ${priceChangeStyle}`} data-testid={`stock-change-${stock.ticker}`}>
+            {stock.priceChange || '+2.5%'}
+          </div>
+        </div>
+
+        {/* Price Chart */}
+        {stock.chartData && stock.chartData.length > 0 && (
+          <StockChart 
+            data={stock.chartData.map(price => parseFloat(price))}
+            currentPrice={parseFloat(stock.price?.replace('$', '') || '0')}
+            priceChange={stock.priceChange}
+            ticker={stock.ticker}
+          />
+        )}
+
+        {/* AI Sentiment Summary */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
+            <h4 className="text-sm font-medium text-muted-foreground mb-2">Why this might interest you:</h4>
+            <p className="text-foreground leading-relaxed" data-testid={`stock-sentiment-${stock.ticker}`}>
+              {stock.sentimentSummary || stock.hook || "This company represents a solid investment opportunity with growth potential in its industry sector."}
+            </p>
+          </div>
+        </div>
+
+        {/* Company Logo at Bottom */}
+        <div className="mt-6 flex justify-center">
+          <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
             {stock.logoUrl ? (
               <img 
                 src={stock.logoUrl} 
                 alt={`${stock.name} logo`} 
-                className="w-12 h-12 rounded-lg object-contain"
+                className="w-8 h-8 rounded object-contain"
                 onError={(e) => {
                   // Fallback to ticker if logo fails to load
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   const parent = target.parentElement;
                   if (parent) {
-                    parent.innerHTML = `<span class="text-2xl font-bold text-primary">${stock.ticker.charAt(0)}</span>`;
+                    parent.innerHTML = `<span class="text-lg font-bold text-muted-foreground">${stock.ticker.charAt(0)}</span>`;
                   }
                 }}
               />
             ) : (
-              <span className="text-2xl font-bold text-primary">{stock.ticker.charAt(0)}</span>
+              <span className="text-lg font-bold text-muted-foreground">{stock.ticker.charAt(0)}</span>
             )}
           </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold" data-testid={`stock-name-${stock.ticker}`}>
-              {stock.name}
-            </h3>
-            <span className="text-muted-foreground font-mono" data-testid={`stock-ticker-${stock.ticker}`}>
-              {stock.ticker}
-            </span>
-          </div>
-        </div>
-        
-        {/* Company Hook */}
-        <p className="text-foreground/80 leading-relaxed" data-testid={`stock-hook-${stock.ticker}`}>
-          {stock.hook}
-        </p>
-        
-        {/* Key Metric */}
-        <div className="bg-muted rounded-lg p-4">
-          <div className="text-sm text-muted-foreground">Market Cap</div>
-          <div className="text-lg font-semibold" data-testid={`stock-metric-${stock.ticker}`}>
-            {stock.metric}
-          </div>
-        </div>
-        
-        {/* Industry Tags */}
-        <div className="flex flex-wrap gap-2">
-          <span className={`${industryInfo.color} px-3 py-1 rounded-full text-sm`}>
-            {industryInfo.category}
-          </span>
         </div>
       </div>
       

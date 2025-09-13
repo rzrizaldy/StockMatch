@@ -28,6 +28,10 @@ export const stockCards = pgTable("stock_cards", {
   marketCap: text("market_cap"),
   beta: text("beta"),
   esgScore: text("esg_score"),
+  price: text("price").notNull(), // Current stock price (e.g., "$150.25")
+  priceChange: text("price_change").notNull(), // Percentage change (e.g., "+2.5%")
+  sentimentSummary: text("sentiment_summary").notNull(), // AI-generated beginner-friendly description
+  chartData: text("chart_data").array().notNull().default(sql`ARRAY[]::text[]`), // 30-day price history for sparkline
 });
 
 export const portfolios = pgTable("portfolios", {

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserProfileSchema, insertPortfolioSchema } from "@shared/schema";
+import { generateBeginnerStockSummary, generateMockPriceData } from "./ai";
 
 // Curated fake stock data for demo purposes
 const STOCK_DATABASE = [
@@ -161,9 +162,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const shuffled = availableStocks.sort(() => 0.5 - Math.random());
       const selectedStocks = shuffled.slice(0, 15);
       
-      const stockCards = [];
-      
-      for (const stock of selectedStocks) {
+      // Generate all stock cards in parallel for better performance
+      const stockCardPromises = selectedStocks.map(async (stock) => {
+        // Generate realistic sample price and change data
+        const basePrice = Math.random() * 300 + 50; // Price between $50-$350
+        const priceChange = (Math.random() - 0.5) * 10; // Change between -5% and +5%
+        const isPositive = priceChange > 0;
+        
+        // Generate GPT-powered beginner-friendly sentiment summary with timeout and fallback
+        let aiAnalysis;
+        try {
+          // Add timeout to prevent hanging API calls
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('OpenAI API timeout')), 8000)
+          );
+          
+          const apiPromise = generateBeginnerStockSummary({
+            ticker: stock.ticker,
+            name: stock.name,
+            industry: stock.industry,
+            marketCap: stock.marketCap,
+            beta: stock.beta,
+            esgScore: stock.esgScore
+          });
+          
+          aiAnalysis = await Promise.race([apiPromise, timeoutPromise]);
+        } catch (error) {
+          console.error(`Failed to generate AI summary for ${stock.ticker}:`, error);
+          // Fallback to basic summary if AI fails
+          aiAnalysis = {
+            sentimentSummary: `${stock.name} is a ${stock.industry.toLowerCase()} company with ${stock.beta <= 1.0 ? 'lower' : 'higher'} volatility, suitable for ${stock.beta <= 1.0 ? 'conservative' : 'more experienced'} investors.`,
+            riskLevel: stock.beta <= 1.0 ? 'low' : stock.beta <= 1.5 ? 'medium' : 'high',
+            beginnerFriendly: stock.beta <= 1.5
+          };
+        }
+        
+        // Generate mock price data for chart
+        const chartData = generateMockPriceData(stock.ticker, basePrice);
+        
         const card = {
           ticker: stock.ticker,
           name: stock.name,
@@ -173,14 +209,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
           industry: stock.industry,
           marketCap: stock.marketCap.toString(),
           beta: stock.beta.toString(),
-          esgScore: stock.esgScore.toString()
+          esgScore: stock.esgScore.toString(),
+          price: `$${basePrice.toFixed(2)}`,
+          priceChange: `${isPositive ? '+' : ''}${priceChange.toFixed(1)}%`,
+          sentimentSummary: aiAnalysis.sentimentSummary,
+          chartData: chartData.map(price => price.toString())
         };
         
-        stockCards.push(card);
-        
-        // Store in memory for later retrieval
-        await storage.createStockCard(card);
-      }
+        return card;
+      });
+      
+      // Wait for all stock cards to be generated in parallel
+      const stockCards = await Promise.all(stockCardPromises);
+      
+      // Store all cards in memory after generation
+      const storagePromises = stockCards.map(card => storage.createStockCard(card));
+      await Promise.all(storagePromises);
       
       res.json(stockCards);
       
