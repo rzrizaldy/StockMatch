@@ -208,6 +208,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user profile by session ID
+  app.get("/api/user-profile/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const profile = await storage.getUserProfile(sessionId);
+      
+      if (!profile) {
+        return res.status(404).json({ message: "User profile not found" });
+      }
+      
+      res.json(profile);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch user profile",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Save portfolio
   app.post("/api/portfolio", async (req, res) => {
     try {

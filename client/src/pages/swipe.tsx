@@ -25,19 +25,35 @@ export default function Swipe() {
   }, [setLocation]);
 
   const { data: stockCards = [], isLoading, error } = useQuery({
-    queryKey: ['/api/get-stock-deck'],
+    queryKey: ['/api/get-stock-deck', sessionId],
     queryFn: async () => {
       if (!sessionId) return [];
       
-      // Get stored profile or use defaults
-      const defaultProfile = {
-        sessionId,
-        risk: 'balanced',
-        industries: ['tech'],
-        esg: false
-      };
-      
-      return api.getStockDeck(defaultProfile);
+      try {
+        // Fetch the actual saved user profile
+        const userProfile = await api.getUserProfile(sessionId);
+        
+        // Use the real profile data to get personalized stock deck
+        const profile = {
+          sessionId,
+          risk: userProfile.risk,
+          industries: userProfile.industries || [],
+          esg: userProfile.esg || false
+        };
+        
+        return api.getStockDeck(profile);
+      } catch (error) {
+        console.error('Failed to fetch user profile, using defaults:', error);
+        // Fallback to defaults only if profile fetch fails
+        const fallbackProfile = {
+          sessionId,
+          risk: 'balanced',
+          industries: ['tech'],
+          esg: false
+        };
+        
+        return api.getStockDeck(fallbackProfile);
+      }
     },
     enabled: !!sessionId,
   });
@@ -92,19 +108,22 @@ export default function Swipe() {
   const handleSwipeRight = () => {
     if (stockCards[currentCardIndex]) {
       const ticker = stockCards[currentCardIndex].ticker;
-      setLikedStocks(prev => [...prev, ticker]);
+      const updatedLikedStocks = [...likedStocks, ticker];
+      setLikedStocks(updatedLikedStocks);
+      nextCard(updatedLikedStocks);
+    } else {
+      nextCard(likedStocks);
     }
-    nextCard();
   };
 
-  const nextCard = () => {
+  const nextCard = (currentLikedStocks = likedStocks) => {
     const nextIndex = currentCardIndex + 1;
     setCurrentCardIndex(nextIndex);
     
     if (nextIndex >= stockCards.length) {
-      // All cards swiped, save portfolio
+      // All cards swiped, save portfolio with the most up-to-date liked stocks
       setTimeout(() => {
-        savePortfolioMutation.mutate(likedStocks);
+        savePortfolioMutation.mutate(currentLikedStocks);
       }, 500);
     }
   };

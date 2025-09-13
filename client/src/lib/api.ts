@@ -29,6 +29,11 @@ export const api = {
     return response.json();
   },
 
+  async getUserProfile(sessionId: string) {
+    const response = await apiRequest("GET", `/api/user-profile/${sessionId}`, undefined);
+    return response.json();
+  },
+
   async savePortfolio(portfolio: InsertPortfolio): Promise<PortfolioResponse> {
     const response = await apiRequest("POST", "/api/portfolio", portfolio);
     return response.json();
