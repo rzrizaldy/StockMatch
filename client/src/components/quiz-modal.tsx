@@ -104,8 +104,8 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
         </div>
         
         {/* Title */}
-        <div className="mb-8">
-          <h1 className="text-white text-[30px] font-din font-bold leading-8 tracking-[0.1px] mb-6" 
+        <div className="mb-8 max-w-[250px]">
+          <h1 className="text-white text-[30px] font-din font-bold leading-8 tracking-[0.1px] mb-6 text-left" 
               style={{fontFamily: 'DIN Alternate, sans-serif'}}>
             Your investing personality check
           </h1>
