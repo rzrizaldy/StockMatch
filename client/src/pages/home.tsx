@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { TrendingUp, Zap, User, ShieldCheck, ArrowRight } from "lucide-react";
+import { BullMascot, BearMascot } from "@/components/mascot";
 
 export default function Home() {
   return (
@@ -16,6 +17,16 @@ export default function Home() {
           <p className="text-muted-foreground text-lg">
             Discover your perfect portfolio in 30 seconds
           </p>
+        </div>
+        
+        {/* Bull Mascot Welcome */}
+        <div className="flex justify-center mb-4">
+          <BullMascot 
+            mood="encouraging" 
+            size="lg" 
+            animated={true}
+            message="Ready to charge into the market? Let's build your perfect portfolio!"
+          />
         </div>
         
         {/* Value Proposition */}

@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Settings, Heart, X, CheckCircle, Trophy, Target, Zap, Star } from "lucide-react";
 import StockCard from "@/components/stock-card";
+import { BullMascot, BearMascot } from "@/components/mascot";
 import type { StockCard as StockCardType } from "@shared/schema";
 
 export default function Swipe() {
@@ -138,13 +139,13 @@ export default function Swipe() {
   const completedCards = currentCardIndex;
   const totalCards = stockCards.length;
   
-  // Gamified progress levels
+  // Investment-focused progress levels
   const getProgressLevel = (progress: number) => {
-    if (progress >= 100) return { level: 'Champion', icon: Trophy, color: 'text-yellow-500', bgColor: 'bg-yellow-500' };
-    if (progress >= 75) return { level: 'Expert', icon: Star, color: 'text-purple-500', bgColor: 'bg-purple-500' };
-    if (progress >= 50) return { level: 'Rising', icon: Zap, color: 'text-blue-500', bgColor: 'bg-blue-500' };
-    if (progress >= 25) return { level: 'Explorer', icon: Target, color: 'text-green-500', bgColor: 'bg-green-500' };
-    return { level: 'Starter', icon: Heart, color: 'text-pink-500', bgColor: 'bg-pink-500' };
+    if (progress >= 100) return { level: 'Broad Spreader', icon: Trophy, color: 'text-yellow-500', bgColor: 'bg-yellow-500' };
+    if (progress >= 75) return { level: 'Active Investor', icon: Star, color: 'text-purple-500', bgColor: 'bg-purple-500' };
+    if (progress >= 50) return { level: 'Balanced Diversifier', icon: Zap, color: 'text-blue-500', bgColor: 'bg-blue-500' };
+    if (progress >= 25) return { level: 'Selective Trader', icon: Target, color: 'text-green-500', bgColor: 'bg-green-500' };
+    return { level: 'Focused Investor', icon: Heart, color: 'text-pink-500', bgColor: 'bg-pink-500' };
   };
   
   const currentLevel = getProgressLevel(progress);
@@ -154,9 +155,12 @@ export default function Swipe() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6 fade-in">
-          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto animate-pulse">
-            <Heart className="w-8 h-8 text-primary-foreground" />
-          </div>
+          <BullMascot 
+            mood="loading" 
+            size="xl" 
+            animated={true}
+            message="Bull market ahead! Finding your perfect stock matches..."
+          />
           <h2 className="text-2xl font-semibold" data-testid="text-loading">Finding your matches...</h2>
           <p className="text-muted-foreground">
             We're curating the perfect stocks based on your preferences
@@ -173,9 +177,12 @@ export default function Swipe() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6">
-          <div className="w-16 h-16 bg-destructive rounded-full flex items-center justify-center mx-auto">
-            <X className="w-8 h-8 text-destructive-foreground" />
-          </div>
+          <BearMascot 
+            mood="thoughtful" 
+            size="xl" 
+            animated={true}
+            message="Bear with us! Let's check your connection and try again."
+          />
           <h2 className="text-2xl font-semibold text-destructive" data-testid="text-error">
             Failed to load stocks
           </h2>
@@ -254,33 +261,63 @@ export default function Swipe() {
               </div>
             </div>
             
-            {/* Motivational Message */}
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground">
-                {progress < 25 && "🚀 Great start! Keep exploring"}
-                {progress >= 25 && progress < 50 && "⭐ You're on fire! Keep going"}
-                {progress >= 50 && progress < 75 && "🎯 Almost there! You're doing amazing"}
-                {progress >= 75 && progress < 100 && "🏆 Final push! You've got this"}
-                {progress >= 100 && "🎉 Daily goal complete! Amazing work!"}
-              </p>
+            {/* Motivational Message with Mascots */}
+            <div className="text-center space-y-2">
+              {progress < 25 && (
+                <div className="flex items-center justify-center space-x-2">
+                  <BearMascot mood="encouraging" size="sm" />
+                  <p className="text-xs text-muted-foreground">Great start! Keep building your portfolio</p>
+                </div>
+              )}
+              {progress >= 25 && progress < 50 && (
+                <div className="flex items-center justify-center space-x-2">
+                  <BullMascot mood="happy" size="sm" />
+                  <p className="text-xs text-muted-foreground">You're on fire! The market loves you</p>
+                </div>
+              )}
+              {progress >= 50 && progress < 75 && (
+                <div className="flex items-center justify-center space-x-2">
+                  <BullMascot mood="celebrating" size="sm" />
+                  <p className="text-xs text-muted-foreground">Almost there! You're doing amazing</p>
+                </div>
+              )}
+              {progress >= 75 && progress < 100 && (
+                <div className="flex items-center justify-center space-x-2">
+                  <BullMascot mood="encouraging" size="sm" />
+                  <p className="text-xs text-muted-foreground">Final push! Bull run incoming!</p>
+                </div>
+              )}
+              {progress >= 100 && (
+                <div className="flex items-center justify-center space-x-2">
+                  <BullMascot mood="celebrating" size="sm" animated={true} />
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">Portfolio goal complete! 🎉</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
       
-      {/* Enhanced Swipe Instructions */}
+      {/* Enhanced Swipe Instructions with Mascot */}
       {showInstructions && (
-        <div className="px-6 py-3 text-center border-b border-border bg-gradient-to-r from-secondary/5 to-primary/5" data-testid="instructions-swipe">
+        <div className="px-6 py-4 text-center border-b border-border bg-gradient-to-r from-secondary/5 to-primary/5" data-testid="instructions-swipe">
+          <div className="flex items-center justify-center space-x-4 mb-3">
+            <BearMascot 
+              mood="thoughtful" 
+              size="sm" 
+              message="Quick tip: Trust your instincts and swipe based on companies you believe in!"
+            />
+          </div>
           <div className="flex items-center justify-center space-x-6 text-sm">
-            <div className="flex items-center space-x-2 text-secondary">
-              <div className="p-1 rounded-full bg-secondary/10">
+            <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
+              <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/20">
                 <Heart className="w-3 h-3 fill-current" />
               </div>
               <span className="font-medium">Swipe right to invest</span>
             </div>
             <div className="w-px h-4 bg-border" />
-            <div className="flex items-center space-x-2 text-destructive">
-              <div className="p-1 rounded-full bg-destructive/10">
+            <div className="flex items-center space-x-2 text-red-600 dark:text-red-400">
+              <div className="p-1 rounded-full bg-red-100 dark:bg-red-900/20">
                 <X className="w-3 h-3" />
               </div>
               <span className="font-medium">Swipe left to pass</span>
@@ -294,12 +331,14 @@ export default function Swipe() {
         <div className="relative w-full max-w-md h-[600px]">
           {currentCardIndex >= stockCards.length ? (
             <div className="text-center space-y-6" data-testid="state-no-cards">
-              {/* Daily Goal Complete Celebration */}
+              {/* Bull Market Celebration */}
               <div className="relative">
-                {/* Main Trophy */}
-                <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto animate-bounce shadow-lg">
-                  <Trophy className="w-12 h-12 text-yellow-900" />
-                </div>
+                <BullMascot 
+                  mood="celebrating" 
+                  size="xl" 
+                  animated={true}
+                  message="🎉 Bull market ahead! You've built an amazing portfolio!"
+                />
                 {/* Particle Effects */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   {[...Array(6)].map((_, i) => (
@@ -308,18 +347,18 @@ export default function Swipe() {
                       className={`absolute animate-ping`}
                       style={{
                         animation: `ping 1s ease-out ${i * 0.1}s infinite`,
-                        transform: `rotate(${i * 60}deg) translateX(40px)`,
+                        transform: `rotate(${i * 60}deg) translateX(50px)`,
                       }}
                     >
-                      <Star className={`w-4 h-4 text-yellow-400 fill-current`} />
+                      <Star className={`w-4 h-4 text-green-400 fill-current`} />
                     </div>
                   ))}
                 </div>
               </div>
               
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-foreground animate-pulse">Daily Goal Complete! 🎉</h3>
-                <p className="text-lg text-secondary font-medium">Amazing work, investor!</p>
+                <h3 className="text-2xl font-bold text-foreground animate-pulse">Portfolio Complete! 🎯</h3>
+                <p className="text-lg text-green-600 dark:text-green-400 font-medium">Ready to charge the market!</p>
                 <p className="text-muted-foreground">
                   You've reviewed {totalCards} stocks and selected {likedStocks.length} for your portfolio
                 </p>

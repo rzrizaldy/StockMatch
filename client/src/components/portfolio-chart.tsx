@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface ChartData {
   name: string;
@@ -51,65 +50,6 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-// Custom treemap cell component for better control
-const CustomTreemapCell = (props: any) => {
-  const { payload, x, y, width, height, fill } = props;
-  const [isHovered, setIsHovered] = useState(false);
-  
-  if (!payload || width < 10 || height < 10) return null;
-
-  const showText = width > 60 && height > 40;
-  const showPercentage = width > 40 && height > 25;
-  
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill={fill}
-        stroke="white"
-        strokeWidth={2}
-        opacity={isHovered ? 0.8 : 1}
-        style={{ cursor: 'pointer', transition: 'opacity 0.2s ease' }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        data-testid={`treemap-cell-${payload.ticker}`}
-      />
-      {showText && (
-        <text
-          x={x + width / 2}
-          y={y + height / 2 - (showPercentage ? 8 : 0)}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="white"
-          fontSize={Math.min(width / 6, height / 4, 14)}
-          fontWeight="600"
-          style={{ pointerEvents: 'none' }}
-          data-testid={`treemap-text-${payload.ticker}`}
-        >
-          {payload.ticker}
-        </text>
-      )}
-      {showPercentage && (
-        <text
-          x={x + width / 2}
-          y={y + height / 2 + 12}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="white"
-          fontSize={Math.min(width / 8, height / 6, 12)}
-          fontWeight="500"
-          style={{ pointerEvents: 'none' }}
-          data-testid={`treemap-percentage-${payload.ticker}`}
-        >
-          {payload.value}%
-        </text>
-      )}
-    </g>
-  );
-};
 
 // Industry Legend Component
 const IndustryLegend = ({ data }: { data: ChartData[] }) => {
@@ -144,26 +84,38 @@ export default function PortfolioChart({ data }: PortfolioChartProps) {
     );
   }
 
-  // Prepare treemap data with industry colors
-  const treemapData = data.map((item) => ({
+  // Prepare chart data with industry colors
+  const chartData = data.map((item) => ({
     ...item,
     fill: getIndustryColor(item.industry)
   }));
 
   return (
-    <div className="w-full" data-testid="portfolio-treemap">
-      {/* Treemap Container */}
+    <div className="w-full" data-testid="portfolio-donut-chart">
+      {/* Donut Chart Container */}
       <div className="h-64 mb-4">
         <ResponsiveContainer width="100%" height="100%">
-          <Treemap
-            data={treemapData}
-            dataKey="value"
-            aspectRatio={16 / 9}
-            stroke="white"
-            content={<CustomTreemapCell />}
-          >
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={100}
+              paddingAngle={2}
+              data-testid="portfolio-pie"
+            >
+              {chartData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.fill}
+                  data-testid={`pie-cell-${entry.ticker}`}
+                />
+              ))}
+            </Pie>
             <Tooltip content={<CustomTooltip />} />
-          </Treemap>
+          </PieChart>
         </ResponsiveContainer>
       </div>
       

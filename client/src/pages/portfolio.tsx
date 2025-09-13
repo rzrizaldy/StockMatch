@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { CheckCircle, RefreshCw, ExternalLink, FileSpreadsheet, Share2, Info, TrendingUp, TrendingDown, AlertTriangle, Target, Heart } from "lucide-react";
 import PortfolioChart from "@/components/portfolio-chart";
 import CompactSparkline from "@/components/compact-sparkline";
+import { BullMascot, BearMascot } from "@/components/mascot";
 import type { StockCard } from "@shared/schema";
 
 export default function Portfolio() {
@@ -63,9 +64,12 @@ export default function Portfolio() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6 fade-in">
-          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto animate-pulse">
-            <CheckCircle className="w-8 h-8 text-primary-foreground" />
-          </div>
+          <BullMascot 
+            mood="celebrating" 
+            size="xl" 
+            animated={true}
+            message="Your investment portfolio is taking shape! Time to build wealth!"
+          />
           <h2 className="text-2xl font-semibold" data-testid="text-loading-portfolio">Creating your portfolio...</h2>
         </div>
       </div>
@@ -76,6 +80,12 @@ export default function Portfolio() {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-background">
         <div className="text-center space-y-6">
+          <BearMascot 
+            mood="encouraging" 
+            size="xl" 
+            animated={true}
+            message="Don't worry! Let's start fresh and build your perfect portfolio."
+          />
           <h2 className="text-2xl font-semibold text-destructive" data-testid="text-error-portfolio">
             Failed to load portfolio
           </h2>
@@ -498,6 +508,16 @@ export default function Portfolio() {
                 <Heart className="w-4 h-4" />
                 92% confidence in your choices
               </div>
+            </div>
+            
+            {/* Bull Mascot Guidance */}
+            <div className="flex justify-center py-4">
+              <BullMascot 
+                mood="encouraging" 
+                size="md" 
+                animated={true}
+                message="Great portfolio! Ready to take charge of your financial future?"
+              />
             </div>
             
             {/* Enhanced Action Buttons */}

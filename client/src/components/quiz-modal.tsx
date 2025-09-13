@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { X, Shield, TrendingUp, Rocket, Smartphone, HeartPulse, Banknote, ShoppingBag, Zap, Play, Leaf, BarChart, DollarSign } from "lucide-react";
+import { BullMascot, BearMascot } from "@/components/mascot";
 import type { UserProfile } from "@/pages/quiz";
 
 interface QuizModalProps {
@@ -358,6 +359,25 @@ export default function QuizModal({ onComplete, isLoading }: QuizModalProps) {
             </div>
           </div>
         </div>
+        
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50 rounded-xl">
+            <div className="text-center space-y-4">
+              <BullMascot 
+                mood="happy" 
+                size="xl" 
+                animated={true}
+                message="Great choices! Finding your perfect stock matches..."
+              />
+              <div className="animate-pulse">
+                <div className="w-32 bg-primary/20 rounded-full h-1 mx-auto">
+                  <div className="bg-primary h-1 rounded-full w-3/4 animate-bounce"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
